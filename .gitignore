@@ -1,1 +1,7 @@
 ﻿*.vscode
+*.vs
+*.csproj
+
+*.los
+*.sln
+*.code-workspace
