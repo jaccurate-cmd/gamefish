@@ -1,1 +1,0 @@
-// A poll using networkable resource file references as the value type.
