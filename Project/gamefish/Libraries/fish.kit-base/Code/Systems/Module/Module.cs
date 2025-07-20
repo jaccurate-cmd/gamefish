@@ -5,9 +5,6 @@ namespace GameFish;
 /// </summary>
 public abstract partial class Module<T> : Component, Component.ExecuteInEditor where T : Component, IModules<T>
 {
-	public const string FEATURE_MODULES = "🧩 Modules";
-	public const string GROUP_MODULE = "🧩 Module";
-
 	/// <summary>
 	/// Is this component currently loaded in the scene editor? <br />
 	/// Otherwise it is assumed to be in play mode. <br />
@@ -19,8 +16,7 @@ public abstract partial class Module<T> : Component, Component.ExecuteInEditor w
 	/// The <typeparamref name="T"/> this module should register with.
 	/// </summary>
 	[Property]
-	[Feature( BaseEntity.DEBUG )]
-	[Group( GROUP_MODULE )]
+	[Feature( BaseEntity.DEBUG ), Group( BaseEntity.MODULES )]
 	public T ParentComponent
 	{
 		get => _comp.IsValid() ? _comp : _comp = Components?.Get<T>( FindMode.EverythingInSelfAndAncestors );
