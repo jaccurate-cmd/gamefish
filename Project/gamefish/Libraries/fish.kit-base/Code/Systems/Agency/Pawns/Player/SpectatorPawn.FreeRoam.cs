@@ -22,6 +22,15 @@ public partial class SpectatorPawn
 	public float? SprintSpeed { get; set; } = 20f;
 
 	/// <summary>
+	/// Sticks the player to ground, until they aim their camera at the specified angle away from surface.
+	/// </summary>
+	[Property]
+	[Feature( FEATURE_SPECTATOR )]
+	[ToggleGroup( nameof( HasFreeRoamMode ) )]
+	[Range( 0, 90, clamped: true )]
+	public float? StickToGroundAngle { get; set; } = 30f;
+
+	/// <summary>
 	/// Should the free roam controller limit itself to the <see cref="Bounds"/>.
 	/// </summary>
 	[Property]

@@ -14,7 +14,7 @@ public partial class SpectatorPawn
 	[ToggleGroup( nameof( HasFirstPersonMode ) )]
 	public bool ShowViewModel { get; set; } = true;
 
-	protected void FirstPersonUpdate()
+	protected void FirstPersonUpdate(float deltaTime)
 	{
 		if ( !Target.IsValid() ) return;
 

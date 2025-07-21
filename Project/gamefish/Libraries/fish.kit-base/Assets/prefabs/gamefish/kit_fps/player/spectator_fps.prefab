@@ -24,6 +24,12 @@
           "Mins": "0,0,0",
           "Maxs": "0,0,0"
         },
+        "CameraColliderRadius": 5,
+        "CameraColliderTags": "solid,world",
+        "CameraDistance": {
+          "Min": 50,
+          "Max": 500
+        },
         "Controller": null,
         "Filter": null,
         "HasBounds": false,
@@ -34,21 +40,21 @@
         "HealthComponent": null,
         "IsAlive": false,
         "IsDestructible": false,
-        "MaxDistance": {
-          "Min": 50,
-          "Max": 500
-        },
         "MaxHealth": 0,
         "Mode": "FreeRoam",
+        "MouseWheelSensitivity": 600,
+        "MouseWheelSmoothing": 15,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "PitchClamp": 90,
         "ShowViewModel": true,
         "Speed": 10,
         "SprintSpeed": 20,
+        "StickToGroundAngle": 30,
         "Target": null,
         "ViewModel": null
       }

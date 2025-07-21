@@ -109,21 +109,24 @@ public partial class SpectatorPawn : ControllerPawn
 		this.Warn( "Targeting is not yet implemented." );
 	}
 
-	protected override void OnUpdate()
+	public override void FrameOperate( in float deltaTime )
 	{
-		base.OnUpdate();
+		base.FrameOperate(in deltaTime);
 
 		switch ( Mode )
 		{
 			case SpectatorModes.FirstPerson:
-				FirstPersonUpdate();
+				FirstPersonUpdate(deltaTime);
+				break;
+			case SpectatorModes.ThirdPerson:
+				ThirdPersonUpdate(deltaTime);
 				break;
 		}
 	}
 
-	protected override void OnFixedUpdate()
+	public override void FixedOperate( in float deltaTime )
 	{
-		base.OnFixedUpdate();
+		base.FixedOperate(deltaTime);
 
 		switch ( Mode )
 		{
