@@ -104,6 +104,23 @@ public abstract partial class Agent : Component
 			?.WorldTransform.WithScale( 1f );
 	}
 
+	protected bool InEditor => Scene?.IsEditor ?? true;
+
+	[Property]
+	[Feature( FEATURE_AGENT ), Category( "Debug" )]
+	[HideIf( nameof(InEditor), true )]
+	public BasePawn SetDebugPawn
+	{
+		get => _debugPawn;
+		set
+		{
+			_debugPawn = value;
+			SetPawn<BasePawn>( _debugPawn.GameObject );
+		}
+	}
+
+	private BasePawn _debugPawn;
+
 	/// <summary>
 	/// Spawns a <see cref="BasePawn"/> prefab and assigns it to this agent.
 	/// </summary>
