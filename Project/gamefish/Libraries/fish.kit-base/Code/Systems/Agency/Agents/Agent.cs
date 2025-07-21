@@ -115,6 +115,7 @@ public abstract partial class Agent : Component
 		set
 		{
 			_debugPawn = value;
+			if ( !_debugPawn.IsValid() ) return;
 			SetPawn<BasePawn>( _debugPawn.GameObject );
 		}
 	}
