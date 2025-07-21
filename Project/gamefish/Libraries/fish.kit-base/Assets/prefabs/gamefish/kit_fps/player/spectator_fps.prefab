@@ -1,0 +1,84 @@
+{
+  "RootObject": {
+    "__guid": "3f0faaed-c487-4bb8-abd0-c3e271085bd9",
+    "__version": 1,
+    "Flags": 0,
+    "Name": "spectator_fps",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkInterpolation": true,
+    "NetworkOrphaned": 0,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "GameFish.SpectatorPawn",
+        "__guid": "38fcaa19-216d-4fde-844e-003465ac2acc",
+        "__enabled": true,
+        "Actor": null,
+        "Agent": null,
+        "Bounds": {
+          "Mins": "0,0,0",
+          "Maxs": "0,0,0"
+        },
+        "Controller": null,
+        "Filter": null,
+        "HasBounds": false,
+        "HasFirstPersonMode": true,
+        "HasFreeRoamMode": true,
+        "HasThirdPersonMode": true,
+        "Health": 0,
+        "HealthComponent": null,
+        "IsAlive": false,
+        "IsDestructible": false,
+        "MaxDistance": {
+          "Min": 50,
+          "Max": 500
+        },
+        "MaxHealth": 0,
+        "Mode": "FreeRoam",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "ShowViewModel": true,
+        "Speed": 10,
+        "SprintSpeed": 20,
+        "Target": null,
+        "ViewModel": null
+      }
+    ],
+    "Children": [],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": true,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": ""
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [],
+  "__version": 2
+}

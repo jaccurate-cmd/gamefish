@@ -2317,92 +2317,6 @@
       "Children": []
     },
     {
-      "__guid": "c1dbc74d-c538-4fbb-9340-28ac79d2bc36",
-      "__version": 1,
-      "__Prefab": "prefabs/gamefish/kit_fps/spectator/spectator_fps.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "2c9ee29d-c1af-4d8b-8f48-d24e59cecd12"
-            },
-            "Property": "Position",
-            "Value": "-702.0522,-211.9642,52.54669"
-          },
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "2c9ee29d-c1af-4d8b-8f48-d24e59cecd12"
-            },
-            "Property": "Rotation",
-            "Value": "0,0.000000006309428,0.9999999,0.00000001892828"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "cfe0ad5b-0b90-4329-b1a5-8afabbabe9f6"
-            },
-            "Property": "HasFreeRoamMode",
-            "Value": false
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "cfe0ad5b-0b90-4329-b1a5-8afabbabe9f6"
-            },
-            "Property": "HasThirdPersonMode",
-            "Value": false
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "cfe0ad5b-0b90-4329-b1a5-8afabbabe9f6"
-            },
-            "Property": "Mode",
-            "Value": "FirstPerson"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "cfe0ad5b-0b90-4329-b1a5-8afabbabe9f6"
-            },
-            "Property": "Speed",
-            "Value": 100
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "cfe0ad5b-0b90-4329-b1a5-8afabbabe9f6"
-            },
-            "Property": "SprintSpeed",
-            "Value": 200
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "cfe0ad5b-0b90-4329-b1a5-8afabbabe9f6"
-            },
-            "Property": "Target",
-            "Value": {
-              "_type": "component",
-              "component_id": "808a72d2-52bd-43cd-a300-8e9d7052aa13",
-              "go": "c9896e6c-bd4e-4cf2-965d-61983f34db2c",
-              "component_type": "PlayerPawn"
-            }
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "2c9ee29d-c1af-4d8b-8f48-d24e59cecd12": "c1dbc74d-c538-4fbb-9340-28ac79d2bc36",
-        "cfe0ad5b-0b90-4329-b1a5-8afabbabe9f6": "2a2a501a-e667-499e-aba8-3dc0c81f4b27",
-        "3e28f647-0cdd-44a7-afbe-003a126ff8f0": "789eeaca-2ac5-407d-b3bc-95bc8dac26c3"
-      }
-    },
-    {
       "__guid": "c9896e6c-bd4e-4cf2-965d-61983f34db2c",
       "__version": 1,
       "Flags": 0,
@@ -2588,7 +2502,6 @@
               "__type": "Sandbox.ModelPhysics",
               "__guid": "343d2e82-4de4-4a7c-b7f1-78e13c8a7167",
               "__enabled": false,
-              "IgnoreRoot": false,
               "Locking": {
                 "X": false,
                 "Y": false,
@@ -2611,8 +2524,7 @@
                 "go": "27d18f94-1c9f-4f61-b3aa-4955984eeeb0",
                 "component_type": "SkinnedModelRenderer"
               },
-              "RigidbodyFlags": 0,
-              "StartAsleep": false
+              "RigidbodyFlags": 0
             },
             {
               "__type": "Sandbox.SkinnedModelRenderer",
@@ -2860,6 +2772,30 @@
           ]
         }
       ]
+    },
+    {
+      "__guid": "d8b49e5e-ef13-4e84-93e3-15df0e7f2252",
+      "__version": 1,
+      "__Prefab": "prefabs/gamefish/kit_fps/player/spectator_fps.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "3f0faaed-c487-4bb8-abd0-c3e271085bd9"
+            },
+            "Property": "Position",
+            "Value": "-705.3578,48.82283,1.999939"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "3f0faaed-c487-4bb8-abd0-c3e271085bd9": "d8b49e5e-ef13-4e84-93e3-15df0e7f2252",
+        "38fcaa19-216d-4fde-844e-003465ac2acc": "c2d7526c-196a-4642-b69d-65144a2ada0c"
+      }
     }
   ],
   "SceneProperties": {
