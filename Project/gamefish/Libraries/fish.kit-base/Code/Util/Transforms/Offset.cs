@@ -2,7 +2,7 @@ namespace GameFish;
 
 /// <summary>
 /// A position and a rotation, but not scale. <br />
-/// Makes it very easy to animate
+/// Makes it very easy to animate programmatically(mainly tweening).
 /// </summary>
 public partial struct Offset
 {
