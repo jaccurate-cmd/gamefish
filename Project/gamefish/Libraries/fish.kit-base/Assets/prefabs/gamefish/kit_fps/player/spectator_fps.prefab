@@ -20,9 +20,10 @@
         "__enabled": true,
         "Actor": null,
         "Agent": null,
+        "AscendButton": "Jump",
         "Bounds": {
-          "Mins": "0,0,0",
-          "Maxs": "0,0,0"
+          "Mins": "-200,-200,-200",
+          "Maxs": "200,200,200"
         },
         "CameraColliderRadius": 5,
         "CameraColliderTags": "solid,world",
@@ -31,8 +32,12 @@
           "Max": 500
         },
         "Controller": null,
+        "DescentButton": "Duck",
         "Filter": null,
-        "HasBounds": false,
+        "FreeRoamColliderRadius": 16,
+        "FreeRoamColliderTags": "solid,world",
+        "FreeRoamPitchClamp": 90,
+        "HasBounds": true,
         "HasFirstPersonMode": true,
         "HasFreeRoamMode": true,
         "HasThirdPersonMode": true,
@@ -50,12 +55,14 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "PitchClamp": 90,
         "ShowViewModel": true,
-        "Speed": 10,
-        "SprintSpeed": 20,
+        "Speed": 50,
+        "SprintButton": "Run",
+        "SprintSpeed": 100,
         "StickToGroundAngle": 30,
+        "StickToGroundDistance": 30,
         "Target": null,
+        "ThirdPersonPitchClamp": 90,
         "ViewModel": null
       }
     ],

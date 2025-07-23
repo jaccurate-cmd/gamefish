@@ -126,6 +126,9 @@ public partial class SpectatorPawn : ControllerPawn
 			case SpectatorModes.ThirdPerson:
 				ThirdPersonUpdate(deltaTime);
 				break;
+			case SpectatorModes.FreeRoam:
+				FreeRoamUpdate( deltaTime );
+				break;
 		}
 	}
 

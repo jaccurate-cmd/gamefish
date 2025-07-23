@@ -2796,14 +2796,6 @@
               "Type": "Component",
               "IdValue": "38fcaa19-216d-4fde-844e-003465ac2acc"
             },
-            "Property": "Mode",
-            "Value": "ThirdPerson"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "38fcaa19-216d-4fde-844e-003465ac2acc"
-            },
             "Property": "Target",
             "Value": {
               "_type": "component",
