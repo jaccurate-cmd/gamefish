@@ -1,7 +1,7 @@
 namespace GameFish;
 
 /// <summary>
-/// The most basic form of a physical object that can separately exist.
+/// The most basic form of an object that can separately exist.
 /// </summary>
 public partial class BaseEntity : Component, ITransform
 {
