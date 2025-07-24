@@ -683,8 +683,8 @@
         "__version": 1,
         "Flags": 0,
         "Name": "View",
-        "Position": "0,0,0",
-        "Rotation": "0,0,0,0",
+        "Position": "0,0,64",
+        "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
         "Tags": "",
         "Enabled": true,
@@ -699,9 +699,11 @@
             "__enabled": true,
             "AllowCyclingMode": true,
             "AllowSpectators": true,
+            "CustomSetAction": null,
             "CustomUpdateAction": null,
             "CycleModeBackwardAction": null,
             "CycleModeForwardAction": "View",
+            "DebugMode": false,
             "DefaultMode": "FirstPerson",
             "FirstPersonRange": {
               "Min": 5,
@@ -712,18 +714,18 @@
               "FirstPerson": true,
               "ThirdPerson": true
             },
+            "ModuleParent": {
+              "_type": "component",
+              "component_id": "00a167f2-9393-469a-879d-63a09e408188",
+              "go": "26d08fde-1687-46ac-ae0e-02eed92368eb",
+              "component_type": "PlayerPawn"
+            },
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
-            "ParentComponent": {
-              "_type": "component",
-              "component_id": "00a167f2-9393-469a-879d-63a09e408188",
-              "go": "26d08fde-1687-46ac-ae0e-02eed92368eb",
-              "component_type": "PlayerPawn"
-            },
             "Relative": {
               "Position": "0,0,0",
               "Rotation": "0,0,0,0",
@@ -870,18 +872,18 @@
                 "Slot": null
               }
             ],
+            "ModuleParent": {
+              "_type": "component",
+              "component_id": "00a167f2-9393-469a-879d-63a09e408188",
+              "go": "26d08fde-1687-46ac-ae0e-02eed92368eb",
+              "component_type": "PlayerPawn"
+            },
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
-            "ParentComponent": {
-              "_type": "component",
-              "component_id": "00a167f2-9393-469a-879d-63a09e408188",
-              "go": "26d08fde-1687-46ac-ae0e-02eed92368eb",
-              "component_type": "PlayerPawn"
-            },
             "SlotCapacity": 1,
             "SlotCount": 10,
             "StrictSlots": false,
