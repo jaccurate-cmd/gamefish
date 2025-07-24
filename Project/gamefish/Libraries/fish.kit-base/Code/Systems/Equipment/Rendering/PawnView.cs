@@ -19,7 +19,7 @@ public partial class PawnView : Module<BasePawn>
 	[Property]
 	[Title( "Allow" )]
 	[Feature( INPUT ), Group( CYCLING )]
-	public bool AllowCyclingMode { get; set; } = false;
+	public virtual bool AllowCyclingMode { get; set; } = false;
 
 	/// <summary>
 	/// The button to press to select the next mode.
@@ -86,51 +86,5 @@ public partial class PawnView : Module<BasePawn>
 		if ( !string.IsNullOrEmpty( CycleModeBackwardAction ) )
 			if ( Input.Pressed( CycleModeBackwardAction ) )
 				CycleMode( -1 );
-	}
-
-	protected virtual void UpdateTransform()
-	{
-		var pawn = Pawn;
-
-		if ( !pawn.IsValid() )
-			return;
-
-		if ( !pawn.IsValid() )
-			return;
-
-		if ( pawn.GameObject == GameObject )
-		{
-			this.Warn( this + " was directly on the pawn! It needs to be a child!" );
-			Enabled = false;
-			return;
-		}
-
-		var mode = GetMode();
-
-		if ( mode is not Perspective.Fixed or Perspective.FreeCam )
-		{
-			if ( Previous is Offset prevOffset )
-			{
-				// Smoothed transitioning.
-				var offsLerped = prevOffset.LerpTo( Relative, TransitionFraction );
-				var tLerped = offsLerped.ToWorld( pawn.EyeTransform );
-
-				TrySetPosition( tLerped.Position );
-				TrySetRotation( tLerped.Rotation );
-			}
-			else
-			{
-				// No transitioning.
-				var tRelative = Relative.ToWorld( pawn.EyeTransform );
-
-				TrySetPosition( tRelative.Position );
-				TrySetRotation( tRelative.Rotation );
-			}
-		}
-
-		var cam = Scene?.Camera;
-
-		if ( cam.IsValid() )
-			cam.WorldTransform = WorldTransform;
 	}
 }

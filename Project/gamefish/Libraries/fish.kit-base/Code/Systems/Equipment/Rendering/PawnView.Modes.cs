@@ -18,16 +18,19 @@ partial class PawnView
 	public const string FIXED = "Fixed View";
 	public const int FIXED_ORDER = 203;
 
+	public const string MANUAL = "Manual View";
+	public const int MANUAL_ORDER = 204;
+
 	public const string CUSTOM = "Custom View";
-	public const int CUSTOM_ORDER = 204;
+	public const int CUSTOM_ORDER = 205;
 
 	public enum Perspective
 	{
-		/// <summary> From the eye position. </summary>
+		/// <summary> From the eye. </summary>
 		[Icon( "face" )]
 		FirstPerson,
 
-		/// <summary> Over-view. </summary>
+		/// <summary> A modern Lakitu. </summary>
 		[Icon( "videocam" )]
 		ThirdPerson,
 
@@ -39,10 +42,21 @@ partial class PawnView
 		[Icon( "rectangle" )]
 		Fixed,
 
+		/// <summary> Hard-coded override. </summary>
+		[Icon( "code" )]
+		Manual,
+
 		/// <summary> Uses ActionGraph. </summary>
 		[Icon( "auto_awesome" )]
 		Custom
 	}
+
+	/// <summary>
+	/// If true: log perspective changes in console.
+	/// </summary>
+	[Property]
+	[Feature( VIEW ), Group( PERSPECTIVE )]
+	public bool DebugMode { get; set; }
 
 	[Property]
 	[Feature( VIEW ), Group( PERSPECTIVE )]
@@ -78,13 +92,8 @@ partial class PawnView
 
 	protected Perspective _mode = Perspective.FirstPerson;
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <returns> The currently active mode. </returns>
-	public virtual Perspective GetMode() => Mode;
-
 	[Property, WideMode]
+	[Title( "Allowed Modes" )]
 	[Feature( VIEW ), Group( PERSPECTIVE )]
 	public Dictionary<Perspective, bool> ModeList { get; set; } = new()
 	{
@@ -109,7 +118,14 @@ partial class PawnView
 	public FloatRange FirstPersonRange { get; set; } = new( 5f, 20f );
 
 	/// <summary>
-	/// Called per update whenever <see cref="Mode"/> is set to "Custom".
+	/// Called whenever <see cref="Mode"/> is set to "Custom".
+	/// </summary>
+	[Property]
+	[Feature( VIEW ), Group( CUSTOM ), Order( CUSTOM_ORDER )]
+	public Action<BasePawn, PawnView> CustomSetAction { get; set; }
+
+	/// <summary>
+	/// Called per update whenever <see cref="Mode"/> is "Custom".
 	/// </summary>
 	[Property]
 	[Feature( VIEW ), Group( CUSTOM ), Order( CUSTOM_ORDER )]
@@ -134,78 +150,67 @@ partial class PawnView
 	/// </summary>
 	protected virtual void OnSetPerspective( in Perspective newMode )
 	{
-		this.Log( "Set Perspective: " + newMode );
+		if ( DebugMode )
+			this.Log( "Set Perspective: " + newMode );
 
 		if ( newMode != Perspective.FirstPerson )
 			ToggleViewModel( false );
 
-		StartTransition();
-	}
-
-	protected virtual void OnPerspectiveUpdate( in float deltaTime )
-	{
 		switch ( _mode )
 		{
 			case Perspective.FirstPerson:
-				OnFirstPersonModeUpdate( in deltaTime );
+				OnFirstPersonModeSet();
 				break;
 
 			case Perspective.ThirdPerson:
-				OnThirdPersonModeUpdate( in deltaTime );
+				OnThirdPersonModeSet();
 				break;
 
 			case Perspective.FreeCam:
-				OnFreeCamModeUpdate( in deltaTime );
+				OnFreeCamModeSet();
 				break;
 
 			case Perspective.Fixed:
-				OnFixedModeUpdate( in deltaTime );
+				OnFixedModeSet();
+				break;
+
+			case Perspective.Manual:
+				OnManualModeSet();
 				break;
 
 			case Perspective.Custom:
-				OnCustomModeUpdate( in deltaTime );
+				OnCustomModeSet();
 				break;
 		}
+
+		StartTransition();
 	}
 
-	protected virtual void OnFirstPersonModeUpdate( in float deltaTime )
-	{
-		var pawn = Pawn;
-
-		if ( !pawn.IsValid() )
-			return;
-
-		Relative = new();
-
-		UpdateViewModel( in deltaTime );
-	}
-
-	protected virtual void OnThirdPersonModeUpdate( in float deltaTime )
-	{
-		var pawn = Pawn;
-
-		if ( !pawn.IsValid() )
-			return;
-
-		var tPos = Vector3.Backward * 150f;
-
-		Relative = new( tPos, Rotation.Identity );
-	}
-
-	protected virtual void OnFreeCamModeUpdate( in float deltaTime )
-	{
-		this.Warn( $"Mode {Perspective.FreeCam} is not yet implemented." );
-	}
-
-	protected virtual void OnFixedModeUpdate( in float deltaTime )
+	protected virtual void OnFirstPersonModeSet()
 	{
 	}
 
-	protected virtual void OnCustomModeUpdate( in float deltaTime )
+	protected virtual void OnThirdPersonModeSet()
+	{
+	}
+
+	protected virtual void OnFreeCamModeSet()
+	{
+	}
+
+	protected virtual void OnFixedModeSet()
+	{
+	}
+
+	protected virtual void OnManualModeSet()
+	{
+	}
+
+	protected virtual void OnCustomModeSet()
 	{
 		try
 		{
-			CustomUpdateAction( Pawn, this );
+			CustomSetAction( Pawn, this );
 		}
 		catch ( Exception e )
 		{

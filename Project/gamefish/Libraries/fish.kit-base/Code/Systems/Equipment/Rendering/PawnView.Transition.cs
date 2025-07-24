@@ -6,15 +6,17 @@ partial class PawnView
 	/// How quickly to transition between modes.
 	/// </summary>
 	[Property]
+	[Title( "Speed" )]
 	[Feature( VIEW ), Group( TRANSITIONING )]
-	public float TransitionSpeed { get; set; } = 2f;
+	public float TransitionSpeed { get; set; } = 3f;
 
 	/// <summary>
 	/// The smoothness of mode transition speed. Slows it down effectively.
 	/// </summary>
 	[Property]
+	[Title( "Smoothing" )]
 	[Feature( VIEW ), Group( TRANSITIONING )]
-	public float TransitionSmoothing { get; set; } = 0.5f;
+	public float TransitionSmoothing { get; set; } = 0.35f;
 
 	/// <summary>
 	/// The local position and rotation relative to the pawn's origin.
@@ -22,7 +24,17 @@ partial class PawnView
 	[Title( "Relative Offset" )]
 	[Property, ReadOnly, InlineEditor]
 	[Feature( VIEW ), Group( TRANSITIONING )]
-	public Offset Relative { get; set; }
+	public Offset Relative
+	{
+		get => _relative;
+		set
+		{
+			_relative = value;
+			UpdateTransform();
+		}
+	}
+
+	protected Offset _relative;
 
 	/// <summary>
 	/// The previous world position and rotation to transition from.
