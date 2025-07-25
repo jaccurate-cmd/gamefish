@@ -4,11 +4,11 @@ namespace GameFish;
 
 partial class PawnView
 {
-	public bool HasFreeCamMode => IsModeEnabled( Perspective.FreeCam );
+	public bool HasFreeCamMode => false;//IsModeEnabled( Perspective.FreeCam );
 
+	/*
 	/// <summary>
 	/// Radius of the sphere collider that will prevent the camera from fazing through walls.
-	///
 	/// Set to <c>null</c> to disable the camera collisions.  
 	/// </summary>
 	[Property]
@@ -72,6 +72,7 @@ partial class PawnView
 	[ShowIf( nameof( HasBounds ), true )]
 	[Group( FREE_CAM ), Order( FREE_CAM_ORDER )]
 	public BBox Bounds { get; set; }
+	*/
 
 	protected virtual void OnFreeCamModeSet()
 	{

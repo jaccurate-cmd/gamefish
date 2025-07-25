@@ -7,7 +7,12 @@ partial class PawnView
 	[Property]
 	[Feature( MODES )]
 	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
-	public FloatRange CameraDistance { get; set; } = new( 50f, 500f );
+	public FloatRange DistanceRange { get; set; } = new( 50f, 500f );
+
+	[Property]
+	[Feature( MODES )]
+	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
+	public float? InitialDistance { get; set; } = 100f;
 
 	/// <summary>
 	/// Sensitivity of the mouse wheel when used to change the distance. <br />
@@ -21,35 +26,21 @@ partial class PawnView
 
 	/// <summary>
 	/// A value that is passed to <see cref="MathX.Lerp(float,float,float,bool)"/>. <br />
-	/// If <c>null</c>: disable smoothing altogether 
+	/// If <c>0 or less</c>: disable smoothing altogether 
 	/// </summary>
 	[Property]
 	[Feature( MODES )]
+	[Range( 0f, 20f, clamped: false )]
 	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
-	public float? ScrollSmoothing { get; set; } = 5f;
-
-	/// <summary>
-	/// Radius of the sphere collider that will prevent the camera from phasing through walls. <br />
-	/// If <c>null</c>: disable the camera collisions.  
-	/// </summary>
-	[Property]
-	[Feature( MODES )]
-	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
-	public float CollisionRadius { get; set; } = 5f;
-
-	/// <summary>
-	/// Tags of objects that will obstruct the camera view.
-	/// </summary>
-	[Property]
-	[Feature( MODES )]
-	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
-	public TagSet CollisionTags { get; set; } = ["solid"];
+	public float ScrollSmoothing { get; set; } = 5f;
 
 	public float CurrentDistance { get; set; }
 	public float DesiredDistance { get; set; }
 
 	protected virtual void OnThirdPersonModeSet()
 	{
+		if ( InitialDistance.HasValue )
+			DesiredDistance = InitialDistance.Value;
 	}
 
 	protected virtual void SetThirdPersonModeTransform()
@@ -64,34 +55,42 @@ partial class PawnView
 		if ( !pawn.IsValid() )
 			return;
 
+		var aimDir = EyeForward;
+
 		DesiredDistance -= Input.MouseWheel.y * ScrollSensitivity * deltaTime;
+		DesiredDistance.Clamp( DistanceRange );
 
-		if ( ScrollSmoothing is { } mws )
-			CurrentDistance = CurrentDistance.LerpTo( DesiredDistance, mws * deltaTime );
+		if ( ScrollSmoothing > 0f )
+			CurrentDistance = CurrentDistance.LerpTo( DesiredDistance, ScrollSmoothing * deltaTime );
 
-		if ( CollisionRadius is { } radius )
+		if ( Collision )
 		{
-			var startPos = pawn.EyePosition;
-			var endPos = startPos - (pawn.EyeForward * DesiredDistance);
+			var startPos = EyePosition;
+			var endPos = startPos - (aimDir * CurrentDistance);
 
-			var trace = Scene.Trace.Sphere( radius, startPos, endPos )
+			var trAll = Scene.Trace.Sphere( CollisionRadius, startPos, endPos )
 				.IgnoreGameObject( pawn.GameObject )
 				.WithAnyTags( CollisionTags )
-				.Run();
+				.RunAll();
 
-			if ( trace.Hit )
-				CurrentDistance = CurrentDistance.Min( trace.Distance );
+			foreach ( var tr in trAll )
+			{
+				if ( !tr.Hit || (!CollideOwned && tr.GameObject.IsOwner()) )
+					continue;
 
-			// DebugOverlay.ScreenText( Vector2.One * 20,
-			// 	$"{DesiredDistance} {trace.Distance} {trace.Hit} {trace.GameObject?.Name}",
-			// 	flags: TextFlag.LeftTop );
-			// DebugOverlay.Line( trace.StartPosition, trace.EndPosition, Color.Red, overlay: true );
+				CurrentDistance = CurrentDistance.Min( tr.Distance );
+			}
+
+			/*
+			DebugOverlay.ScreenText( Vector2.One * 20,
+				$"{DesiredDistance} {trace.Distance} {trace.Hit} {trace.GameObject?.Name}",
+				flags: TextFlag.LeftTop );
+
+			DebugOverlay.Line( trace.StartPosition, trace.EndPosition, Color.Red, overlay: true );
+			*/
 		}
 
-		// Also clamp the current distance, because it starts with 0
-		CurrentDistance = CurrentDistance.Clamp( CameraDistance );
-
-		var tPos = Vector3.Backward * 150f;
+		var tPos = Vector3.Backward * CurrentDistance;
 
 		Relative = new( tPos, Rotation.Identity );
 	}

@@ -18,14 +18,11 @@ public partial class PawnView : Module<BasePawn>, IOperate
 	/// </summary>
 	public virtual BasePawn Pawn => ModuleParent;
 
-	public Vector3 EyePosition => Pawn?.EyePosition ?? WorldPosition;
-	public Rotation EyeRotation => Pawn?.EyeRotation ?? WorldRotation;
-	public Vector3 EyeForward => EyeRotation.Forward;
-
 	/// <summary>
-	/// Distance from this view to the pawn's first-person origin.
+	/// How to scale the opacity from distance.
+	/// This is for the pawn itself to consider using.
 	/// </summary>
-	public float DistanceFromEye => WorldPosition.Distance( EyePosition );
+	public float PawnOpacity { get; set; } = 1f;
 
 	public virtual bool CanOperate()
 		=> ModuleParent?.CanOperate() ?? false;
@@ -44,6 +41,8 @@ public partial class PawnView : Module<BasePawn>, IOperate
 		OnPerspectiveUpdate( Time.Delta );
 
 		UpdateTransition();
+
+		PawnOpacity = DistanceFromEye.Remap( FirstPersonRange.Max, FirstPersonRange.Min );
 	}
 
 	/// <summary>

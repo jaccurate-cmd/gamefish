@@ -55,7 +55,7 @@ partial class PawnView
 		if ( !pawn.IsValid() )
 			return;
 
-		Previous = new( pawn.EyeTransform.ToLocal( WorldTransform ) );
+		Previous = new( EyeTransform.ToLocal( WorldTransform ) );
 
 		TransitionFraction = 0f;
 		_transVel = 0f;

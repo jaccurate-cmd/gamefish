@@ -25,10 +25,12 @@ public abstract partial class ControllerPawn : BasePawn
 		get => Controller?.EyePosition ?? WorldTransform.PointToWorld( Vector3.Up * 64f );
 		set
 		{
+			// Why the fuck not? WHY NOT? Fuck this.
 			// if ( Controller.IsValid() )
 			// Controller.EyePosition = value;
 		}
 	}
+
 	public override Rotation EyeRotation
 	{
 		get => Controller?.EyeAngles ?? base.EyeRotation;
@@ -45,16 +47,6 @@ public abstract partial class ControllerPawn : BasePawn
 		set { if ( _pc.IsValid() ) _pc.WishVelocity = value; }
 	}
 
-	protected override void OnUpdate()
-	{
-		base.OnUpdate();
-
-		var allowInput = AllowInput();
-
-		if ( Controller.IsValid() )
-			Controller.UseInputControls = allowInput;
-	}
-
 	protected override void OnSetOwner( Agent old, Agent agent )
 	{
 		base.OnSetOwner( old, agent );
@@ -66,6 +58,9 @@ public abstract partial class ControllerPawn : BasePawn
 	public override void FrameOperate( in float deltaTime )
 	{
 		base.FrameOperate( deltaTime );
+
+		if ( Controller.IsValid() && View.IsValid() )
+			Controller.EyeAngles = View.GetViewTransform().Rotation;
 	}
 
 	public override void FixedOperate( in float deltaTime )

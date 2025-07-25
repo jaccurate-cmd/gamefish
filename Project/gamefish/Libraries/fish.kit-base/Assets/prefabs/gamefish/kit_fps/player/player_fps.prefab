@@ -20,12 +20,17 @@
         "__enabled": true,
         "Actor": null,
         "Agent": null,
+        "AllowSpectators": false,
         "Controller": {
           "_type": "component",
           "component_id": "edc765a1-6ab4-4b78-a07d-58125b29947f",
           "go": "26d08fde-1687-46ac-ae0e-02eed92368eb",
           "component_type": "PlayerController"
         },
+        "DuckButton": "duck",
+        "DuckLowerSpeed": 10,
+        "DuckMoveSpeed": 50,
+        "DuckRaiseSpeed": 15,
         "Health": 100,
         "HealthComponent": {
           "_type": "component",
@@ -35,13 +40,18 @@
         },
         "IsAlive": true,
         "IsDestructible": true,
+        "JumpButton": "jump",
+        "JumpSpeed": 250,
         "MaxHealth": 100,
+        "MoveSpeed": 100,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "SprintButton": "run",
+        "SprintMultiplier": 1.5,
         "View": {
           "_type": "component",
           "component_id": "c7391ef4-d529-4db4-9b20-71271e0abec5",
@@ -139,7 +149,7 @@
         "UseCameraControls": false,
         "UseFovFromPreferences": true,
         "UseInputControls": true,
-        "UseLookControls": true,
+        "UseLookControls": false,
         "WalkSpeed": 110
       },
       {
@@ -698,17 +708,26 @@
             "__guid": "c7391ef4-d529-4db4-9b20-71271e0abec5",
             "__enabled": true,
             "AllowCyclingMode": true,
-            "AllowSpectators": true,
+            "CollideOwned": false,
+            "Collision": true,
+            "CollisionRadius": 5,
+            "CollisionTags": "solid",
             "CustomSetAction": null,
             "CustomUpdateAction": null,
             "CycleModeBackwardAction": null,
             "CycleModeForwardAction": "View",
             "DebugMode": false,
             "DefaultMode": "FirstPerson",
+            "DistanceRange": {
+              "Min": 50,
+              "Max": 500
+            },
+            "EyeAngles": "0,0,0",
             "FirstPersonRange": {
               "Min": 5,
               "Max": 20
             },
+            "InitialDistance": 100,
             "Mode": "FirstPerson",
             "ModeList": {
               "FirstPerson": true,
@@ -726,6 +745,11 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
+            "PitchClamping": true,
+            "PitchRange": {
+              "Min": -89.9,
+              "Max": 89.9
+            },
             "Relative": {
               "Position": "0,0,0",
               "Rotation": "0,0,0,0",
@@ -735,6 +759,9 @@
                 "Rotation": "0,0,0,0"
               }
             },
+            "ScrollSensitivity": 5,
+            "ScrollSmoothing": 5,
+            "ShowViewModel": true,
             "TransitionSmoothing": 0.5,
             "TransitionSpeed": 2,
             "ViewModel": {

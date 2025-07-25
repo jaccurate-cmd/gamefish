@@ -21,11 +21,18 @@
         "Actor": null,
         "Agent": null,
         "Controller": null,
+        "DuckButton": "duck",
+        "DuckLowerSpeed": 10,
+        "DuckMoveSpeed": 50,
+        "DuckRaiseSpeed": 15,
         "Health": 0,
         "HealthComponent": null,
         "IsAlive": false,
         "IsDestructible": false,
+        "JumpButton": "jump",
+        "JumpSpeed": 250,
         "MaxHealth": 0,
+        "MoveSpeed": 100,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -33,6 +40,8 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "Spectating": null,
+        "SprintButton": "run",
+        "SprintMultiplier": 1.5,
         "View": {
           "_type": "component",
           "component_id": "c06f4824-6a01-4022-ac58-91126185aa0a",
@@ -67,19 +76,32 @@
             "__type": "GameFish.PawnView",
             "__guid": "c06f4824-6a01-4022-ac58-91126185aa0a",
             "__enabled": true,
-            "AllowCyclingMode": false,
+            "AllowCyclingMode": true,
+            "CollideOwned": false,
+            "Collision": true,
+            "CollisionRadius": 5,
+            "CollisionTags": "solid",
             "CustomSetAction": null,
             "CustomUpdateAction": null,
             "CycleModeBackwardAction": null,
             "CycleModeForwardAction": "View",
             "DebugMode": false,
             "DefaultMode": "FirstPerson",
+            "DistanceRange": {
+              "Min": 50,
+              "Max": 500
+            },
+            "EyeAngles": "0,0,0",
             "FirstPersonRange": {
               "Min": 5,
               "Max": 20
             },
+            "InitialDistance": 100,
             "Mode": "FirstPerson",
-            "ModeList": {},
+            "ModeList": {
+              "FirstPerson": true,
+              "ThirdPerson": true
+            },
             "ModuleParent": {
               "_type": "component",
               "component_id": "38fcaa19-216d-4fde-844e-003465ac2acc",
@@ -92,6 +114,11 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
+            "PitchClamping": true,
+            "PitchRange": {
+              "Min": -89.9,
+              "Max": 89.9
+            },
             "Relative": {
               "Position": "0,0,0",
               "Rotation": "0,0,0,0",
@@ -101,6 +128,9 @@
                 "Rotation": "0,0,0,0"
               }
             },
+            "ScrollSensitivity": 5,
+            "ScrollSmoothing": 5,
+            "ShowViewModel": true,
             "TransitionSmoothing": 0.5,
             "TransitionSpeed": 2,
             "ViewModel": {

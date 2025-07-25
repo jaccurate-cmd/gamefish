@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace GameFish;
 
 partial class PawnView
@@ -15,6 +17,37 @@ partial class PawnView
 	protected virtual void UpdateTransform()
 	{
 		UpdateModeTransform();
+	}
+
+	/// <summary>
+	/// Sets the transform safely using <see cref="Relative"/> and with transition support.
+	/// </summary>
+	protected virtual void SetRelativeTransform()
+	{
+		var pawn = Pawn;
+
+		if ( !pawn.IsValid() )
+			return;
+
+		var tEye = EyeTransform;
+
+		if ( Previous is Offset prevOffset )
+		{
+			// Smoothed transitioning.
+			var offsLerped = prevOffset.LerpTo( Relative, TransitionFraction );
+			var tLerped = offsLerped.ToWorld( tEye );
+
+			TrySetPosition( tLerped.Position );
+			TrySetRotation( tLerped.Rotation );
+		}
+		else
+		{
+			// No transitioning.
+			var tRelative = Relative.ToWorld( tEye );
+
+			TrySetPosition( tRelative.Position );
+			TrySetRotation( tRelative.Rotation );
+		}
 	}
 
 	/// <summary>
@@ -47,35 +80,6 @@ partial class PawnView
 			case Perspective.Custom:
 				SetCustomModeTransform();
 				break;
-		}
-	}
-
-	/// <summary>
-	/// Sets the transform safely using <see cref="Relative"/> and with transition support.
-	/// </summary>
-	protected virtual void SetRelativeTransform()
-	{
-		var pawn = Pawn;
-
-		if ( !pawn.IsValid() )
-			return;
-
-		if ( Previous is Offset prevOffset )
-		{
-			// Smoothed transitioning.
-			var offsLerped = prevOffset.LerpTo( Relative, TransitionFraction );
-			var tLerped = offsLerped.ToWorld( pawn.EyeTransform );
-
-			TrySetPosition( tLerped.Position );
-			TrySetRotation( tLerped.Rotation );
-		}
-		else
-		{
-			// No transitioning.
-			var tRelative = Relative.ToWorld( pawn.EyeTransform );
-
-			TrySetPosition( tRelative.Position );
-			TrySetRotation( tRelative.Rotation );
 		}
 	}
 
