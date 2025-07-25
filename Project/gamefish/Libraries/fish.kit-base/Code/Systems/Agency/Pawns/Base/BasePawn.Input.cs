@@ -2,6 +2,8 @@ namespace GameFish;
 
 partial class BasePawn : IOperate
 {
+	public const string INPUT = "🕹 Input";
+
 	/// <returns> If this pawn should listen to the local client's input. </returns>
 	public virtual bool AllowInput()
 	{

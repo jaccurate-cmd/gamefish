@@ -2,6 +2,8 @@ namespace GameFish;
 
 partial class BasePawn
 {
+	public const string SPECTATING = "👻 Spectating";
+
 	/// <summary>
 	/// The central view manager for the pawn.
 	/// </summary>
@@ -21,6 +23,14 @@ partial class BasePawn
 	[Feature( FEATURE_PAWN ), Group( PawnView.VIEW )]
 	public ViewModel ViewModel => View?.ViewModel;
 
+	/// <summary>
+	/// If true: indicate that spectators can spectate this pawn. <br />
+	/// If false: spectators are blocked from this pawn.
+	/// </summary>
+	[Property]
+	[Feature( SPECTATING )]
+	public virtual bool AllowSpectators { get; set; } = false;
+
 	public virtual void UpdateView( in float deltaTime )
 	{
 		if ( !View.IsValid() )
@@ -35,5 +45,35 @@ partial class BasePawn
 	public virtual void ApplyView( CameraComponent cam, ref Transform tView )
 	{
 		tView = View?.GetViewTransform() ?? tView;
+	}
+
+	/// <param name="spec"> A spectator. </param>
+	/// <returns> If the spectator can target this pawn. </returns>
+	public virtual bool CanSpectate( BasePawn spec )
+	{
+		if ( !this.IsValid() )
+			return false;
+
+		if ( !AllowSpectators || !spec.IsValid() )
+			return false;
+
+		return true;
+	}
+
+	/// <param name="target"> The pawn we're trying to spectate. </param>
+	/// <returns> If the spectating was successful. </returns>
+	public virtual bool TrySpectate( BasePawn target )
+	{
+		// Only spectators can spectate.
+		return false;
+	}
+
+	/// <summary>
+	/// Kicks the spectator out of the fuggen thing, man.
+	/// </summary>
+	[Button]
+	[Feature( SPECTATING ), Group( DEBUG )]
+	public virtual void StopSpectating()
+	{
 	}
 }

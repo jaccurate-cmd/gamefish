@@ -14,7 +14,6 @@ partial class PawnView
 
 	protected virtual void UpdateTransform()
 	{
-		EnsureValidHierarchy();
 		UpdateModeTransform();
 	}
 
@@ -78,20 +77,6 @@ partial class PawnView
 			TrySetPosition( tRelative.Position );
 			TrySetRotation( tRelative.Rotation );
 		}
-	}
-
-	protected virtual void SetFirstPersonModeTransform()
-	{
-		SetRelativeTransform();
-	}
-
-	protected virtual void SetThirdPersonModeTransform()
-	{
-		SetRelativeTransform();
-	}
-
-	protected virtual void SetFreeCamModeTransform()
-	{
 	}
 
 	protected virtual void SetFixedModeTransform()

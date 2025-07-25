@@ -2263,6 +2263,7 @@
           "__enabled": true,
           "Actor": null,
           "Agent": null,
+          "AllowSpectators": false,
           "Health": 0,
           "HealthComponent": null,
           "IsAlive": false,
@@ -2301,6 +2302,7 @@
           "__enabled": true,
           "Actor": null,
           "Agent": null,
+          "AllowSpectators": false,
           "Health": 0,
           "HealthComponent": null,
           "IsAlive": false,
@@ -2339,7 +2341,10 @@
           "__enabled": true,
           "Actor": null,
           "Agent": null,
+          "AllowSpectators": false,
           "Controller": null,
+          "DuckButton": "duck",
+          "FreeRoamPitchClamp": 90,
           "Health": 100,
           "HealthComponent": {
             "_type": "component",
@@ -2349,6 +2354,7 @@
           },
           "IsAlive": true,
           "IsDestructible": true,
+          "JumpButton": "jump",
           "MaxHealth": 100,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
@@ -2356,6 +2362,9 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
+          "Speed": 50,
+          "SprintButton": "run",
+          "SprintSpeed": 100,
           "View": null,
           "ViewModel": null
         },
@@ -2791,13 +2800,176 @@
             },
             "Property": "Position",
             "Value": "-705.3578,48.82283,1.999939"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "38fcaa19-216d-4fde-844e-003465ac2acc"
+            },
+            "Property": "DuckButton",
+            "Value": "duck"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "38fcaa19-216d-4fde-844e-003465ac2acc"
+            },
+            "Property": "FreeRoamPitchClamp",
+            "Value": 90
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "38fcaa19-216d-4fde-844e-003465ac2acc"
+            },
+            "Property": "JumpButton",
+            "Value": "jump"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "38fcaa19-216d-4fde-844e-003465ac2acc"
+            },
+            "Property": "Speed",
+            "Value": 50
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "38fcaa19-216d-4fde-844e-003465ac2acc"
+            },
+            "Property": "SprintButton",
+            "Value": "run"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "38fcaa19-216d-4fde-844e-003465ac2acc"
+            },
+            "Property": "SprintSpeed",
+            "Value": 100
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "Bounds",
+            "Value": {
+              "Mins": "0,0,0",
+              "Maxs": "0,0,0"
+            }
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "CameraDistance",
+            "Value": {
+              "Min": 50,
+              "Max": 500
+            }
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "CollisionRadius",
+            "Value": 5
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "CollisionTags",
+            "Value": "solid"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "FreeRoamColliderRadius",
+            "Value": 16
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "FreeRoamColliderTags",
+            "Value": ""
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "HasBounds",
+            "Value": false
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "PitchClamp",
+            "Value": 90
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "ScrollSensitivity",
+            "Value": 5
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "ScrollSmoothing",
+            "Value": 5
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "ShowViewModel",
+            "Value": true
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "StickToGroundAngle",
+            "Value": 30
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "c06f4824-6a01-4022-ac58-91126185aa0a"
+            },
+            "Property": "StickToGroundDistance",
+            "Value": 30
           }
         ],
         "MovedObjects": []
       },
       "__PrefabIdToInstanceId": {
         "3f0faaed-c487-4bb8-abd0-c3e271085bd9": "d8b49e5e-ef13-4e84-93e3-15df0e7f2252",
-        "38fcaa19-216d-4fde-844e-003465ac2acc": "c2d7526c-196a-4642-b69d-65144a2ada0c"
+        "38fcaa19-216d-4fde-844e-003465ac2acc": "c2d7526c-196a-4642-b69d-65144a2ada0c",
+        "d89c2fa0-e3b0-4852-8cf5-5081ab716a9b": "5c2fc71a-c9f8-45d6-b39e-00bc7031d09e",
+        "bde78980-4c59-4322-985e-82f1a5e0b812": "99ebc173-3889-4e1b-8345-0959fd080f0f",
+        "c06f4824-6a01-4022-ac58-91126185aa0a": "98608c4a-6e08-4045-b08b-6af6d66780b4",
+        "d326bee5-a470-48fd-b034-93639ccc7264": "e02e752f-f9e6-46b0-a73e-52a437c7e6a8",
+        "c141c37b-f3dc-49ea-9ee5-628f3d8bf989": "4d0eba21-42cd-43eb-803f-73c973a94d54"
       }
     }
   ],

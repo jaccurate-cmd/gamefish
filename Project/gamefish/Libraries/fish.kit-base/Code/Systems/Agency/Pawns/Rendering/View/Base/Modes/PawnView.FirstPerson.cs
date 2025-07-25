@@ -2,22 +2,42 @@ namespace GameFish;
 
 partial class PawnView
 {
+	public bool HasFirstPersonMode => IsModeEnabled( Perspective.FirstPerson );
+
+	[Property]
+	[Feature( MODES )]
+	[Group( FIRST_PERSON ), Order( FIRST_PERSON_ORDER )]
+	public bool ShowViewModel { get; set; } = true;
+
 	/// <summary>
-	/// The <see cref="global::GameFish.ViewModel"/> component. <br />
-	/// Needs to be on a child of this object!
+	/// Used to manage pawn model fade and view model visibility.
 	/// </summary>
 	[Property]
-	[Feature( VIEW )]
-	public ViewModel ViewModel
-	{
-		// Auto-cache the component.
-		get => _vm.IsValid() ? _vm
-			: _vm = Components?.Get<ViewModel>( FindMode.EverythingInDescendants );
+	[Feature( MODES )]
+	[Title( "Fade Range" )]
+	[Group( FIRST_PERSON ), Order( FIRST_PERSON_ORDER )]
+	public FloatRange FirstPersonRange { get; set; } = new( 5f, 20f );
 
-		set { _vm = value; }
+	protected virtual void OnFirstPersonModeSet()
+	{
 	}
 
-	protected ViewModel _vm;
+	protected virtual void SetFirstPersonModeTransform()
+	{
+		SetRelativeTransform();
+	}
+
+	protected virtual void OnFirstPersonModeUpdate( in float deltaTime )
+	{
+		var pawn = Pawn;
+
+		if ( !pawn.IsValid() )
+			return;
+
+		Relative = new();
+
+		UpdateViewModel( in deltaTime );
+	}
 
 	protected virtual void ToggleViewModel( bool isEnabled )
 	{

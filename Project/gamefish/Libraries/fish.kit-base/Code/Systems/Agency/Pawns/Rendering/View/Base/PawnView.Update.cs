@@ -34,35 +34,6 @@ partial class PawnView
 		}
 	}
 
-	protected virtual void OnFirstPersonModeUpdate( in float deltaTime )
-	{
-		var pawn = Pawn;
-
-		if ( !pawn.IsValid() )
-			return;
-
-		Relative = new();
-
-		UpdateViewModel( in deltaTime );
-	}
-
-	protected virtual void OnThirdPersonModeUpdate( in float deltaTime )
-	{
-		var pawn = Pawn;
-
-		if ( !pawn.IsValid() )
-			return;
-
-		var tPos = Vector3.Backward * 150f;
-
-		Relative = new( tPos, Rotation.Identity );
-	}
-
-	protected virtual void OnFreeCamModeUpdate( in float deltaTime )
-	{
-		this.Warn( $"Mode {Perspective.FreeCam} is not yet implemented." );
-	}
-
 	protected virtual void OnFixedModeUpdate( in float deltaTime )
 	{
 	}

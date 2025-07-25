@@ -8,36 +8,10 @@ namespace GameFish;
 public partial class PawnView : Module<BasePawn>, IOperate
 {
 	public const string VIEW = "🎥 View";
-	public const string INPUT = "🕹 Input";
+	public const string SPECTATING = BasePawn.SPECTATING;
 
 	public const string CYCLING = "Cycling";
 	public const string TRANSITIONING = "Transitioning";
-
-	/// <summary>
-	/// If true: you can press buttons to cycle through perspectives.
-	/// </summary>
-	[Property]
-	[Title( "Allow" )]
-	[Feature( INPUT ), Group( CYCLING )]
-	public virtual bool AllowCyclingMode { get; set; } = false;
-
-	/// <summary>
-	/// The button to press to select the next mode.
-	/// </summary>
-	[Property]
-	[InputAction]
-	[Title( "Forward" )]
-	[Feature( INPUT ), Group( CYCLING )]
-	public string CycleModeForwardAction { get; set; } = "View";
-
-	/// <summary>
-	/// The button to press to select the next mode.
-	/// </summary>
-	[Property]
-	[InputAction]
-	[Title( "Backward" )]
-	[Feature( INPUT ), Group( CYCLING )]
-	public string CycleModeBackwardAction { get; set; }
 
 	/// <summary>
 	/// The pawn we're looking at/through.
@@ -87,22 +61,5 @@ public partial class PawnView : Module<BasePawn>, IOperate
 			this.Warn( this + " was directly on the pawn! It needs to be a child!" );
 			Enabled = false;
 		}
-	}
-
-	/// <summary>
-	/// Allows cycling of perspective modes.
-	/// </summary>
-	protected virtual void HandleInput()
-	{
-		if ( !AllowCyclingMode )
-			return;
-
-		if ( !string.IsNullOrEmpty( CycleModeForwardAction ) )
-			if ( Input.Pressed( CycleModeForwardAction ) )
-				CycleMode( 1 );
-
-		if ( !string.IsNullOrEmpty( CycleModeBackwardAction ) )
-			if ( Input.Pressed( CycleModeBackwardAction ) )
-				CycleMode( -1 );
 	}
 }

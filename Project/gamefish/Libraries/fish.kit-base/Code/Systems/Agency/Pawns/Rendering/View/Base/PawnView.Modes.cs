@@ -5,6 +5,7 @@ namespace GameFish;
 partial class PawnView
 {
 	public const string PERSPECTIVE = "Perspective";
+	public const string MODES = "🎛️ Modes";
 
 	public const string FIRST_PERSON = "First Person";
 	public const int FIRST_PERSON_ORDER = 200;
@@ -34,7 +35,7 @@ partial class PawnView
 		[Icon( "videocam" )]
 		ThirdPerson,
 
-		/// <summary> Like noclip. </summary>
+		/// <summary> Like noclip for the camera. </summary>
 		[Icon( "flight" )]
 		FreeCam,
 
@@ -77,7 +78,7 @@ partial class PawnView
 	[Sync]
 	[Property]
 	[Feature( VIEW ), Group( PERSPECTIVE )]
-	protected Perspective Mode
+	public Perspective Mode
 	{
 		get => _mode;
 		set
@@ -106,14 +107,6 @@ partial class PawnView
 
 	public virtual IEnumerable<Perspective> GetAllowedModes()
 		=> Enum.GetValues<Perspective>()?.Where( IsModeEnabled ) ?? [];
-
-	/// <summary>
-	/// Used to manage pawn model fade and view model visibility.
-	/// </summary>
-	[Property]
-	[Title( "Fade Range" )]
-	[Feature( VIEW ), Group( FIRST_PERSON ), Order( FIRST_PERSON_ORDER )]
-	public FloatRange FirstPersonRange { get; set; } = new( 5f, 20f );
 
 	/// <summary>
 	/// Called whenever <see cref="Mode"/> is set to "Custom".
@@ -182,18 +175,6 @@ partial class PawnView
 		}
 
 		StartTransition();
-	}
-
-	protected virtual void OnFirstPersonModeSet()
-	{
-	}
-
-	protected virtual void OnThirdPersonModeSet()
-	{
-	}
-
-	protected virtual void OnFreeCamModeSet()
-	{
 	}
 
 	protected virtual void OnFixedModeSet()
