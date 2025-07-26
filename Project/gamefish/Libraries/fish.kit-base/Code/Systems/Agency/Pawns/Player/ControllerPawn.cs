@@ -6,7 +6,7 @@ namespace GameFish;
 public abstract partial class ControllerPawn : BasePawn
 {
 	/// <summary>
-	/// A player-intended mobile extension of will.
+	/// The unfortunately less than ideal built-in controller.
 	/// </summary>
 	[Property]
 	[Feature( FEATURE_PAWN )]
