@@ -70,7 +70,8 @@ partial class PawnView
 
 			var trAll = Scene.Trace.Sphere( CollisionRadius, startPos, endPos )
 				.IgnoreGameObject( pawn.GameObject )
-				.WithAnyTags( CollisionTags )
+				.WithAnyTags( CollisionHitTags )
+				.WithoutTags( CollisionIgnoreTags )
 				.RunAll();
 
 			foreach ( var tr in trAll )

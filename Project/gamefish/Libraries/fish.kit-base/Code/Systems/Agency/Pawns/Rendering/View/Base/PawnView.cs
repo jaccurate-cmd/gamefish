@@ -14,6 +14,47 @@ public partial class PawnView : Module<BasePawn>, ISimulate
 	public const string TRANSITIONING = "Transitioning";
 
 	/// <summary>
+	/// If true: the view will be traced from aiming origin to the destination and collide according to its settings.
+	/// </summary>
+	[Property]
+	[Title( "Enabled" )]
+	[Feature( VIEW ), Group( COLLISION )]
+	public virtual bool Collision { get; set; } = true;
+
+	/// <summary>
+	/// Radius of the sphere collider used when tracing.
+	/// </summary>
+	[Property]
+	[Title( "Radius" )]
+	[Range( 1f, 64f, clamped: false )]
+	[Feature( VIEW ), Group( COLLISION )]
+	public virtual float CollisionRadius { get; set; } = 16f;
+
+	/// <summary>
+	/// If true: collide with objects we have explicit ownership over.
+	/// </summary>
+	[Property]
+	[Title( "Hit Owned" )]
+	[Feature( VIEW ), Group( COLLISION )]
+	public virtual bool CollideOwned { get; set; } = false;
+
+	/// <summary>
+	/// Tags of objects that will obstruct the camera view.
+	/// </summary>
+	[Property]
+	[Title( "Hit Tags" )]
+	[Feature( VIEW ), Group( COLLISION )]
+	public TagSet CollisionHitTags { get; set; } = ["solid"];
+
+	/// <summary>
+	/// Tags of objects that will obstruct the camera view.
+	/// </summary>
+	[Property]
+	[Title( "Hit Tags" )]
+	[Feature( VIEW ), Group( COLLISION )]
+	public TagSet CollisionIgnoreTags { get; set; } = [BaseEntity.TAG_PAWN];
+
+	/// <summary>
 	/// The pawn we're looking at/through.
 	/// </summary>
 	public virtual BasePawn Pawn => ModuleParent;

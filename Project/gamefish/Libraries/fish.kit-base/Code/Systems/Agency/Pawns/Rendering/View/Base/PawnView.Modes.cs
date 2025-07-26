@@ -77,6 +77,7 @@ partial class PawnView
 
 	[Sync]
 	[Property]
+	[Title( "Active Mode" )]
 	[Feature( VIEW ), Group( PERSPECTIVE )]
 	public Perspective Mode
 	{

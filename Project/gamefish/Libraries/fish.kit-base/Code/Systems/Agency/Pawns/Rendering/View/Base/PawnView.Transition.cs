@@ -7,7 +7,7 @@ partial class PawnView
 	/// </summary>
 	[Property]
 	[Title( "Speed" )]
-	[Feature( VIEW ), Group( TRANSITIONING )]
+	[Feature( MODES ), Group( TRANSITIONING )]
 	public float TransitionSpeed { get; set; } = 3f;
 
 	/// <summary>
@@ -15,7 +15,7 @@ partial class PawnView
 	/// </summary>
 	[Property]
 	[Title( "Smoothing" )]
-	[Feature( VIEW ), Group( TRANSITIONING )]
+	[Feature( MODES ), Group( TRANSITIONING )]
 	public float TransitionSmoothing { get; set; } = 0.35f;
 
 	/// <summary>
@@ -23,7 +23,7 @@ partial class PawnView
 	/// </summary>
 	[Title( "Relative Offset" )]
 	[Property, ReadOnly, InlineEditor]
-	[Feature( VIEW ), Group( TRANSITIONING )]
+	[Feature( MODES ), Group( TRANSITIONING )]
 	public Offset Relative
 	{
 		get => _relative;
