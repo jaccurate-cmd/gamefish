@@ -68,6 +68,8 @@ public abstract partial class BasePawn : PhysicsEntity
 	{
 		base.OnEnabled();
 
+		Tags?.Add( TAG_PAWN );
+
 		UpdateNetworking();
 	}
 
