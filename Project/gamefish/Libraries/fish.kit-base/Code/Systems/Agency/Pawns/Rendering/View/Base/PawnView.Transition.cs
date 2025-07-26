@@ -64,7 +64,7 @@ partial class PawnView
 	/// <summary>
 	/// Instantly ends the transition. Might cause visible snapping if done midway!
 	/// </summary>
-	protected virtual void StopTransition()
+	public virtual void StopTransition()
 	{
 		Previous = null;
 		TransitionFraction = 1f;

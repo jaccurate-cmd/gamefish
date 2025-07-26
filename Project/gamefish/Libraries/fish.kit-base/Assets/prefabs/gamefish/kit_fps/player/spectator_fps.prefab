@@ -57,8 +57,7 @@
         "SpectatePreviousAction": "Attack1",
         "SpectateTargetAction": "Use",
         "Spectating": null,
-        "StopSpectatingAction": "Reload",
-        "TogglePerspectiveAction": "Jump",
+        "StopSpectatingAction": "Use",
         "Velocity": "0,0,0",
         "View": {
           "_type": "component",
@@ -103,7 +102,7 @@
             "CustomSetAction": null,
             "CustomUpdateAction": null,
             "CycleModeBackwardAction": null,
-            "CycleModeForwardAction": "View",
+            "CycleModeForwardAction": "Jump",
             "DebugMode": false,
             "DefaultMode": "FirstPerson",
             "DistanceRange": {
@@ -117,7 +116,10 @@
             },
             "InitialDistance": 100,
             "Mode": "FirstPerson",
-            "ModeList": {},
+            "ModeList": {
+              "FirstPerson": true,
+              "ThirdPerson": true
+            },
             "ModuleParent": {
               "_type": "component",
               "component_id": "38fcaa19-216d-4fde-844e-003465ac2acc",

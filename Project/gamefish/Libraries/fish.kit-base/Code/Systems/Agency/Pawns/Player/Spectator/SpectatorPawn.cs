@@ -64,15 +64,6 @@ public partial class SpectatorPawn : BasePawn
 	public virtual string SpectateNextAction { get; set; } = "Attack2";
 	public virtual bool AllowSpectateNext => !string.IsNullOrWhiteSpace( SpectateNextAction );
 
-	/// <summary>
-	/// The button that toggles first/third person(if any).
-	/// </summary>
-	[Property]
-	[InputAction]
-	[Title( "Toggle Perspective" )]
-	[Feature( SPECTATING ), Group( INPUT )]
-	public virtual string TogglePerspectiveAction { get; set; } = "Jump";
-
 	/// <summary> Spectators can never be spectated. </summary>
 	public override bool AllowSpectators => false;
 
@@ -98,14 +89,32 @@ public partial class SpectatorPawn : BasePawn
 
 		HandleInput();
 
+		var view = View;
+
+		if ( Spectating.IsValid() && view.IsValid() )
+		{
+			var tView = View.GetViewTransform();
+
+			WorldPosition = tView.Position;
+			WorldRotation = tView.Rotation;
+		}
+
 		if ( !Spectating.IsValid() )
 			DoFlying( in deltaTime );
 	}
 
 	protected virtual void HandleInput()
 	{
-		if ( AllowSpectateTarget && Input.Down( SpectateTargetAction ) )
-			SpectateTarget();
+		if ( Spectating.IsValid() )
+		{
+			if ( AllowStopSpectating && Input.Pressed( StopSpectatingAction ) )
+				StopSpectating();
+		}
+		else
+		{
+			if ( AllowSpectateTarget && Input.Pressed( SpectateTargetAction ) )
+				SpectateTarget();
+		}
 
 		if ( AllowSpectatePrevious && Input.Pressed( SpectatePreviousAction ) )
 			SpectatePrevious();
@@ -125,15 +134,8 @@ public partial class SpectatorPawn : BasePawn
 		if ( !target.IsValid() )
 		{
 			View.Mode = PawnView.Perspective.FirstPerson;
-			return;
+			// View.StopTransition();
 		}
-
-		WorldPosition = View.WorldPosition;
-		WorldRotation = View.WorldRotation;
-
-		View.Mode = target.View.IsValid()
-			? target.View.Mode
-			: PawnView.Perspective.ThirdPerson;
 	}
 
 	public override bool CanSpectate( BasePawn target )
@@ -201,6 +203,7 @@ public partial class SpectatorPawn : BasePawn
 
 		var target = targets.ElementAtOrDefault( iNext );
 
+		// TODO: Upon failure remove failed target and continue cycling until empty.
 		if ( !TrySpectate( target ) )
 			this.Warn( $"failed to spectate target:[{target}] index:[{iNext}]" );
 	}
