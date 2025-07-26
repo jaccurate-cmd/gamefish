@@ -112,7 +112,7 @@ public partial class SpectatorPawn : BasePawn
 	[Title( "Collision Radius" )]
 	[Feature( SPECTATING ), Group( FLYING )]
 	[ShowIf( nameof( FlyingCollision ), true )]
-	public float FlyingCollisionRadius { get; set; } = 64f;
+	public float FlyingCollisionRadius { get; set; } = 16f;
 
 	/// <summary>
 	/// Collide with objects using these tags.

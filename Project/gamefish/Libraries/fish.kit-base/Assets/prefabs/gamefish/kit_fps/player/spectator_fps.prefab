@@ -23,7 +23,7 @@
         "AscendAction": "Jump",
         "DescendAction": "Duck",
         "FlyingCollision": false,
-        "FlyingCollisionRadius": 32,
+        "FlyingCollisionRadius": 16,
         "FlyingEnabled": true,
         "FlyingFriction": {
           "Value": 2,
