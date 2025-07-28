@@ -3,22 +3,27 @@ using System;
 namespace GameFish;
 
 /// <summary>
-/// Convenience methods for randomization. <br />
-/// Less typing means cleaner code. 🎲
+/// 🎲 Convenience methods for randomization.
 /// </summary>
-public static class Random
+public static partial class Random
 {
 	/// <returns> True or false. </returns>
 	public static bool CoinFlip => Game.Random.Int( 0, 1 ) == 1;
 
 	/// <returns> Integer between 0 and <paramref name="max"/>. </returns>
-	public static int Int( int max ) => Game.Random.Int( max );
+	public static int Int( int max = 1 ) => Game.Random.Int( max );
 	/// <returns> Integer between <paramref name="a"/> and <paramref name="b"/>. </returns>
 	public static int Int( int a, int b ) => Game.Random.Int( a, b );
+
 	/// <returns> Float between 0 and <paramref name="max"/>. </returns>
-	public static float Float( float max ) => Game.Random.Float( max );
+	public static float Float( float max = 1f ) => Game.Random.Float( max );
 	/// <returns> Float between <paramref name="a"/> and <paramref name="b"/>. </returns>
 	public static float Float( float a, float b ) => Game.Random.Float( a, b );
+
+	/// <returns> Double between 0 and <paramref name="max"/>. </returns>
+	public static double Double( double max = 1d ) => Game.Random.Double( 0, max );
+	/// <returns> Double between <paramref name="a"/> and <paramref name="b"/>. </returns>
+	public static double Double( double a, double b ) => Game.Random.Double( a, b );
 
 	public static float From( RangedFloat range )
 	{
