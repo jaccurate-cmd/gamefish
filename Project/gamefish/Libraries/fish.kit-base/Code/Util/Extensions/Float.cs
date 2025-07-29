@@ -14,7 +14,11 @@ public static partial class GameFish
 	/// <see cref="MathF.Sign"/>
 	/// </summary>
 	public static int Sign( this float n )
-		=> MathF.Sign( n );
+		=> float.IsNaN( n ) ? 0 : MathF.Sign( n );
+
+	/// <returns> A sign of that's never zero(will be 1 instead). </returns>
+	public static float Direction( this float n )
+		=> n.Sign() == 1 ? 1 : -1;
 
 	/// <summary>
 	/// <see cref="MathX.Clamp"/>
@@ -37,4 +41,12 @@ public static partial class GameFish
 	/// <returns> A number that's at least zero. </returns>
 	public static float Positive( this float n )
 		=> n > 0f ? n : 0f;
+
+	/// <returns> A number that's at most zero. </returns>
+	public static float Negative( this float n )
+		=> n < 0f ? n : float.NegativeZero;
+
+	/// <returns> A number that's at least this far away from zero. </returns>
+	public static float NonZero( this float n, in float epsilon = float.Epsilon )
+		=> n.Abs() < epsilon ? epsilon * n.Direction() : n;
 }
