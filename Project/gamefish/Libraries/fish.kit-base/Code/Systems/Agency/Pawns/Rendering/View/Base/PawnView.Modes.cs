@@ -88,7 +88,9 @@ partial class PawnView
 				return;
 
 			_mode = value;
-			OnSetPerspective( in value );
+
+			if ( this.IsOwner() )
+				OnSetPerspective( in value );
 		}
 	}
 
