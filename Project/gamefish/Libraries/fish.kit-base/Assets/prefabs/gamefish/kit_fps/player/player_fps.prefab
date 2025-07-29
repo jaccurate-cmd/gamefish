@@ -762,7 +762,7 @@
             "Collision": true,
             "CollisionHitTags": "solid",
             "CollisionIgnoreTags": "pawn",
-            "CollisionRadius": 16,
+            "CollisionRadius": 8,
             "CustomSetAction": null,
             "CustomUpdateAction": null,
             "CycleModeBackwardAction": null,
@@ -774,10 +774,6 @@
               "Max": 500
             },
             "EyeAngles": "0,0,0",
-            "FirstPersonRange": {
-              "Min": 15,
-              "Max": 30
-            },
             "InitialDistance": 100,
             "Mode": "FirstPerson",
             "ModeList": {

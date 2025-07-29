@@ -28,7 +28,8 @@ public partial class PawnView : Module<BasePawn>, ISimulate
 	[Title( "Radius" )]
 	[Range( 1f, 64f, clamped: false )]
 	[Feature( VIEW ), Group( COLLISION )]
-	public virtual float CollisionRadius { get; set; } = 16f;
+	public virtual float CollisionRadius { get; set; } = 8f;
+	public virtual float GetCollisionRadius() => CollisionRadius * WorldScale.x.NonZero();
 
 	/// <summary>
 	/// If true: collide with objects we have explicit ownership over.

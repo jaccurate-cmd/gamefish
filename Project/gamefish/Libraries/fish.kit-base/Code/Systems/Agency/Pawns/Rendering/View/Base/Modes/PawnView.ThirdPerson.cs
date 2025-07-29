@@ -67,8 +67,9 @@ partial class PawnView
 		{
 			var startPos = EyePosition;
 			var endPos = startPos - (aimDir * CurrentDistance);
+			var radius = GetCollisionRadius();
 
-			var trAll = Scene.Trace.Sphere( CollisionRadius, startPos, endPos )
+			var trAll = Scene.Trace.Sphere( radius, startPos, endPos )
 				.IgnoreGameObject( pawn.GameObject )
 				.WithAnyTags( CollisionHitTags )
 				.WithoutTags( CollisionIgnoreTags )
