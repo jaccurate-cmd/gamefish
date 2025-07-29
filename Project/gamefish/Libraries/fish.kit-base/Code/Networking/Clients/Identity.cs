@@ -77,6 +77,7 @@ public partial struct Identity : IValid
 
 		Type = cl.IsPlayer ? ClientType.User : ClientType.Bot;
 
+		Client = cl;
 		Connection = cn;
 
 		Server.Instance?.RegisterIdentity( ref this );

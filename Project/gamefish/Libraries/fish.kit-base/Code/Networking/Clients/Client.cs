@@ -38,6 +38,8 @@ public partial class Client : Agent
 	public override Connection Connection => _id.Connection;
 
 	/// <summary> Is the identity's connection defined and active? </summary>
+	[ReadOnly]
+	[Property, Feature( FEATURE_AGENT )]
 	public override bool Connected => Connection is not null && Connection.IsActive;
 
 	public override string Name => Connection?.DisplayName ?? base.Name;
