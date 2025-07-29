@@ -35,7 +35,7 @@ public static partial class Random
 		=> range.GetRandom();
 
 	/// <returns> A random value from any kind of list(or <paramref name="default"/>). </returns>
-	public static T From<T>( IEnumerable<T> list, T @default = default )
+	public static T From<T>( IEnumerable<T> list, in T @default = default )
 	{
 		if ( list is null )
 			return @default;
@@ -45,20 +45,48 @@ public static partial class Random
 		if ( count <= 0 )
 			return @default;
 
-		return list.ElementAtOrDefault( count.Random() );
+		return list.ElementAt( (count - 1).Random() );
 	}
 
-	/// <returns> A random value from a <see cref="List{T}"/>(or <paramref name="default"/>). </returns>
-	public static T From<T>( List<T> list, T @default = default )
+	/// <returns> A random value from an <see cref="IList{T}"/>(or <paramref name="default"/>). </returns>
+	public static T From<T>( IList<T> list, in T @default = default )
 	{
 		if ( list is null )
 			return @default;
 
-		return Game.Random.FromList( list, @default );
+		return From( list as IEnumerable<T>, @default );
+	}
+
+	/// <summary>
+	/// Tries to pick and then remove a random <typeparamref name="T"/> from an <see cref="IList{T}"/>.
+	/// </summary>
+	/// <returns> A random <typeparamref name="T"/> from a <see cref="IList{T}"/>. </returns>
+	public static bool TryTake<T>( IList<T> list, out T value )
+	{
+		if ( list is null )
+		{
+			value = default;
+			return false;
+		}
+
+		var count = list.Count;
+
+		if ( count <= 0 )
+		{
+			value = default;
+			return false;
+		}
+
+		var iRandom = (count - 1).Random();
+
+		value = list.ElementAt( iRandom );
+		list.RemoveAt( iRandom );
+
+		return true;
 	}
 
 	/// <returns> A random value from an <see cref="Array"/>(or <paramref name="default"/>). </returns>
-	public static T From<T>( T[] array, T @default = default )
+	public static T From<T>( T[] array, in T @default = default )
 	{
 		if ( array is null )
 			return @default;

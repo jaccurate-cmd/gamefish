@@ -19,4 +19,25 @@ public static partial class RandomExtensions
 			< 0f => global::GameFish.Random.Float( n, 0f ),
 			_ => global::GameFish.Random.Float( 0f, n )
 		};
+
+	/// <summary>
+	/// A random value from any kind of list(or <paramref name="default"/>).
+	/// </summary>
+	/// <returns> An existing <typeparamref name="T"/>(or <paramref name="default"/>). </returns>
+	public static T PickRandom<T>( this IEnumerable<T> list, T @default = default )
+		=> global::GameFish.Random.From( list, @default );
+
+	/// <summary>
+	/// A random value from an <see cref="IList{T}"/>(or <paramref name="default"/>).
+	/// </summary>
+	/// <returns> An existing <typeparamref name="T"/>(or <paramref name="default"/>). </returns>
+	public static T TakeRandom<T>( this IList<T> list, T @default = default )
+		=> global::GameFish.Random.TryTake( list, out T value ) ? value : @default;
+
+	/// <summary>
+	/// Tries to pick and then remove a random <typeparamref name="T"/> from an <see cref="IList{T}"/>.
+	/// </summary>
+	/// <returns> If a <typeparamref name="T"/> was found and thus removed. </returns>
+	public static bool TryTakeRandom<T>( this IList<T> list, out T value )
+		=> global::GameFish.Random.TryTake( list, out value );
 }
