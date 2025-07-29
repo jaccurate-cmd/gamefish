@@ -21,14 +21,14 @@ public static partial class RandomExtensions
 		};
 
 	/// <summary>
-	/// A random value from any kind of list(or <paramref name="default"/>).
+	/// Gets a random value from this list.
 	/// </summary>
 	/// <returns> An existing <typeparamref name="T"/>(or <paramref name="default"/>). </returns>
 	public static T PickRandom<T>( this IEnumerable<T> list, T @default = default )
 		=> global::GameFish.Random.From( list, @default );
 
 	/// <summary>
-	/// A random value from an <see cref="IList{T}"/>(or <paramref name="default"/>).
+	/// Gets and then removes a random <typeparamref name="T"/> from this list.
 	/// </summary>
 	/// <returns> An existing <typeparamref name="T"/>(or <paramref name="default"/>). </returns>
 	public static T TakeRandom<T>( this IList<T> list, T @default = default )

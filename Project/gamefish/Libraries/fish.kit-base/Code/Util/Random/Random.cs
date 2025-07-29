@@ -48,15 +48,6 @@ public static partial class Random
 		return list.ElementAt( (count - 1).Random() );
 	}
 
-	/// <returns> A random value from an <see cref="IList{T}"/>(or <paramref name="default"/>). </returns>
-	public static T From<T>( IList<T> list, in T @default = default )
-	{
-		if ( list is null )
-			return @default;
-
-		return From( list as IEnumerable<T>, @default );
-	}
-
 	/// <summary>
 	/// Tries to pick and then remove a random <typeparamref name="T"/> from an <see cref="IList{T}"/>.
 	/// </summary>
