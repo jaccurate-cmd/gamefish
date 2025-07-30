@@ -7,7 +7,7 @@ namespace GameFish;
 [EditorHandle( Icon = "person" )]
 public abstract partial class BasePawn : PhysicsEntity
 {
-	public const string FEATURE_PAWN = "🐴 Pawn";
+	public const string PAWN = "🐴 Pawn";
 
 	// public override string ToString()
 	// => $"{GetType().ToSimpleString( includeNamespace: false )}|Agent:{Agent?.ToString() ?? "none"}";
@@ -16,7 +16,7 @@ public abstract partial class BasePawn : PhysicsEntity
 	/// The agent controlling this pawn. Could be a player or NPC.
 	/// </summary>
 	[Sync( SyncFlags.FromHost )]
-	[Property, Feature( FEATURE_PAWN )]
+	[Property, Feature( PAWN )]
 	public Agent Agent
 	{
 		get => _owner;
@@ -25,7 +25,7 @@ public abstract partial class BasePawn : PhysicsEntity
 			if ( _owner == value )
 				return;
 
-			if ( value != null && !AllowOwnership( value ) )
+			if ( value is not null && !AllowOwnership( value ) )
 				return;
 
 			var old = _owner;
@@ -42,7 +42,7 @@ public abstract partial class BasePawn : PhysicsEntity
 	/// The thing with the model that does the stuff.
 	/// </summary>
 	[Property]
-	[Feature( FEATURE_PAWN ), Group( BaseActor.ACTOR )]
+	[Feature( PAWN ), Group( BaseActor.ACTOR )]
 	public BaseActor Actor
 	{
 		get => _actor.IsValid() ? _actor
@@ -53,27 +53,15 @@ public abstract partial class BasePawn : PhysicsEntity
 
 	protected BaseActor _actor;
 
+	protected override NetworkOrphaned NetworkOrphanedModeOverride => NetworkOrphaned.ClearOwner;
+
 	protected override void OnEnabled()
 	{
 		base.OnEnabled();
 
 		Tags?.Add( TAG_PAWN );
 
-		UpdateNetworking();
-	}
-
-	public void UpdateNetworking()
-	{
-		if ( !Networking.IsHost )
-			return;
-
-		GameObject?.NetworkSetup(
-			cn: Agent?.Connection,
-			orphanMode: NetworkOrphaned.ClearOwner,
-			ownerTransfer: OwnerTransfer.Fixed,
-			netMode: NetworkMode.Object,
-			ignoreProxy: true
-		);
+		UpdateNetworking( Agent?.Connection );
 	}
 
 	/// <summary>

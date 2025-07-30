@@ -2,21 +2,12 @@ namespace GameFish;
 
 partial class PawnView
 {
-	public bool HasFirstPersonMode => IsModeEnabled( Perspective.FirstPerson );
+	public bool HasFirstPersonMode => IsModeAllowed( Perspective.FirstPerson );
 
 	[Property]
 	[Feature( MODES )]
 	[Group( FIRST_PERSON ), Order( FIRST_PERSON_ORDER )]
 	public bool ShowViewModel { get; set; } = true;
-
-	/// <summary>
-	/// Used to manage pawn model fade and view model visibility.
-	/// </summary>
-	[Property]
-	[Feature( MODES )]
-	[Title( "Fade Range" )]
-	[Group( FIRST_PERSON ), Order( FIRST_PERSON_ORDER )]
-	public FloatRange FirstPersonRange { get; set; } = new( 15f, 30f );
 
 	protected virtual void OnFirstPersonModeSet()
 	{
@@ -24,12 +15,12 @@ partial class PawnView
 
 	protected virtual void SetFirstPersonModeTransform()
 	{
-		SetRelativeTransform();
+		SetTransformFromRelative();
 	}
 
 	protected virtual void OnFirstPersonModeUpdate( in float deltaTime )
 	{
-		var pawn = Pawn;
+		var pawn = TargetPawn;
 
 		if ( !pawn.IsValid() )
 			return;
@@ -74,6 +65,6 @@ partial class PawnView
 		if ( Mode != Perspective.FirstPerson )
 			return false;
 
-		return DistanceFromEye <= FirstPersonRange.Min;
+		return DistanceFromEye <= 5f;
 	}
 }

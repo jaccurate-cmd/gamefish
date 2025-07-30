@@ -2,13 +2,11 @@ namespace GameFish;
 
 partial class BasePawn
 {
-	public const string SPECTATING = "👻 Spectating";
-
 	/// <summary>
 	/// The central view manager for the pawn.
 	/// </summary>
 	[Property]
-	[Feature( FEATURE_PAWN ), Group( PawnView.VIEW )]
+	[Feature( PAWN ), Group( PawnView.VIEW )]
 	public PawnView View
 	{
 		get => _view.IsValid() ? _view
@@ -20,64 +18,55 @@ partial class BasePawn
 	protected PawnView _view;
 
 	[Property]
-	[Feature( FEATURE_PAWN ), Group( PawnView.VIEW )]
+	[Feature( PAWN ), Group( PawnView.VIEW )]
 	public ViewModel ViewModel => View?.ViewModel;
 
-	/// <summary>
-	/// If true: indicate that spectators can spectate this pawn. <br />
-	/// If false: all spectators are blocked.
-	/// </summary>
-	[Property]
-	[Feature( SPECTATING )]
-	public virtual bool AllowSpectators { get; set; } = false;
+	public virtual Vector3 EyePosition { get => WorldPosition; set => WorldPosition = value; }
+	public virtual Rotation EyeRotation { get => WorldRotation; set => WorldRotation = value; }
 
+	public Transform EyeTransform => new( EyePosition, EyeRotation, 1f );
+
+	public Vector3 EyeForward => EyeRotation.Forward;
+
+	/// <summary>
+	/// Tells the view manager to process its transitions and offsets.
+	/// </summary>
 	public virtual void UpdateView( in float deltaTime )
 	{
-		if ( !View.IsValid() )
-			return;
-
-		View.FrameSimulate( deltaTime );
+		if ( View.IsValid() )
+			View.FrameSimulate( deltaTime );
 	}
 
 	/// <summary>
-	/// Lets this pawn manipulate a camera.
+	/// Lets this pawn manipulate what is probably the main camera.
 	/// </summary>
 	public virtual void ApplyView( CameraComponent cam, ref Transform tView )
 	{
 		tView = View?.GetViewTransform() ?? tView;
 	}
 
-	/// <returns> If this can spectate a target. </returns>
-	public virtual bool CanSpectate( BasePawn target )
-		=> false;
-
-	/// <param name="spec"> A spectator. </param>
-	/// <returns> If the spectator can target this pawn. </returns>
-	public virtual bool AllowSpectator( BasePawn spec )
+	/// <summary>
+	/// Tells this pawn where they should be looking. <br />
+	/// Now's a good time to update related components. <br />
+	/// Typically called by the view manager.
+	/// </summary>
+	public virtual void SetLookRotation( in Rotation rLook )
 	{
-		if ( !this.IsValid() || !AllowSpectators )
-			return false;
-
-		if ( !spec.IsValid() || spec == this )
-			return false;
-
-		return true;
-	}
-
-	/// <param name="target"> The pawn we're trying to spectate. </param>
-	/// <returns> If the spectate attempt was successful. </returns>
-	public virtual bool TrySpectate( BasePawn target )
-	{
-		// Only spectators can spectate.
-		return false;
 	}
 
 	/// <summary>
-	/// Kicks the spectator out of the fuggen thing, man.
+	/// Called when the view targeting this pawn has finished updating. <br />
+	/// It may be a view spectating this pawn, not the child view. <br />
+	/// You should process clientside effects like model fading here.
 	/// </summary>
-	[Button]
-	[Feature( SPECTATING ), Group( DEBUG )]
-	public virtual void StopSpectating()
+	public virtual void OnViewUpdate( PawnView view )
 	{
+		if ( !view.IsValid() )
+			return;
+
+		var model = Actor?.Model;
+
+		if ( model.IsValid() )
+			model.OnViewUpdate( view );
 	}
 }

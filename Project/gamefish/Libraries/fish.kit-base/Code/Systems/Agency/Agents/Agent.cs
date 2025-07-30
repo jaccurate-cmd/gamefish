@@ -6,7 +6,7 @@ namespace GameFish;
 /// </summary>
 [Icon( "psychology" )]
 [EditorHandle( Icon = "psychology" )]
-public abstract partial class Agent : Component
+public abstract partial class Agent : BaseEntity
 {
 	public const string FEATURE_AGENT = "🧠 Agent";
 	public const string GROUP_ID = "🆔 Identity";
@@ -61,21 +61,7 @@ public abstract partial class Agent : Component
 	{
 		base.OnEnabled();
 
-		UpdateNetworking();
-	}
-
-	public virtual void UpdateNetworking()
-	{
-		if ( !Networking.IsHost )
-			return;
-
-		GameObject?.NetworkSetup(
-			cn: Connection,
-			orphanMode: NetworkOrphaned.Destroy,
-			ownerTransfer: OwnerTransfer.Fixed,
-			netMode: NetworkMode.Object,
-			ignoreProxy: false
-		);
+		UpdateNetworking( Connection );
 	}
 
 	protected override void OnDestroy()

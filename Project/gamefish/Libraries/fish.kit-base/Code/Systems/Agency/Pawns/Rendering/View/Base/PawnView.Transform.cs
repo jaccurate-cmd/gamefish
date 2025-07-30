@@ -14,49 +14,31 @@ partial class PawnView
 		return WorldTransform;
 	}
 
+	/// <summary>
+	/// Applies current offset/transition effects to the view's transform.
+	/// </summary>
 	public virtual void UpdateTransform()
 	{
 		UpdateModeTransform();
 	}
 
 	/// <summary>
-	/// Sets the transform safely using <see cref="Relative"/> and with transition support.
+	/// Allows this view to specify the origin from which it may offset from. <br />
+	/// By default this is <see cref="TargetPawn"/>'s eye transform.
 	/// </summary>
-	protected virtual void SetRelativeTransform()
+	/// <returns> The base transform to offset from. </returns>
+	public virtual Transform GetOrigin()
 	{
-		var pawn = Pawn;
+		var targetPawn = TargetPawn;
+
+		var pawn = targetPawn.IsValid()
+			? targetPawn
+			: ParentPawn;
 
 		if ( !pawn.IsValid() )
-			return;
+			return global::Transform.Zero;
 
-		var tEye = EyeTransform;
-
-		if ( PreviousTransform is Transform prevTrans )
-		{
-			// Smoothed transitioning.
-			var tRelative = Relative.ToWorld( tEye );
-			var tLerped = prevTrans.LerpTo( tRelative, TransitionFraction );
-
-			TrySetPosition( tLerped.Position );
-			TrySetRotation( tLerped.Rotation );
-		}
-		else if ( PreviousOffset is Offset prevOffset )
-		{
-			// Smoothed transitioning.
-			var offsLerped = prevOffset.LerpTo( Relative, TransitionFraction );
-			var tLerped = offsLerped.ToWorld( tEye );
-
-			TrySetPosition( tLerped.Position );
-			TrySetRotation( tLerped.Rotation );
-		}
-		else
-		{
-			// No transitioning.
-			var tRelative = Relative.ToWorld( tEye );
-
-			TrySetPosition( tRelative.Position );
-			TrySetRotation( tRelative.Rotation );
-		}
+		return pawn.EyeTransform;
 	}
 
 	/// <summary>

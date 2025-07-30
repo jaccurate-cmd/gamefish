@@ -37,14 +37,14 @@ partial class PawnView
 	protected Offset _relative;
 
 	/// <summary>
-	/// The previous world position and rotation to transition from.
-	/// </summary>
-	public Transform? PreviousTransform { get; set; }
-
-	/// <summary>
 	/// The previous relative position and rotation to transition from.
 	/// </summary>
 	public Offset? PreviousOffset { get; set; }
+
+	/// <summary>
+	/// The previous world position to transition from(optional).
+	/// </summary>
+	public Vector3? PreviousPosition { get; set; }
 
 	public virtual float TransitionFraction
 	{
@@ -59,23 +59,17 @@ partial class PawnView
 	/// <summary>
 	/// Begins a transition given the current position of this view.
 	/// </summary>
-	public virtual void StartTransition( bool isRelative = true )
+	public virtual void StartTransition( in bool useWorldPosition = false )
 	{
-		var pawn = Pawn;
+		var pawn = TargetPawn;
 
 		if ( !pawn.IsValid() )
 			return;
 
-		if ( isRelative )
-		{
-			PreviousTransform = null;
-			PreviousOffset = new( pawn.EyeTransform.ToLocal( WorldTransform ) );
-		}
-		else
-		{
-			PreviousOffset = null;
-			PreviousTransform = WorldTransform;
-		}
+		var tWorld = WorldTransform;
+
+		PreviousPosition = useWorldPosition ? WorldPosition : null;
+		PreviousOffset = new( GetOrigin().ToLocal( tWorld ) );
 
 		TransitionFraction = 0f;
 		_transVel = 0f;
@@ -86,15 +80,15 @@ partial class PawnView
 	/// </summary>
 	public virtual void StopTransition()
 	{
-		PreviousTransform = null;
+		PreviousPosition = null;
 		PreviousOffset = null;
 
 		TransitionFraction = 1f;
 	}
 
-	protected virtual void UpdateTransition()
+	protected virtual void UpdateTransition( in float deltaTime )
 	{
-		if ( !PreviousTransform.HasValue && !PreviousOffset.HasValue )
+		if ( !PreviousOffset.HasValue )
 			return;
 
 		TransitionFraction = MathX.SmoothDamp( TransitionFraction, 1f, ref _transVel, TransitionSmoothing, Time.Delta )
@@ -102,8 +96,43 @@ partial class PawnView
 
 		if ( TransitionFraction.AlmostEqual( 1f ) )
 		{
-			PreviousTransform = null;
+			TransitionFraction = 1f;
+
+			PreviousPosition = null;
 			PreviousOffset = null;
+		}
+	}
+
+	/// <summary>
+	/// Sets the transform safely using <see cref="Relative"/> with transition support.
+	/// </summary>
+	protected virtual void SetTransformFromRelative()
+	{
+		var tOrigin = GetOrigin();
+
+		if ( PreviousOffset is Offset prevOffset )
+		{
+			// Smoothed transitioning.
+			var offsLerped = prevOffset.LerpTo( Relative, TransitionFraction );
+
+			var tLerped = offsLerped.ToWorld( tOrigin );
+
+			if ( PreviousPosition is Vector3 prevPos )
+			{
+				var tRelative = Relative.ToWorld( tOrigin );
+				tLerped.Position = prevPos.LerpTo( tRelative.Position, TransitionFraction );
+			}
+
+			TrySetPosition( tLerped.Position );
+			TrySetRotation( tLerped.Rotation );
+		}
+		else
+		{
+			// No transitioning.
+			var tRelative = Relative.ToWorld( tOrigin );
+
+			TrySetPosition( tRelative.Position );
+			TrySetRotation( tRelative.Rotation );
 		}
 	}
 }

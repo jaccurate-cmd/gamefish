@@ -84,7 +84,7 @@ partial class PawnView
 
 	protected virtual void OnFreeCamModeUpdate( in float deltaTime )
 	{
-		var pawn = Pawn;
+		var pawn = TargetPawn;
 
 		if ( !pawn.IsValid() )
 			return;

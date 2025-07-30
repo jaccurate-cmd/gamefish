@@ -46,7 +46,7 @@ partial class PawnView
 	{
 		try
 		{
-			CustomUpdateAction( Pawn, this );
+			CustomUpdateAction( TargetPawn, this );
 		}
 		catch ( Exception e )
 		{

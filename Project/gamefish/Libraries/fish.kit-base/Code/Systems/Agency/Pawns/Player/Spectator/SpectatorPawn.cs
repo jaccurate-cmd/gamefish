@@ -78,6 +78,11 @@ public partial class SpectatorPawn : BasePawn
 	[Feature( DEBUG ), Group( PHYSICS )]
 	public override Vector3 Velocity { get; set; }
 
+	/// <summary>
+	/// Always destroy spectator pawns upon losing them.
+	/// </summary>
+	protected override NetworkOrphaned NetworkOrphanedModeOverride => NetworkOrphaned.Destroy;
+
 	protected override void OnEnabled()
 	{
 		base.OnEnabled();
@@ -85,16 +90,18 @@ public partial class SpectatorPawn : BasePawn
 		Tags?.Add( TAG_SPECTATOR );
 	}
 
+	protected override void OnTaken( Agent old, Agent agent )
+	{
+		base.OnTaken( old, agent );
+
+		View?.StartTransition();
+	}
+
 	public override void FrameSimulate( in float deltaTime )
 	{
 		base.FrameSimulate( deltaTime );
 
 		HandleInput();
-
-		var view = View;
-
-		if ( Spectating.IsValid() && view.IsValid() )
-			view.EyeRotation = Spectating.EyeRotation;
 
 		if ( !Spectating.IsValid() )
 			DoFlying( in deltaTime );
@@ -125,11 +132,15 @@ public partial class SpectatorPawn : BasePawn
 	/// </summary>
 	protected virtual void OnSpectatingSet( BasePawn prev, BasePawn next )
 	{
-		if ( !this.IsOwner() || !View.IsValid() )
+		if ( !this.IsOwner() )
 			return;
 
-		View.StartTransition();
-		View.UpdateTransform();
+		var view = View;
+
+		if ( !view.IsValid() )
+			return;
+
+		view.StartTransition( useWorldPosition: true );
 	}
 
 	public override bool CanSpectate( BasePawn target )

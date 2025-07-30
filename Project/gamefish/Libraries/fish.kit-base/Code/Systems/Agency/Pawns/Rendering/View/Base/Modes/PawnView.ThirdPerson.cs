@@ -2,17 +2,17 @@ namespace GameFish;
 
 partial class PawnView
 {
-	public bool HasThirdPersonMode => IsModeEnabled( Perspective.ThirdPerson );
+	public virtual bool HasThirdPersonMode => IsModeAllowed( Perspective.ThirdPerson );
 
 	[Property]
 	[Feature( MODES )]
 	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
-	public float? InitialDistance { get; set; } = 100f;
+	public virtual float? InitialDistance { get; set; } = 100f;
 
 	[Property]
 	[Feature( MODES )]
 	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
-	public FloatRange DistanceRange { get; set; } = new( 50f, 300f );
+	public virtual FloatRange DistanceRange { get; set; } = new( 50f, 300f );
 
 	/// <summary>
 	/// Sensitivity of the mouse wheel when used to change the distance. <br />
@@ -22,51 +22,55 @@ partial class PawnView
 	[Property]
 	[Feature( MODES )]
 	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
-	public float ScrollSensitivity { get; set; } = 5f;
+	public virtual float ScrollSensitivity { get; set; } = 15f;
 
 	/// <summary>
-	/// A value that is passed to <see cref="MathX.Lerp(float,float,float,bool)"/>. <br />
-	/// If <c>0 or less</c>: disable smoothing altogether 
+	/// How quickly scrolling is smoothed towards its intended distance. <br />
+	/// If zero or less: disable smoothing altogether.
 	/// </summary>
 	[Property]
 	[Feature( MODES )]
 	[Range( 0f, 20f, clamped: false )]
 	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
-	public float ScrollSmoothing { get; set; } = 5f;
+	public virtual float ScrollSpeed { get; set; } = 5f;
 
-	public float CurrentDistance { get; set; }
-	public float DesiredDistance { get; set; }
+	public virtual float CurrentDistance { get; set; }
+	public virtual float DesiredDistance { get; set; }
 
 	protected virtual void OnThirdPersonModeSet()
 	{
 		if ( InitialDistance.HasValue )
+		{
 			DesiredDistance = InitialDistance.Value;
+			CurrentDistance = DesiredDistance;
+		}
 	}
 
 	protected virtual void SetThirdPersonModeTransform()
 	{
-		SetRelativeTransform();
+		SetTransformFromRelative();
 	}
 
 	protected virtual void OnThirdPersonModeUpdate( in float deltaTime )
 	{
-		var pawn = Pawn;
+		var pawn = TargetPawn;
 
 		if ( !pawn.IsValid() )
 			return;
 
-		var aimDir = EyeForward;
+		var tOrigin = GetOrigin();
+		var aimDir = tOrigin.Forward;
 
 		DesiredDistance -= Input.MouseWheel.y * ScrollSensitivity;
 		DesiredDistance = DesiredDistance.Clamp( DistanceRange );
 
-		CurrentDistance = ScrollSmoothing > 0f
-			? CurrentDistance.LerpTo( DesiredDistance, ScrollSmoothing * deltaTime )
+		CurrentDistance = ScrollSpeed > 0f
+			? CurrentDistance.LerpTo( DesiredDistance, ScrollSpeed * deltaTime )
 			: DesiredDistance;
 
 		if ( Collision )
 		{
-			var startPos = EyePosition;
+			var startPos = tOrigin.Position;
 			var endPos = startPos - (aimDir * CurrentDistance);
 			var radius = GetCollisionRadius();
 

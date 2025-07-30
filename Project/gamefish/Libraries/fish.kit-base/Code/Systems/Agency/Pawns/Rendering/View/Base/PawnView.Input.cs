@@ -42,36 +42,48 @@ partial class PawnView
 	[Property]
 	[Range( 0, 180 )]
 	[Feature( INPUT ), Group( AIMING )]
+	[ShowIf( nameof( PitchClamping ), true )]
 	public FloatRange PitchRange { get; set; } = new( -89.9f, 89.9f );
 
-	[Sync]
+	/// <summary>
+	/// An Euler angle representing where this view is looking.
+	/// </summary>
 	[Property]
 	[Feature( INPUT ), Group( AIMING )]
 	public virtual Angles EyeAngles
 	{
-		get => _eyeAngles;
-		set => _eyeAngles = value.WithPitch( value.pitch.Clamp( PitchRange ) );
+		get => EyeRotation;
+		set => EyeRotation = PitchClamping
+			? value.WithPitch( value.pitch.Clamp( PitchRange ) )
+			: value;
 	}
-
-	protected Angles _eyeAngles;
 
 	/// <summary>
-	/// An actual rotation. Allows non-Euler fanciness. <br />
-	/// A more sophisticated solution would use Rotations instead of Euler angles
-	/// but I'm not doing that right now. I'm in a rush and it's not necessary yet.
+	/// An actual rotation. Allows non-Euler fanciness.
 	/// </summary>
+	[Sync]
 	public virtual Rotation EyeRotation
 	{
-		get => _eyeAngles;
-		set => EyeAngles = value;
+		get => _eyeRotation;
+		set
+		{
+			_eyeRotation = value;
+
+			var parentPawn = ParentPawn;
+
+			if ( parentPawn.IsValid() )
+				parentPawn.SetLookRotation( EyeRotation );
+		}
 	}
+
+	protected Rotation _eyeRotation = Rotation.Identity;
 
 	public Vector3 EyeForward => EyeRotation.Forward;
 
 	public virtual Vector3 EyePosition
 	{
-		get => Pawn?.EyePosition ?? WorldPosition;
-		set { if ( Pawn.IsValid() ) Pawn.EyePosition = value; }
+		get => TargetPawn?.EyePosition ?? WorldPosition;
+		set { if ( TargetPawn.IsValid() ) TargetPawn.EyePosition = value; }
 	}
 
 	public Transform EyeTransform => new( EyePosition, EyeRotation, WorldScale );
@@ -92,7 +104,15 @@ partial class PawnView
 
 	protected virtual void DoAiming()
 	{
-		EyeAngles += Input.AnalogLook;
+		var angLook = Input.AnalogLook;
+
+		Angles angAim = EyeAngles;
+
+		angAim.pitch = (angAim.pitch + angLook.pitch).Clamp( PitchRange );
+		angAim.yaw = (angAim.yaw + angLook.yaw).NormalizeDegrees();
+		angAim.roll = 0f;
+
+		EyeAngles = angAim;
 	}
 
 	protected virtual void DoModeCycling()

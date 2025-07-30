@@ -9,9 +9,9 @@
     "Scale": "1,1,1",
     "Tags": "spectator",
     "Enabled": true,
-    "NetworkMode": 2,
+    "NetworkMode": 1,
     "NetworkInterpolation": true,
-    "NetworkOrphaned": 0,
+    "NetworkOrphaned": 1,
     "OwnerTransfer": 1,
     "Components": [
       {
@@ -46,6 +46,9 @@
             "component_type": "SpectatorView"
           }
         ],
+        "NetworkingMode": "Object",
+        "NetworkOrphanedMode": "Destroy",
+        "NetworkTransferMode": "Fixed",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -79,12 +82,12 @@
         "__version": 1,
         "Flags": 0,
         "Name": "View",
-        "Position": "0,0,64",
+        "Position": "0,0,0",
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
         "Tags": "",
         "Enabled": true,
-        "NetworkMode": 2,
+        "NetworkMode": 1,
         "NetworkInterpolation": true,
         "NetworkOrphaned": 0,
         "OwnerTransfer": 1,
@@ -98,7 +101,7 @@
             "Collision": true,
             "CollisionHitTags": "solid",
             "CollisionIgnoreTags": "pawn",
-            "CollisionRadius": 16,
+            "CollisionRadius": 8,
             "CustomSetAction": null,
             "CustomUpdateAction": null,
             "CycleModeBackwardAction": null,
@@ -107,13 +110,9 @@
             "DefaultMode": "FirstPerson",
             "DistanceRange": {
               "Min": 50,
-              "Max": 500
+              "Max": 400
             },
-            "EyeAngles": "0,0,0",
-            "FirstPersonRange": {
-              "Min": 5,
-              "Max": 20
-            },
+            "EyeAngles": "-0,0,0",
             "InitialDistance": 100,
             "Mode": "FirstPerson",
             "ModeList": {
@@ -146,11 +145,11 @@
                 "Rotation": "0,0,0,0"
               }
             },
-            "ScrollSensitivity": 5,
-            "ScrollSmoothing": 5,
+            "ScrollSensitivity": 20,
+            "ScrollSpeed": 5,
             "ShowViewModel": true,
-            "TransitionSmoothing": 0.5,
-            "TransitionSpeed": 2,
+            "TransitionSmoothing": 0.7,
+            "TransitionSpeed": 3,
             "ViewModel": {
               "_type": "component",
               "component_id": "d326bee5-a470-48fd-b034-93639ccc7264",

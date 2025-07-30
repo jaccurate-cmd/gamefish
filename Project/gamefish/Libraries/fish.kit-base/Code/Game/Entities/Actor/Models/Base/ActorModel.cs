@@ -29,7 +29,7 @@ public abstract partial class ActorModel : Component
 
 	protected float _opacity;
 
-	public TimeUntil OpacityReset { get; set; }
+	public RealTimeUntil OpacityReset { get; set; }
 
 	public virtual Model Model { get => GetModel(); set => SetModel( value ); }
 
@@ -60,5 +60,23 @@ public abstract partial class ActorModel : Component
 		Opacity += Time.Delta * OpacitySpeed;
 	}
 
-	// public virtual void Set<T>( string key, T value ) { }
+	/// <summary>
+	/// Called from a pawn to manage things like distance fading.
+	/// </summary>
+	public virtual void OnViewUpdate( PawnView view )
+	{
+		if ( view.IsValid() )
+			SetOpacity( OpacityFromDistance( view.DistanceFromEye ) );
+	}
+
+	// Hardcoded for consistency but you can easily override this.
+	public virtual float OpacityFromDistance( in float distance )
+		=> (distance * WorldScale.x.NonZero( 0.1f )).Remap( 15f, 25f );
+
+	/// <summary>
+	/// Set an animation parameter on the model rendering component.
+	/// </summary>
+	public virtual void SetAnim<T>( in string key, in T value )
+	{
+	}
 }

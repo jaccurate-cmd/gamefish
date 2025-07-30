@@ -105,11 +105,11 @@ partial class PawnView
 		[Perspective.ThirdPerson] = true,
 	};
 
-	public virtual bool IsModeEnabled( Perspective mode )
+	public virtual bool IsModeAllowed( Perspective mode )
 		=> ModeList is not null && ModeList.TryGetValue( mode, out var bAllow ) && bAllow;
 
 	public virtual IEnumerable<Perspective> GetAllowedModes()
-		=> Enum.GetValues<Perspective>()?.Where( IsModeEnabled ) ?? [];
+		=> Enum.GetValues<Perspective>()?.Where( IsModeAllowed ) ?? [];
 
 	/// <summary>
 	/// Called whenever <see cref="Mode"/> is set to "Custom".
@@ -192,7 +192,7 @@ partial class PawnView
 	{
 		try
 		{
-			CustomSetAction( Pawn, this );
+			CustomSetAction( TargetPawn, this );
 		}
 		catch ( Exception e )
 		{

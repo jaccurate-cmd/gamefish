@@ -40,7 +40,7 @@ public partial class Client : Agent
 	/// <summary> Is the identity's connection defined and active? </summary>
 	[ReadOnly]
 	[Property, Feature( FEATURE_AGENT )]
-	public override bool Connected => Connection is not null && Connection.IsActive;
+	public override bool Connected => Connection is not null;// TEMP(lobby bug!): && Connection.IsActive;
 
 	public override string Name => Connection?.DisplayName ?? base.Name;
 
@@ -99,7 +99,7 @@ public partial class Client : Agent
 		id = new Identity( this, cn );
 		Identity = id;
 
-		UpdateNetworking();
+		UpdateNetworking( Connection );
 
 		this.Log( "assigned connection: " + cn );
 	}

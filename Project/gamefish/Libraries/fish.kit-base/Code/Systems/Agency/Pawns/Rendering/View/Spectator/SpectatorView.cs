@@ -1,24 +1,66 @@
 namespace GameFish;
 
 /// <summary>
-/// A <see cref="PawnView"/> that can look through a <see cref="SpectatorPawn"/> target's eyes.
+/// A <see cref="PawnView"/> that can look through a <see cref="global::GameFish.SpectatorPawn"/> target's eyes.
 /// </summary>
 public partial class SpectatorView : PawnView
 {
-	public SpectatorPawn Spectator => ModuleParent as SpectatorPawn;
+	public SpectatorPawn SpectatorPawn => ParentPawn as SpectatorPawn;
 
-	public override BasePawn Pawn => Spectator is SpectatorPawn spec && spec.IsValid()
-		? spec.Spectating ?? base.Pawn
-		: base.Pawn;
+	public override BasePawn TargetPawn => SpectatorPawn is SpectatorPawn spec && spec.IsValid()
+		? spec.Spectating.IsValid() ? spec.Spectating : spec
+		: null;
 
-	public override Angles EyeAngles
+	public override void FrameSimulate( in float deltaTime )
 	{
-		get => base.EyeAngles;
-		set => base.EyeAngles = value;
+		base.FrameSimulate( deltaTime );
+
+		EnsureFlyingMode();
 	}
 
-	public override void StartTransition( bool isRelative = false )
-		=> base.StartTransition( isRelative );
+	public override void CycleMode( in int dir )
+	{
+		base.CycleMode( dir );
+
+		EnsureFlyingMode();
+	}
+
+	public override Transform GetOrigin()
+	{
+		var targetPawn = TargetPawn;
+		var parentPawn = ParentPawn;
+
+		if ( !targetPawn.IsValid() )
+			return global::Transform.Zero;
+
+		if ( SpectatorPawn is SpectatorPawn spec && !spec.Spectating.IsValid() )
+			return WorldTransform.WithRotation( EyeRotation );
+
+		return Mode is not Perspective.FirstPerson
+			? targetPawn.EyeTransform.WithRotation( EyeRotation )
+			: targetPawn.EyeTransform;
+	}
+
+	protected override void DoAiming()
+	{
+		// Prevent aiming while spectating in first person.
+		/*
+		if ( Mode is Perspective.FirstPerson )
+			if ( SpectatorPawn is SpectatorPawn spec && spec.IsValid() )
+				if ( spec.Spectating.IsValid() )
+					return;
+		*/
+
+		base.DoAiming();
+	}
+
+	protected override void OnFirstPersonModeUpdate( in float deltaTime )
+	{
+		base.OnFirstPersonModeUpdate( deltaTime );
+
+		if ( SpectatorPawn is SpectatorPawn spec && spec.Spectating.IsValid() )
+			EyeRotation = spec.Spectating.EyeRotation;
+	}
 
 	/// <summary>
 	/// Makes sure we're in first person while not spectating someone.
@@ -26,7 +68,7 @@ public partial class SpectatorView : PawnView
 	/// <returns> If the mode was forced to first person. </returns>
 	protected bool EnsureFlyingMode()
 	{
-		var spec = Spectator;
+		var spec = SpectatorPawn;
 
 		// Ensure first person while not spectating someone.
 		if ( spec.IsValid() && !spec.Spectating.IsValid() )
@@ -39,25 +81,5 @@ public partial class SpectatorView : PawnView
 		}
 
 		return false;
-	}
-
-	public override void FrameSimulate( in float deltaTime )
-	{
-		base.FrameSimulate( deltaTime );
-
-		EnsureFlyingMode();
-	}
-
-	public override void CycleMode( in int dir )
-	{
-		/*var spec = Spectator;
-
-		if ( spec.IsValid() && !spec.Spectating.IsValid() )
-		{
-			Mode = Perspective.FirstPerson;
-			return;
-		}*/
-
-		base.CycleMode( dir );
 	}
 }

@@ -64,6 +64,7 @@ partial class BaseEquip
 
 	public virtual void OnEquip( PawnEquipment inv )
 	{
+		UpdateNetworking( inv?.ModuleParent?.Agent?.Connection );
 	}
 
 	public virtual void OnDrop( PawnEquipment inv )

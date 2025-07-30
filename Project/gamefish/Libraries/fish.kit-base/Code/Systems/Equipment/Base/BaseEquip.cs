@@ -145,15 +145,8 @@ public abstract partial class BaseEquip : PhysicsEntity, ISkinned
 		base.OnStart();
 
 		Tags?.Add( TAG );
-	}
 
-	public virtual void UpdateNetworking()
-	{
-		if ( !Networking.IsHost )
-			return;
-
-		var cn = Owner?.Agent?.Connection;
-		GameObject.NetworkSetup( cn, NetworkOrphaned.ClearOwner, OwnerTransfer.Fixed, NetworkMode.Object, ignoreProxy: false );
+		UpdateNetworking( Owner?.Agent?.Connection );
 	}
 
 	public virtual bool AllowInput()

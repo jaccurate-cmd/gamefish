@@ -9,7 +9,7 @@ public abstract partial class ControllerPawn : BasePawn
 	/// The unfortunately less than ideal built-in controller.
 	/// </summary>
 	[Property]
-	[Feature( FEATURE_PAWN )]
+	[Feature( PAWN )]
 	public PlayerController Controller
 	{
 		get => _pc.IsValid() ? _pc
@@ -33,7 +33,7 @@ public abstract partial class ControllerPawn : BasePawn
 
 	public override Rotation EyeRotation
 	{
-		get => View?.EyeRotation ?? base.EyeRotation;
+		get => Controller?.EyeAngles ?? base.EyeRotation;
 		set
 		{
 			if ( View.IsValid() )
@@ -70,5 +70,13 @@ public abstract partial class ControllerPawn : BasePawn
 	public override void FixedSimulate( in float deltaTime )
 	{
 		base.FixedSimulate( deltaTime );
+	}
+
+	public override void SetLookRotation( in Rotation rLook )
+	{
+		base.SetLookRotation( rLook );
+
+		if ( Controller.IsValid() )
+			Controller.EyeAngles = rLook;
 	}
 }

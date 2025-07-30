@@ -9,9 +9,9 @@
     "Scale": "1,1,1",
     "Tags": "player",
     "Enabled": true,
-    "NetworkMode": 2,
+    "NetworkMode": 1,
     "NetworkInterpolation": true,
-    "NetworkOrphaned": 0,
+    "NetworkOrphaned": 1,
     "OwnerTransfer": 1,
     "Components": [
       {
@@ -63,6 +63,9 @@
           }
         ],
         "MoveSpeed": 100,
+        "NetworkingMode": "Object",
+        "NetworkOrphanedMode": "ClearOwner",
+        "NetworkTransferMode": "Fixed",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -105,6 +108,9 @@
           "go": "77ffd783-71f9-45f3-9f18-c9bd791a0356",
           "component_type": "ActorCitizenModel"
         },
+        "NetworkingMode": "Object",
+        "NetworkOrphanedMode": "Destroy",
+        "NetworkTransferMode": "Fixed",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -771,9 +777,9 @@
             "DefaultMode": "FirstPerson",
             "DistanceRange": {
               "Min": 50,
-              "Max": 500
+              "Max": 250
             },
-            "EyeAngles": "0,0,0",
+            "EyeAngles": "-0,0,0",
             "InitialDistance": 100,
             "Mode": "FirstPerson",
             "ModeList": {
@@ -806,11 +812,11 @@
                 "Rotation": "0,0,0,0"
               }
             },
-            "ScrollSensitivity": 5,
-            "ScrollSmoothing": 5,
+            "ScrollSensitivity": 15,
+            "ScrollSpeed": 5,
             "ShowViewModel": true,
-            "TransitionSmoothing": 0.5,
-            "TransitionSpeed": 2,
+            "TransitionSmoothing": 0.35,
+            "TransitionSpeed": 3,
             "ViewModel": {
               "_type": "component",
               "component_id": "bcc0ec7b-1fe9-4f35-9db6-3fe24c24f7b1",

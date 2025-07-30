@@ -56,12 +56,17 @@ public partial class PawnView : Module<BasePawn>, ISimulate
 	public TagSet CollisionIgnoreTags { get; set; } = [BaseEntity.TAG_PAWN];
 
 	/// <summary>
-	/// The pawn we're looking at/through.
+	/// The pawn this view actually belongs to.
 	/// </summary>
-	public virtual BasePawn Pawn => ModuleParent;
+	public BasePawn ParentPawn => ModuleParent;
+
+	/// <summary>
+	/// The pawn we're currently looking at/through.
+	/// </summary>
+	public virtual BasePawn TargetPawn => ParentPawn;
 
 	public virtual bool CanSimulate()
-		=> ModuleParent?.CanSimulate() ?? false;
+		=> ParentPawn?.CanSimulate() ?? false;
 
 	protected override void OnStart()
 	{
@@ -74,23 +79,20 @@ public partial class PawnView : Module<BasePawn>, ISimulate
 	{
 		HandleInput();
 
-		OnPerspectiveUpdate( Time.Delta );
+		OnPerspectiveUpdate( deltaTime );
 
-		UpdateTransition();
+		UpdateTransition( deltaTime );
 
-		UpdateOpacity();
+		UpdatePawn();
 	}
 
-	public virtual void UpdateOpacity()
+	/// <summary>
+	/// Tell the targeted pawn about this view. <br />
+	/// You should call this once after processing whatever else.
+	/// </summary>
+	protected virtual void UpdatePawn()
 	{
-		var model = Pawn?.Actor?.Model;
-
-		if ( !model.IsValid() )
-			return;
-
-		var a = DistanceFromEye.Remap( FirstPersonRange.Min, FirstPersonRange.Max );
-
-		model.SetOpacity( a );
+		TargetPawn?.OnViewUpdate( this );
 	}
 
 	/// <summary>
@@ -98,7 +100,7 @@ public partial class PawnView : Module<BasePawn>, ISimulate
 	/// </summary>
 	protected void EnsureValidHierarchy()
 	{
-		var pawn = Pawn;
+		var pawn = ParentPawn;
 
 		if ( !pawn.IsValid() )
 			return;
@@ -106,7 +108,7 @@ public partial class PawnView : Module<BasePawn>, ISimulate
 		if ( pawn.GameObject == GameObject )
 		{
 			this.Warn( this + " was directly on the pawn! It needs to be a child!" );
-			Enabled = false;
+			GameObject.SetParent( pawn.GameObject );
 		}
 	}
 }
