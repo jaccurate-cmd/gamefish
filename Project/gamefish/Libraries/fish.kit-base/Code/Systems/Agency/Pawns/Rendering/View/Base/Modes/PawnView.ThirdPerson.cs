@@ -7,12 +7,12 @@ partial class PawnView
 	[Property]
 	[Feature( MODES )]
 	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
-	public FloatRange DistanceRange { get; set; } = new( 50f, 500f );
+	public float? InitialDistance { get; set; } = 100f;
 
 	[Property]
 	[Feature( MODES )]
 	[Group( THIRD_PERSON ), Order( THIRD_PERSON_ORDER )]
-	public float? InitialDistance { get; set; } = 100f;
+	public FloatRange DistanceRange { get; set; } = new( 50f, 300f );
 
 	/// <summary>
 	/// Sensitivity of the mouse wheel when used to change the distance. <br />
@@ -57,11 +57,12 @@ partial class PawnView
 
 		var aimDir = EyeForward;
 
-		DesiredDistance -= Input.MouseWheel.y * ScrollSensitivity * deltaTime;
-		DesiredDistance.Clamp( DistanceRange );
+		DesiredDistance -= Input.MouseWheel.y * ScrollSensitivity;
+		DesiredDistance = DesiredDistance.Clamp( DistanceRange );
 
-		if ( ScrollSmoothing > 0f )
-			CurrentDistance = CurrentDistance.LerpTo( DesiredDistance, ScrollSmoothing * deltaTime );
+		CurrentDistance = ScrollSmoothing > 0f
+			? CurrentDistance.LerpTo( DesiredDistance, ScrollSmoothing * deltaTime )
+			: DesiredDistance;
 
 		if ( Collision )
 		{
