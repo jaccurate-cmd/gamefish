@@ -11,13 +11,6 @@ public abstract partial class Module<T> : BaseEntity, Component.ExecuteInEditor 
 	public const string GROUP_MODULE = "🧩 Module";
 
 	/// <summary>
-	/// Is this component currently loaded in the scene editor? <br />
-	/// Otherwise it is assumed to be in play mode. <br />
-	/// You can use this with <see cref="HideIfAttribute"/> or <see cref="ShowIfAttribute"/>.
-	/// </summary>
-	public bool EditingScene => Scene?.IsEditor ?? true;
-
-	/// <summary>
 	/// The <typeparamref name="T"/> this module should register with.
 	/// </summary>
 	[Property]

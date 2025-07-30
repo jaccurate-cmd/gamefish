@@ -47,7 +47,7 @@ public partial class PawnEquipment : Module<BasePawn>
 
 	[InlineEditor, ReadOnly]
 	[Sync( SyncFlags.FromHost )]
-	[HideIf( nameof( EditingScene ), true )]
+	[ShowIf( nameof( PlayingScene ), true )]
 	[Property, Feature( FEATURE_EQUIPS ), Group( GROUP_INVENTORY )]
 	public NetList<BaseEquip> Equipped { get; } = [];
 

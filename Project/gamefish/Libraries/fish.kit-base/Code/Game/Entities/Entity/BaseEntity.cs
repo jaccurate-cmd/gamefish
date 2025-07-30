@@ -22,4 +22,16 @@ public partial class BaseEntity : Component, ITransform
 	public const string TAG_ACTOR = "actor";
 	public const string TAG_PLAYER = "player";
 	public const string TAG_NPC = "npc";
+
+	/// <summary>
+	/// Is this currently loaded in a valid editor scene? <br />
+	/// You can use this with <see cref="HideIfAttribute"/> or <see cref="ShowIfAttribute"/>.
+	/// </summary>
+	public bool EditingScene => this.InEditor();
+
+	/// <summary>
+	/// Is this currently loaded in a valid play mode scene? <br />
+	/// You can use this with <see cref="HideIfAttribute"/> or <see cref="ShowIfAttribute"/>.
+	/// </summary>
+	public bool PlayingScene => this.InGame();
 }
