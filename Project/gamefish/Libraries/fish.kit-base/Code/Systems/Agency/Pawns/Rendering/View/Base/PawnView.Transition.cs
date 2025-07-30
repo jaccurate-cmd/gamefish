@@ -51,9 +51,15 @@ partial class PawnView
 		get => _transFrac;
 		set => _transFrac = value.Clamp( 0f, 1f );
 	}
+
 	protected float _transFrac;
 
-	public virtual float TransitionVelocity { get => _transVel; set => _transVel = value; }
+	public virtual float TransitionVelocity
+	{
+		get => _transVel;
+		set => _transVel = value;
+	}
+
 	protected float _transVel;
 
 	/// <summary>

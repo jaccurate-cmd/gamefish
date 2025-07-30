@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace GameFish;
 
 partial class PawnView
@@ -35,10 +33,10 @@ partial class PawnView
 			? targetPawn
 			: ParentPawn;
 
-		if ( !pawn.IsValid() )
-			return global::Transform.Zero;
+		if ( pawn.IsValid() )
+			return pawn.EyeTransform;
 
-		return pawn.EyeTransform;
+		return global::Transform.Zero;
 	}
 
 	/// <summary>

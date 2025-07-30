@@ -89,7 +89,7 @@ partial class PawnView
 
 			_mode = value;
 
-			if ( this.IsOwner() )
+			if ( !IsProxy )
 				OnSetPerspective( in value );
 		}
 	}
@@ -177,6 +177,11 @@ partial class PawnView
 				break;
 		}
 
+		DoModeTransition( in newMode );
+	}
+
+	protected virtual void DoModeTransition( in Perspective newMode )
+	{
 		StartTransition();
 	}
 

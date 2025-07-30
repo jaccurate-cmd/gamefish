@@ -20,46 +20,8 @@ public partial class SpectatorView : PawnView
 
 	public override void CycleMode( in int dir )
 	{
-		base.CycleMode( dir );
-
-		EnsureFlyingMode();
-	}
-
-	public override Transform GetOrigin()
-	{
-		var targetPawn = TargetPawn;
-		var parentPawn = ParentPawn;
-
-		if ( !targetPawn.IsValid() )
-			return global::Transform.Zero;
-
-		if ( SpectatorPawn is SpectatorPawn spec && !spec.Spectating.IsValid() )
-			return WorldTransform.WithRotation( EyeRotation );
-
-		return Mode is not Perspective.FirstPerson
-			? targetPawn.EyeTransform.WithRotation( EyeRotation )
-			: targetPawn.EyeTransform;
-	}
-
-	protected override void DoAiming()
-	{
-		// Prevent aiming while spectating in first person.
-		/*
-		if ( Mode is Perspective.FirstPerson )
-			if ( SpectatorPawn is SpectatorPawn spec && spec.IsValid() )
-				if ( spec.Spectating.IsValid() )
-					return;
-		*/
-
-		base.DoAiming();
-	}
-
-	protected override void OnFirstPersonModeUpdate( in float deltaTime )
-	{
-		base.OnFirstPersonModeUpdate( deltaTime );
-
-		if ( SpectatorPawn is SpectatorPawn spec && spec.Spectating.IsValid() )
-			EyeRotation = spec.Spectating.EyeRotation;
+		if ( !EnsureFlyingMode() )
+			base.CycleMode( dir );
 	}
 
 	/// <summary>
@@ -81,5 +43,41 @@ public partial class SpectatorView : PawnView
 		}
 
 		return false;
+	}
+
+	public override Transform GetOrigin()
+	{
+		if ( SpectatorPawn is SpectatorPawn spec && !spec.Spectating.IsValid() )
+			return spec.EyeTransform.WithRotation( EyeRotation );
+
+		var targetPawn = TargetPawn;
+
+		if ( !targetPawn.IsValid() )
+			return EyeTransform;
+
+		return Mode is not Perspective.FirstPerson
+			? targetPawn.EyeTransform.WithRotation( EyeRotation )
+			: targetPawn.EyeTransform;
+	}
+
+	protected override void DoAiming()
+	{
+		/*
+		// Prevent aiming while spectating in first person.
+		if ( Mode is Perspective.FirstPerson )
+			if ( SpectatorPawn is SpectatorPawn spec && spec.IsValid() )
+				if ( spec.Spectating.IsValid() )
+					return;
+		*/
+
+		base.DoAiming();
+	}
+
+	protected override void OnFirstPersonModeUpdate( in float deltaTime )
+	{
+		base.OnFirstPersonModeUpdate( deltaTime );
+
+		if ( SpectatorPawn is SpectatorPawn spec && spec.Spectating.IsValid() )
+			EyeRotation = spec.Spectating.EyeRotation;
 	}
 }
