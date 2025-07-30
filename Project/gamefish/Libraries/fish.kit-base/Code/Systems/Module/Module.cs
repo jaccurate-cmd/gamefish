@@ -1,12 +1,12 @@
 namespace GameFish;
 
 /// <summary>
-/// A module for <typeparamref name="T"/> components. Registers itself.
+/// A module for <typeparamref name="T"/> components. Registers itself. <br />
+/// These are entities that can automatically network the object they're on. <br />
+/// You should put them on child objects of the parent component.
 /// </summary>
-public abstract partial class Module<T> : Component, Component.ExecuteInEditor where T : Component, IModules<T>
+public abstract partial class Module<T> : BaseEntity, Component.ExecuteInEditor where T : Component, IModules<T>
 {
-	public const string DEBUG = BaseEntity.DEBUG;
-
 	public const string FEATURE_MODULES = "🧩 Modules";
 	public const string GROUP_MODULE = "🧩 Module";
 
@@ -21,7 +21,7 @@ public abstract partial class Module<T> : Component, Component.ExecuteInEditor w
 	/// The <typeparamref name="T"/> this module should register with.
 	/// </summary>
 	[Property]
-	[Feature( DEBUG ), Group( GROUP_MODULE )]
+	[Feature( DEBUG ), Order( DEBUG_ORDER ), Group( GROUP_MODULE )]
 	public T ModuleParent
 	{
 		get => _comp.IsValid() ? _comp
@@ -41,12 +41,12 @@ public abstract partial class Module<T> : Component, Component.ExecuteInEditor w
 
 	protected override void OnStart()
 	{
-		base.OnStart();
-
 		RegisterModule();
 
 		if ( !ModuleParent.IsValid() )
 			this.Warn( $"Failed to find parent component of type:[{typeof( T )}]" );
+
+		base.OnStart();
 	}
 
 	protected override void OnDestroy()

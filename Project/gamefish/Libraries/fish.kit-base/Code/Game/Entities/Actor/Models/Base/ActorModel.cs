@@ -1,10 +1,7 @@
 namespace GameFish;
 
-public abstract partial class ActorModel : Component
+public abstract partial class ActorModel : BaseEntity
 {
-	public const string MODEL = "🕺 Model";
-	public const string DEBUG = BaseEntity.DEBUG;
-
 	public const string GROUP_OPACITY = "Opacity";
 
 	/// <summary>
@@ -16,7 +13,7 @@ public abstract partial class ActorModel : Component
 
 	[Property]
 	[Range( 0f, 1f, step: 0.001f )]
-	[Feature( DEBUG ), Group( GROUP_OPACITY )]
+	[Feature( DEBUG ), Order( DEBUG_ORDER ), Group( GROUP_OPACITY )]
 	public virtual float Opacity
 	{
 		get => _opacity;
