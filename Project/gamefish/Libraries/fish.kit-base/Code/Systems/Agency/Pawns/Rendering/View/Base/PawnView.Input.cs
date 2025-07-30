@@ -83,7 +83,6 @@ partial class PawnView
 	public virtual Vector3 EyePosition
 	{
 		get => TargetPawn?.EyePosition ?? WorldPosition;
-		set { if ( TargetPawn.IsValid() ) TargetPawn.EyePosition = value; }
 	}
 
 	public Transform EyeTransform => new( EyePosition, EyeRotation, WorldScale );

@@ -15,7 +15,7 @@ public partial class PhysicsEntity : BaseEntity, IPhysics
 	public Vector3 MassCenter => PhysicsBody?.MassCenter ?? GetPosition();
 
 	[Property]
-	[Feature( DEBUG ), Group( PHYSICS )]
+	[Feature( DEBUG ), Order( DEBUG_ORDER ), Group( PHYSICS )]
 	public virtual Vector3 Velocity
 	{
 		get => Rigidbody?.Velocity ?? default;

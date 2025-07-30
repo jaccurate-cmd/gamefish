@@ -33,6 +33,7 @@
         "FlyingIgnoreTags": "pawn",
         "FlyingRunSpeed": 3000,
         "FlyingSpeed": 1000,
+        "HasForcedNetworking": true,
         "Health": 0,
         "HealthComponent": null,
         "IsAlive": false,
@@ -46,6 +47,8 @@
             "component_type": "SpectatorView"
           }
         ],
+        "NetworkAutomatically": true,
+        "NetworkId": "38fcaa19-216d-4fde-844e-003465ac2acc",
         "NetworkingMode": "Object",
         "NetworkOrphanedMode": "Destroy",
         "NetworkTransferMode": "Fixed",
@@ -113,7 +116,13 @@
               "Max": 400
             },
             "EyeAngles": "-0,0,0",
+            "HasForcedNetworking": false,
+            "Health": 0,
+            "HealthComponent": null,
             "InitialDistance": 100,
+            "IsAlive": false,
+            "IsDestructible": false,
+            "MaxHealth": 0,
             "Mode": "FirstPerson",
             "ModeList": {
               "FirstPerson": true,
@@ -125,6 +134,11 @@
               "go": "3f0faaed-c487-4bb8-abd0-c3e271085bd9",
               "component_type": "SpectatorPawn"
             },
+            "NetworkAutomatically": false,
+            "NetworkId": "c06f4824-6a01-4022-ac58-91126185aa0a",
+            "NetworkingMode": "Object",
+            "NetworkOrphanedMode": "Destroy",
+            "NetworkTransferMode": "Fixed",
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,

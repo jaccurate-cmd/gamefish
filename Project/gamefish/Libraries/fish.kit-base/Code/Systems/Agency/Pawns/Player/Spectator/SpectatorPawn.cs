@@ -75,19 +75,14 @@ public partial class SpectatorPawn : BasePawn
 
 	/// <summary> How fast the spectator is moving. </summary>
 	[Property]
-	[Feature( DEBUG ), Group( PHYSICS )]
+	[Feature( DEBUG ), Order( DEBUG_ORDER ), Group( PHYSICS )]
 	public override Vector3 Velocity { get; set; }
-
-	/// <summary>
-	/// Always destroy spectator pawns upon losing them.
-	/// </summary>
-	protected override NetworkOrphaned NetworkOrphanedModeOverride => NetworkOrphaned.Destroy;
 
 	protected override void OnEnabled()
 	{
-		base.OnEnabled();
-
 		Tags?.Add( TAG_SPECTATOR );
+
+		base.OnEnabled();
 	}
 
 	protected override void OnTaken( Agent old, Agent agent )

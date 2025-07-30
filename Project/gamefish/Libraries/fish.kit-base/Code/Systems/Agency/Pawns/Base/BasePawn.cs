@@ -53,17 +53,6 @@ public abstract partial class BasePawn : PhysicsEntity
 
 	protected BaseActor _actor;
 
-	protected override NetworkOrphaned NetworkOrphanedModeOverride => NetworkOrphaned.ClearOwner;
-
-	protected override void OnEnabled()
-	{
-		base.OnEnabled();
-
-		Tags?.Add( TAG_PAWN );
-
-		UpdateNetworking( Agent?.Connection );
-	}
-
 	/// <summary>
 	/// Called when the <see cref="Agent"/> property has been set to a new value.
 	/// </summary>

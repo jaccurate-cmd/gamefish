@@ -145,8 +145,6 @@ public abstract partial class BaseEquip : PhysicsEntity, ISkinned
 		base.OnStart();
 
 		Tags?.Add( TAG );
-
-		UpdateNetworking( Owner?.Agent?.Connection );
 	}
 
 	public virtual bool AllowInput()

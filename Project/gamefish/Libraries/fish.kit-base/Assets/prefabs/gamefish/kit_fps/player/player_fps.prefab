@@ -36,6 +36,7 @@
         "DuckLowerSpeed": 10,
         "DuckMoveSpeed": 50,
         "DuckRaiseSpeed": 15,
+        "HasForcedNetworking": true,
         "Health": 100,
         "HealthComponent": {
           "_type": "component",
@@ -63,6 +64,8 @@
           }
         ],
         "MoveSpeed": 100,
+        "NetworkAutomatically": true,
+        "NetworkId": "00a167f2-9393-469a-879d-63a09e408188",
         "NetworkingMode": "Object",
         "NetworkOrphanedMode": "ClearOwner",
         "NetworkTransferMode": "Fixed",
@@ -92,6 +95,7 @@
         "__type": "GameFish.BaseActor",
         "__guid": "07520265-2ad8-4f1f-8ade-e5d5a804a803",
         "__enabled": true,
+        "HasForcedNetworking": false,
         "Health": 100,
         "HealthComponent": {
           "_type": "component",
@@ -108,6 +112,8 @@
           "go": "77ffd783-71f9-45f3-9f18-c9bd791a0356",
           "component_type": "ActorCitizenModel"
         },
+        "NetworkAutomatically": false,
+        "NetworkId": "07520265-2ad8-4f1f-8ade-e5d5a804a803",
         "NetworkingMode": "Object",
         "NetworkOrphanedMode": "Destroy",
         "NetworkTransferMode": "Fixed",
@@ -780,7 +786,13 @@
               "Max": 250
             },
             "EyeAngles": "-0,0,0",
+            "HasForcedNetworking": false,
+            "Health": 0,
+            "HealthComponent": null,
             "InitialDistance": 100,
+            "IsAlive": false,
+            "IsDestructible": false,
+            "MaxHealth": 0,
             "Mode": "FirstPerson",
             "ModeList": {
               "FirstPerson": true,
@@ -792,6 +804,11 @@
               "go": "26d08fde-1687-46ac-ae0e-02eed92368eb",
               "component_type": "PlayerPawn"
             },
+            "NetworkAutomatically": false,
+            "NetworkId": "c7391ef4-d529-4db4-9b20-71271e0abec5",
+            "NetworkingMode": "Object",
+            "NetworkOrphanedMode": "Destroy",
+            "NetworkTransferMode": "Fixed",
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
@@ -946,18 +963,29 @@
             "__enabled": true,
             "AutoGiveLoadout": true,
             "Equipped": [],
+            "HasForcedNetworking": false,
+            "Health": 0,
+            "HealthComponent": null,
+            "IsAlive": false,
+            "IsDestructible": false,
             "Loadout": [
               {
                 "Prefab": "prefabs/gamefish/kit_fps/equips/rocket_launcher.prefab",
                 "Slot": null
               }
             ],
+            "MaxHealth": 0,
             "ModuleParent": {
               "_type": "component",
               "component_id": "00a167f2-9393-469a-879d-63a09e408188",
               "go": "26d08fde-1687-46ac-ae0e-02eed92368eb",
               "component_type": "PlayerPawn"
             },
+            "NetworkAutomatically": false,
+            "NetworkId": "41565e7f-493f-4aa8-802e-130a36e10531",
+            "NetworkingMode": "Object",
+            "NetworkOrphanedMode": "Destroy",
+            "NetworkTransferMode": "Fixed",
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,

@@ -1,6 +1,6 @@
 namespace GameFish;
 
-partial class BaseEquip
+partial class BasePawn
 {
 	protected override bool IsNetworkingForced => true;
 
@@ -8,5 +8,14 @@ partial class BaseEquip
 	protected override OwnerTransfer NetworkTransferModeDefault => OwnerTransfer.Fixed;
 	protected override NetworkOrphaned NetworkOrphanedModeDefault => NetworkOrphaned.ClearOwner;
 
-	public override Connection DefaultNetworkOwner => Owner?.Agent?.Connection;
+	public override Connection DefaultNetworkOwner => Agent?.Connection;
+
+	protected override void OnEnabled()
+	{
+		Tags?.Add( TAG_PAWN );
+
+		base.OnEnabled();
+
+		SetupNetworking();
+	}
 }
