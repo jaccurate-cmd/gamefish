@@ -3,27 +3,35 @@ namespace GameFish;
 public static class OffsetExtensions
 {
 	/// <summary>
-	/// Lerps a transform(probably local!) to an offset's position/rotation while preserving its original scale.
+	/// Lerps a transform to an offset's position/rotation while preserving its original scale. <br />
+	/// This is typically best used on local transforms.
 	/// </summary>
 	public static Transform LerpTo( this in Transform t, in Offset offset, in float frac )
 		=> t.LerpTo( offset.Transform.WithScale( t.Scale ), frac );
 
 	/// <summary>
-	/// Sets a transform(probably local!) to an offset's position/rotation while preserving its original scale.
+	/// Sets a transform to an offset's position/rotation while preserving its original scale. <br />
+	/// This is typically best used on local transforms.
 	/// </summary>
 	public static Transform SetOffset( this in Transform t, in Offset offset )
 		=> offset.Transform.WithScale( t.Scale );
 
 	/// <summary>
-	/// Directly sets the local transform to the specified offset.
+	/// Directly sets the object's local transform to the specified offset.
 	/// </summary>
 	public static void SetOffset( this GameObject self, in Offset offset )
 	{
 		if ( !self.IsValid() )
 			return;
 
-		self.LocalPosition = offset.Position;
-		self.LocalRotation = offset.Rotation;
+		var pos = offset.Position;
+		var r = offset.Rotation;
+
+		if ( !ITransform.IsValid( in pos ) || !ITransform.IsValid( in r ) )
+			return;
+
+		self.LocalPosition = pos;
+		self.LocalRotation = r;
 	}
 
 	/// <summary>
@@ -31,8 +39,17 @@ public static class OffsetExtensions
 	/// </summary>
 	public static void SetOffset( this GameObject self, in Transform t, in Offset offset )
 	{
-		if ( self.IsValid() )
-			self.WorldTransform = t.ToWorld( offset.Transform ).WithScale( self.WorldScale );
+		if ( !self.IsValid() )
+			return;
+
+		var pos = t.PointToWorld( offset.Position );
+		var r = t.RotationToWorld( offset.Rotation );
+
+		if ( !ITransform.IsValid( in pos ) || !ITransform.IsValid( in r ) )
+			return;
+
+		self.WorldPosition = pos;
+		self.WorldRotation = r;
 	}
 
 	/// <summary>

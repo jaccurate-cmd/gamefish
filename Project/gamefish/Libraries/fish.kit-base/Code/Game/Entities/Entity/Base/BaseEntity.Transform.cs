@@ -8,6 +8,20 @@ partial class BaseEntity : ITransform
 
 	public virtual Vector3 Center => GetPosition();
 
+	public bool TrySetTransform( in Transform t )
+	{
+		if ( !TrySetPosition( t.Position ) )
+			return false;
+
+		if ( !TrySetRotation( t.Rotation ) )
+			return false;
+
+		if ( !TrySetScale( t.Scale ) )
+			return false;
+
+		return true;
+	}
+
 	public virtual bool TrySetPosition( in Vector3 newPos )
 	{
 		if ( !ITransform.IsValid( newPos ) )
