@@ -45,8 +45,11 @@ public partial class ViewModel : Component, ISkinned
 		{
 			_offset = value;
 
-			UpdateTransform();
-			OnSetOffset( in value );
+			if ( this.InGame() )
+			{
+				UpdateTransform();
+				OnSetOffset( in value );
+			}
 		}
 	}
 
