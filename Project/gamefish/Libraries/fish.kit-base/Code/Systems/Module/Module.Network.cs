@@ -1,6 +1,6 @@
 namespace GameFish;
 
-partial class Module<T>
+partial class Module
 {
 	protected override bool IsNetworkingForced => true;
 
@@ -8,5 +8,5 @@ partial class Module<T>
 	protected override OwnerTransfer NetworkTransferModeDefault => OwnerTransfer.Fixed;
 	protected override NetworkOrphaned NetworkOrphanedModeDefault => NetworkOrphaned.ClearOwner;
 
-	public override Connection DefaultNetworkOwner => ModuleParent?.Network?.Owner;
+	public override Connection DefaultNetworkOwner => Parent?.Network?.Owner;
 }

@@ -5,7 +5,7 @@ namespace GameFish;
 /// <summary>
 /// Manages and optionally spawns equipment.
 /// </summary>
-public partial class PawnEquipment : Module<BasePawn>
+public partial class PawnEquipment : Module
 {
 	public const string FEATURE_EQUIPS = "🏹 Equipment";
 
@@ -78,6 +78,11 @@ public partial class PawnEquipment : Module<BasePawn>
 	}
 
 	protected BaseEquip _activeEquip;
+
+	public BasePawn Pawn => Parent as BasePawn;
+
+	protected override bool IsParent( ModuleEntity comp )
+		=> comp.IsValid() && comp is BasePawn;
 
 	protected override void OnStart()
 	{
@@ -169,15 +174,17 @@ public partial class PawnEquipment : Module<BasePawn>
 
 	public virtual bool TryEquip( BaseEquip e, int? slot = null )
 	{
-		if ( !ModuleParent.IsValid() )
+		var pawn = Pawn;
+
+		if ( !pawn.IsValid() )
 		{
-			this.Warn( $"Tried to equip:[{e}] with an invalid parent:[{ModuleParent}]" );
+			this.Warn( $"Tried to equip:[{e}] with an invalid parent:[{pawn}]" );
 			return false;
 		}
 
 		if ( !e.IsValid() )
 		{
-			this.Warn( $"Tried to equip an invalid on parent:[{ModuleParent}]" );
+			this.Warn( $"Tried to equip an invalid on parent:[{pawn}]" );
 			return false;
 		}
 
@@ -205,12 +212,12 @@ public partial class PawnEquipment : Module<BasePawn>
 
 		if ( inSlot.Count() > SlotCapacity )
 		{
-			this.Log( $"Tried to equip:[{e}] in full slot:[{slot}] on parent:[{ModuleParent}]" );
+			this.Log( $"Tried to equip:[{e}] in full slot:[{slot}] on parent:[{pawn}]" );
 			return false;
 		}
 
 		// Equip might have something to say about this.
-		if ( !e.AllowEquip( ModuleParent ) )
+		if ( !e.AllowEquip( pawn ) )
 			return false;
 
 		e.EquipState = ActiveEquip == e
@@ -222,7 +229,7 @@ public partial class PawnEquipment : Module<BasePawn>
 
 		Equipped?.Add( e );
 
-		e.Owner = ModuleParent;
+		e.Owner = pawn;
 		e.Inventory = this;
 
 		e.OnEquip( this );

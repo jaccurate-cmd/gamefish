@@ -5,7 +5,7 @@ namespace GameFish;
 /// This should be on a child object of the pawn(otherwise expect problems).
 /// </summary>
 [Icon( "videocam" )]
-public partial class PawnView : Module<BasePawn>, ISimulate
+public partial class PawnView : Module, ISimulate
 {
 	public const string VIEW = "🎥 View";
 	public const string SPECTATING = BasePawn.SPECTATING;
@@ -58,12 +58,15 @@ public partial class PawnView : Module<BasePawn>, ISimulate
 	/// <summary>
 	/// The pawn this view actually belongs to.
 	/// </summary>
-	public BasePawn ParentPawn => ModuleParent;
+	public BasePawn ParentPawn => Parent as BasePawn;
 
 	/// <summary>
 	/// The pawn we're currently looking at/through.
 	/// </summary>
 	public virtual BasePawn TargetPawn => ParentPawn;
+
+	protected override bool IsParent( ModuleEntity comp )
+		=> comp.IsValid() && comp is BasePawn;
 
 	public virtual bool CanSimulate()
 		=> ParentPawn?.CanSimulate() ?? false;

@@ -4,9 +4,6 @@ namespace GameFish;
 
 public interface IHealth
 {
-	public const string FEATURE = "💖 Health";
-	public const string GROUP_VALUES = "Values";
-
 	abstract bool IsAlive { get; set; }
 
 	/// <summary> Is this capable of ever taking damage? </summary>

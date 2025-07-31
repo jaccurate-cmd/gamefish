@@ -1,11 +1,11 @@
 namespace GameFish;
 
 /// <summary>
-/// A module for <typeparamref name="T"/> components. Registers itself. <br />
+/// A module for components. Registers itself. <br />
 /// These are entities that can automatically network the object they're on. <br />
 /// You should put them on child objects of the parent component.
 /// </summary>
-public abstract partial class Module<T> : BaseEntity, Component.ExecuteInEditor where T : Component, IModules<T>
+public abstract partial class Module : BaseEntity, Component.ExecuteInEditor
 {
 	/// <summary>
 	/// If true: the entire object is destroyed with this component. <br />
@@ -18,17 +18,21 @@ public abstract partial class Module<T> : BaseEntity, Component.ExecuteInEditor 
 	public bool DestroyObject { get; set; } = true;
 
 	/// <summary>
-	/// The <typeparamref name="T"/> this module should register with.
+	/// The entity this is registered to.
 	/// </summary>
 	[Property]
 	[Feature( ENTITY ), Group( MODULE )]
-	public T ModuleParent
+	public ModuleEntity Parent
 	{
-		get => _comp.IsValid() ? _comp
-			: _comp = Components?.Get<T>( FindMode.EverythingInSelfAndAncestors );
+		get => _parent.IsValid() ? _parent
+			: _parent = Components?.GetAll<ModuleEntity>( FindMode.EverythingInSelfAndAncestors )
+				.FirstOrDefault( p => p.IsValid() && IsParent( p ) );
 	}
 
-	protected T _comp;
+	protected ModuleEntity _parent;
+
+	/// <returns> If this module is meant to target this entity. </returns>
+	protected abstract bool IsParent( ModuleEntity comp );
 
 	protected override void OnEnabled()
 	{
@@ -41,8 +45,8 @@ public abstract partial class Module<T> : BaseEntity, Component.ExecuteInEditor 
 	{
 		RegisterModule();
 
-		if ( !ModuleParent.IsValid() )
-			this.Warn( $"Failed to find parent component of type:[{typeof( T )}]" );
+		if ( !Parent.IsValid() )
+			this.Warn( $"Failed to find parent component." );
 
 		base.OnStart();
 	}
@@ -59,7 +63,7 @@ public abstract partial class Module<T> : BaseEntity, Component.ExecuteInEditor 
 
 	public void RegisterModule()
 	{
-		var comp = ModuleParent;
+		var comp = Parent;
 
 		if ( comp.IsValid() )
 			comp.RegisterModule( this );
@@ -67,7 +71,7 @@ public abstract partial class Module<T> : BaseEntity, Component.ExecuteInEditor 
 
 	public void RemoveModule()
 	{
-		var comp = ModuleParent;
+		var comp = Parent;
 
 		if ( comp.IsValid() )
 			comp.RemoveModule( this );
@@ -76,14 +80,14 @@ public abstract partial class Module<T> : BaseEntity, Component.ExecuteInEditor 
 	/// <summary>
 	/// Called when this has been successfully registered onto a parent component.
 	/// </summary>
-	public virtual void OnRegistered( T comp )
+	public virtual void OnRegistered( ModuleEntity comp )
 	{
 	}
 
 	/// <summary>
 	/// Called when this has been removed from a parent component.
 	/// </summary>
-	public virtual void OnRemoved( T comp )
+	public virtual void OnRemoved( ModuleEntity comp )
 	{
 	}
 }

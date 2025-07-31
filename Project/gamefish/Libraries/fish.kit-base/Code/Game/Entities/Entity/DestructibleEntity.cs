@@ -5,17 +5,21 @@ namespace GameFish;
 /// </summary>
 public partial class DestructibleEntity : PhysicsEntity
 {
+	public const string HEALTH = "💖 Health";
+
+	public const string GROUP_VALUES = "Values";
+
 	/// <summary>
 	/// Does this entity have a valid <see cref="global::GameFish.HealthComponent"/>?
 	/// </summary>
 	public bool HasHealth => HealthComponent.IsValid();
 
 	/// <summary>
-	/// The <see cref="global::GameFish.HealthComponent"/> on this object or its children(if any).
+	/// The <see cref="global::GameFish.HealthComponent"/> in this object hierarchy.
 	/// Add one to allow taking damage, healing, dying etc.
 	/// </summary>
 	[Title( "Component" )]
-	[Property, Feature( IHealth.FEATURE )]
+	[Property, Feature( ENTITY ), Group( HEALTH )]
 	public HealthComponent HealthComponent
 	{
 		get => _hp.IsValid() ? _hp
@@ -27,22 +31,20 @@ public partial class DestructibleEntity : PhysicsEntity
 	protected HealthComponent _hp;
 
 	[ShowIf( nameof( HasHealth ), true )]
-	[Property, Feature( IHealth.FEATURE )]
+	[Property, Feature( ENTITY ), Group( HEALTH )]
 	public bool IsAlive => HealthComponent?.IsAlive ?? false;
 
 	[ShowIf( nameof( HasHealth ), true )]
-	[Property, Feature( IHealth.FEATURE )]
+	[Property, Feature( ENTITY ), Group( HEALTH )]
 	public bool IsDestructible => HealthComponent?.IsDestructible ?? false;
 
 	[Title( "Initial" )]
-	[Group( IHealth.GROUP_VALUES )]
 	[ShowIf( nameof( HasHealth ), true )]
-	[Property, Feature( IHealth.FEATURE )]
+	[Property, Feature( ENTITY ), Group( HEALTH )]
 	public float Health => HealthComponent?.Health ?? 0f;
 
 	[Title( "Max" )]
-	[Group( IHealth.GROUP_VALUES )]
 	[ShowIf( nameof( HasHealth ), true )]
-	[Property, Feature( IHealth.FEATURE )]
+	[Property, Feature( ENTITY ), Group( HEALTH )]
 	public float MaxHealth => HealthComponent?.MaxHealth ?? 0f;
 }

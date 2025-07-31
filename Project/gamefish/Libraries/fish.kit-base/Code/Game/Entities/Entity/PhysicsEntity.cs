@@ -3,7 +3,7 @@ namespace GameFish;
 /// <summary>
 /// An entity that can have a Rigidbody on/in it.
 /// </summary>
-public partial class PhysicsEntity : BaseEntity, IPhysics
+public partial class PhysicsEntity : ModuleEntity, IPhysics
 {
 	public const string PHYSICS = "🍎 Physics";
 

@@ -86,7 +86,7 @@ public abstract partial class BaseEquip : PhysicsEntity, ISkinned
 	public PawnEquipment Inventory
 	{
 		get => _inv.IsValid() ? _inv
-			: _inv = Owner?.Modules.GetModule<PawnEquipment>();
+			: _inv = Owner?.GetModule<PawnEquipment>();
 
 		set => _inv = value;
 	}
@@ -180,7 +180,7 @@ public abstract partial class BaseEquip : PhysicsEntity, ISkinned
 	/// <returns> If a pawn can equip this. </returns>
 	public virtual bool AllowEquip( BasePawn pawn )
 	{
-		return pawn.IsValid() && pawn.Modules.HasModule<PawnEquipment>();
+		return pawn.IsValid() && pawn.HasModule<PawnEquipment>();
 	}
 
 	public virtual bool CanPrimary()

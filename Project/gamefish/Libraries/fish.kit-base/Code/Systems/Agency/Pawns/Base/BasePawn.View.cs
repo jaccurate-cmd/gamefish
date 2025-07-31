@@ -10,7 +10,7 @@ partial class BasePawn
 	public PawnView View
 	{
 		get => _view.IsValid() ? _view
-			: _view = Modules.GetModule<PawnView>();
+			: _view = GetModule<PawnView>();
 
 		set { _view = value; }
 	}
