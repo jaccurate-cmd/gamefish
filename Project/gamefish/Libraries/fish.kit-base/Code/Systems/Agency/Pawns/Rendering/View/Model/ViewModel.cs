@@ -4,11 +4,21 @@ namespace GameFish;
 /// This should be on a child object of the pawn's viewing object.
 /// </summary>
 [Icon( "sports_mma" )]
-public partial class ViewModel : Component, ISkinned
+public partial class ViewModel : BaseEntity, ISkinned
 {
 	public const string VIEW = PawnView.VIEW;
 
 	public const string GROUP_OFFSETS = "Offsets";
+
+	[Property]
+	[Feature( VIEW )]
+	public PawnView View
+	{
+		get => _view.IsValid() ? _view
+			: _view = Components?.Get<PawnView>( FindMode.EverythingInAncestors );
+	}
+
+	protected PawnView _view;
 
 	[Property]
 	[Title( "Renderer" )]
@@ -17,7 +27,7 @@ public partial class ViewModel : Component, ISkinned
 	{
 		// Auto-cache the component.
 		get => _r.IsValid() ? _r
-			: _r = Components?.Get<SkinnedModelRenderer>( FindMode.EverythingInSelf );
+			: _r = Components?.Get<SkinnedModelRenderer>( FindMode.EverythingInSelfAndDescendants );
 
 		set { _r = value; }
 	}
@@ -27,10 +37,9 @@ public partial class ViewModel : Component, ISkinned
 	/// <summary>
 	/// How quickly to affect the view model's orientation towards its destination.
 	/// </summary>
-	[Sync]
 	[Property]
 	[Feature( VIEW ), Group( GROUP_OFFSETS )]
-	public float Speed { get; set; } = 15f;
+	public virtual float Speed { get; set; } = 15f;
 
 	/// <summary>
 	/// The current orientation. <br />
@@ -38,7 +47,7 @@ public partial class ViewModel : Component, ISkinned
 	/// </summary>
 	[Property, ReadOnly, InlineEditor]
 	[Feature( VIEW ), Group( GROUP_OFFSETS )]
-	public Offset Offset
+	public virtual Offset Offset
 	{
 		get => _offset;
 		set
@@ -61,7 +70,13 @@ public partial class ViewModel : Component, ISkinned
 	[Sync]
 	[Property, ReadOnly, InlineEditor]
 	[Feature( VIEW ), Group( GROUP_OFFSETS )]
-	public Offset TargetOffset { get; set; }
+	public Offset TargetOffset
+	{
+		get => _targetOffset;
+		set => _targetOffset = value;
+	}
+
+	protected Offset _targetOffset;
 
 	protected override void OnEnabled()
 	{
@@ -81,7 +96,7 @@ public partial class ViewModel : Component, ISkinned
 	/// </summary>
 	public virtual void UpdateOffset( in float deltaTime )
 	{
-		Offset = Offset.LerpTo( TargetOffset, deltaTime * Speed );
+		Offset = Offset.LerpTo( in _targetOffset, Speed * deltaTime );
 	}
 
 	public virtual void OnSetOffset( in Offset newOffset )
