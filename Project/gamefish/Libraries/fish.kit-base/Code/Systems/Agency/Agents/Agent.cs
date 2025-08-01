@@ -229,10 +229,9 @@ public abstract partial class Agent : BaseEntity
 				return false;
 			}
 
-			if ( !pawn.Network.Active )
-				pawn.UpdateNetworking( Connection );
+			pawn.UpdateNetworking( Connection );
 
-			if ( pawn.Network.Owner != Connection && !pawn.Network.AssignOwnership( Connection ) )
+			if ( pawn.Network.Owner != Connection )
 			{
 				this.Warn( $"Failed to assign ownership to Connection:[{Connection}]" );
 				return false;

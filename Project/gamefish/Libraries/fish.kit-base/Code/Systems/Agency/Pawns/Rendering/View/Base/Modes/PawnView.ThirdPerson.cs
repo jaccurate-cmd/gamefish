@@ -58,7 +58,7 @@ partial class PawnView
 		if ( !pawn.IsValid() )
 			return;
 
-		var tOrigin = GetOrigin();
+		var tOrigin = GetViewOrigin();
 		var aimDir = tOrigin.Forward;
 
 		DesiredDistance -= Input.MouseWheel.y * ScrollSensitivity;

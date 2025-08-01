@@ -52,45 +52,11 @@ partial class PawnView
 	[Feature( INPUT ), Group( AIMING )]
 	public virtual Angles EyeAngles
 	{
-		get => EyeRotation;
-		set => EyeRotation = PitchClamping
+		get => ViewRotation;
+		set => ViewRotation = PitchClamping
 			? value.WithPitch( value.pitch.Clamp( PitchRange ) )
 			: value;
 	}
-
-	/// <summary>
-	/// An actual rotation. Allows non-Euler fanciness.
-	/// </summary>
-	[Sync]
-	public virtual Rotation EyeRotation
-	{
-		get => _eyeRotation;
-		set
-		{
-			_eyeRotation = value;
-
-			var parentPawn = ParentPawn;
-
-			if ( parentPawn.IsValid() )
-				parentPawn.SetLookRotation( EyeRotation );
-		}
-	}
-
-	protected Rotation _eyeRotation = Rotation.Identity;
-
-	public Vector3 EyeForward => EyeRotation.Forward;
-
-	public virtual Vector3 EyePosition
-	{
-		get => TargetPawn?.EyePosition ?? WorldPosition;
-	}
-
-	public Transform EyeTransform => new( EyePosition, EyeRotation, WorldScale );
-
-	/// <summary>
-	/// Distance from this view to the pawn's first-person origin.
-	/// </summary>
-	public float DistanceFromEye => WorldPosition.Distance( EyePosition );
 
 	/// <summary>
 	/// Allows cycling of perspective modes.
@@ -109,7 +75,7 @@ partial class PawnView
 
 		angAim.pitch = (angAim.pitch + angLook.pitch).Clamp( PitchRange );
 		angAim.yaw = (angAim.yaw + angLook.yaw).NormalizeDegrees();
-		angAim.roll = 0f;
+		angAim.roll = angAim.roll.LerpDegreesTo( 0f, Time.Delta * 10f );
 
 		EyeAngles = angAim;
 	}

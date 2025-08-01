@@ -2,45 +2,74 @@ namespace GameFish;
 
 partial class PawnView
 {
-	/// <summary>
-	/// Updates and then returns the world transform of this view.
-	/// </summary>
-	/// <returns> Where the camera should be positioned. </returns>
-	public virtual Transform GetViewTransform()
+	public virtual Vector3 ViewPosition
 	{
-		UpdateTransform();
-		return WorldTransform;
+		get => _viewPos;
+		set { _viewPos = value; }
 	}
 
-	/// <summary>
-	/// Applies current offset/transition effects to the view's transform.
-	/// </summary>
-	public virtual void UpdateTransform()
+	protected Vector3 _viewPos;
+
+	public virtual Rotation ViewRotation
 	{
-		UpdateModeTransform();
+		get => _viewRotation;
+		set { _viewRotation = value; }
 	}
+
+	protected Rotation _viewRotation;
+
+	public Vector3 ViewForward => ViewRotation.Forward;
+	public Transform ViewTransform => new( ViewPosition, ViewRotation, WorldScale );
+
+	public virtual Vector3 PawnEyePosition => TargetPawn?.EyePosition ?? ViewPosition;
+	public virtual Rotation PawnEyeRotation => TargetPawn?.EyeRotation ?? ViewRotation;
+	public Vector3 PawnScale => TargetPawn?.WorldScale ?? Vector3.One;
+
+	public virtual Transform PawnEyeTransform => TargetPawn?.EyeTransform ?? WorldTransform;
+
+	/// <summary>
+	/// Distance from this view to the pawn's first-person origin.
+	/// </summary>
+	public float DistanceFromEye => ViewPosition.Distance( PawnEyePosition );
 
 	/// <summary>
 	/// Allows this view to specify the origin from which it may offset from. <br />
-	/// By default this is <see cref="TargetPawn"/>'s eye transform.
+	/// By default this is the <see cref="TargetPawn"/>'s eye transform.
 	/// </summary>
 	/// <returns> The base transform to offset from. </returns>
-	public virtual Transform GetOrigin()
+	public virtual Transform GetViewOrigin()
+		=> PawnEyeTransform;
+
+	/// <summary>
+	/// Updates and then returns the view transform.
+	/// </summary>
+	/// <param name="updateView"> If true: update where the camera should render from. </param>
+	/// <param name="updateObject"> If true: update the view's GameObject world transform. </param>
+	/// <returns> Where the camera should be positioned. </returns>
+	public virtual Transform GetViewTransform( bool updateView = true, bool updateObject = true )
 	{
-		var targetPawn = TargetPawn;
+		UpdateViewTransform( updateView, updateObject );
 
-		var pawn = targetPawn.IsValid()
-			? targetPawn
-			: ParentPawn;
-
-		if ( pawn.IsValid() )
-			return pawn.EyeTransform;
-
-		return global::Transform.Zero;
+		return ViewTransform;
 	}
 
 	/// <summary>
-	/// Sets this view's transform according to the curent mode.
+	/// Applies current offset/transition effects to the view's world position/rotation. <br />
+	/// Also allows (not) setting the world transform of the viewing object itself.
+	/// </summary>
+	/// <param name="updateView"> If true: update where the camera should render from. </param>
+	/// <param name="updateObject"> If true: update the view's GameObject world transform. </param>
+	public virtual void UpdateViewTransform( bool updateView = true, bool updateObject = true )
+	{
+		if ( updateView )
+			UpdateModeTransform();
+
+		if ( updateObject )
+			TrySetTransform( ViewTransform );
+	}
+
+	/// <summary>
+	/// Sets this view's transform according to the current mode.
 	/// </summary>
 	protected virtual void UpdateModeTransform()
 	{

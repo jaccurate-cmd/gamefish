@@ -21,12 +21,21 @@ partial class BasePawn
 	[Feature( PAWN ), Group( PawnView.VIEW )]
 	public ViewModel ViewModel => View?.ViewModel;
 
+	/// <summary>
+	/// Where traces and the view should originate from.
+	/// </summary>
+	[Sync]
 	public virtual Vector3 EyePosition { get => WorldPosition; set => WorldPosition = value; }
+
+	/// <summary>
+	/// Where bullets and first person views should be pointed.
+	/// </summary>
+	[Sync]
 	public virtual Rotation EyeRotation { get => WorldRotation; set => WorldRotation = value; }
 
-	public Transform EyeTransform => new( EyePosition, EyeRotation, 1f );
-
 	public Vector3 EyeForward => EyeRotation.Forward;
+
+	public Transform EyeTransform => new( EyePosition, EyeRotation, 1f );
 
 	/// <summary>
 	/// Tells the view manager to process its transitions and offsets.

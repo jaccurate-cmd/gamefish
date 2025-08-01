@@ -72,7 +72,7 @@ public partial class Client : Agent
 	/// <summary>
 	/// Sets camera transform according to the current view.
 	/// </summary>
-	protected virtual void UpdateCamera()
+	public virtual void UpdateCamera()
 	{
 		if ( Pawns is null || !Scene.IsValid() )
 			return;

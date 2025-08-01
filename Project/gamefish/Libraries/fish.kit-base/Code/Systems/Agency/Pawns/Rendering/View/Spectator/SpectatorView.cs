@@ -6,16 +6,67 @@ namespace GameFish;
 public partial class SpectatorView : PawnView
 {
 	public SpectatorPawn SpectatorPawn => ParentPawn as SpectatorPawn;
+	public BasePawn SpectatorTarget => SpectatorPawn?.Spectating;
+
+	/// <summary>
+	/// Is our pawn a spectator that is spectating someone?
+	/// </summary>
+	public bool IsSpectating => SpectatorTarget.IsValid();
 
 	public override BasePawn TargetPawn => SpectatorPawn is SpectatorPawn spec && spec.IsValid()
 		? spec.Spectating.IsValid() ? spec.Spectating : spec
 		: null;
 
-	public override void FrameSimulate( in float deltaTime )
-	{
-		base.FrameSimulate( deltaTime );
+	public override bool TrySetPosition( in Vector3 newPos )
+		=> SpectatorPawn?.TrySetPosition( newPos ) ?? false;
 
-		EnsureFlyingMode();
+	public override bool TrySetRotation( in Rotation rNew )
+		=> SpectatorPawn?.TrySetRotation( rNew ) ?? false;
+
+	protected override void SetTransformFromRelative()
+	{
+		if ( !IsSpectating )
+		{
+			Relative = new();
+			return;
+		}
+
+		base.SetTransformFromRelative();
+	}
+
+	public override void StartTransition( in bool useWorldPosition = false )
+	{
+		// Don't transition while flying around.
+		if ( !IsSpectating )
+			return;
+
+		base.StartTransition( useWorldPosition );
+	}
+
+	protected override void UpdateTransition( in float deltaTime )
+	{
+		if ( !PreviousOffset.HasValue )
+			return;
+
+		// Stop all spectating while flying around.
+		if ( !IsSpectating )
+		{
+			StopTransition();
+			return;
+		}
+
+		base.UpdateTransition( in deltaTime );
+	}
+
+	protected override void DoAiming()
+	{
+		// Prevent aiming while spectating in first person.
+		if ( Mode is Perspective.FirstPerson )
+			if ( SpectatorPawn is SpectatorPawn spec && spec.IsValid() )
+				if ( spec.Spectating.IsValid() )
+					return;
+
+		base.DoAiming();
 	}
 
 	public override void CycleMode( in int dir )
@@ -30,54 +81,18 @@ public partial class SpectatorView : PawnView
 	/// <returns> If the mode was forced to first person. </returns>
 	protected bool EnsureFlyingMode()
 	{
-		var spec = SpectatorPawn;
-
 		// Ensure first person while not spectating someone.
-		if ( spec.IsValid() && !spec.Spectating.IsValid() )
+		if ( !IsSpectating )
 		{
 			if ( Mode != Perspective.FirstPerson )
 			{
 				Mode = Perspective.FirstPerson;
-				return true;
+				StopTransition();
 			}
+
+			return true;
 		}
 
 		return false;
-	}
-
-	public override Transform GetOrigin()
-	{
-		if ( SpectatorPawn is SpectatorPawn spec && !spec.Spectating.IsValid() )
-			return spec.EyeTransform.WithRotation( EyeRotation );
-
-		var targetPawn = TargetPawn;
-
-		if ( !targetPawn.IsValid() )
-			return EyeTransform;
-
-		return Mode is not Perspective.FirstPerson
-			? targetPawn.EyeTransform.WithRotation( EyeRotation )
-			: targetPawn.EyeTransform;
-	}
-
-	protected override void DoAiming()
-	{
-		/*
-		// Prevent aiming while spectating in first person.
-		if ( Mode is Perspective.FirstPerson )
-			if ( SpectatorPawn is SpectatorPawn spec && spec.IsValid() )
-				if ( spec.Spectating.IsValid() )
-					return;
-		*/
-
-		base.DoAiming();
-	}
-
-	protected override void OnFirstPersonModeUpdate( in float deltaTime )
-	{
-		base.OnFirstPersonModeUpdate( deltaTime );
-
-		if ( SpectatorPawn is SpectatorPawn spec && spec.Spectating.IsValid() )
-			EyeRotation = spec.Spectating.EyeRotation;
 	}
 }

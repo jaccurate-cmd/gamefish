@@ -100,15 +100,16 @@ partial class SpectatorPawn
 		if ( Spectating.IsValid() || !FlyingEnabled )
 			return;
 
+		var view = View;
+
+		if ( !view.IsValid() )
+			return;
+
 		var speed = AllowRunning && Input.Down( RunAction )
 			? FlyingRunSpeed
 			: FlyingSpeed;
 
 		WishVelocity = Input.AnalogMove * speed;
-
-		var view = View;
-
-		var rAim = view.IsValid() ? view.EyeRotation : WorldRotation;
 
 		if ( AllowAscend && Input.Down( AscendAction ) )
 			WishVelocity += Vector3.Up * speed;
@@ -116,19 +117,21 @@ partial class SpectatorPawn
 		if ( AllowDescend && Input.Down( DescendAction ) )
 			WishVelocity += Vector3.Down * speed;
 
+		var rAim = view.ViewRotation;
+
 		Velocity += rAim * WishVelocity * deltaTime;
 
 		// No need to trace if not colliding.
 		if ( !ShouldCollide() )
 		{
-			WorldPosition += Velocity * deltaTime;
+			view.ViewPosition += Velocity * deltaTime;
 			goto Friction;
 		}
 
 		// Use a collision helper.
 		var trace = Scene.Trace
-			.Radius( FlyingCollisionRadius )
 			.UsePhysicsWorld()
+			.Radius( FlyingCollisionRadius )
 			.WithAnyTags( FlyingHitTags )
 			.WithoutTags( FlyingIgnoreTags )
 			.IgnoreGameObjectHierarchy( GameObject );
@@ -137,7 +140,7 @@ partial class SpectatorPawn
 		{
 			Trace = trace,
 			Bounce = 0,
-			Position = WorldPosition,
+			Position = view.ViewPosition,
 			MaxStandableAngle = 90,
 			Velocity = Velocity
 		};
@@ -145,7 +148,8 @@ partial class SpectatorPawn
 		helper.TryMove( deltaTime );
 
 		Velocity = helper.Velocity;
-		WorldPosition = helper.Position;
+
+		view.ViewPosition = helper.Position;
 
 		Friction:
 

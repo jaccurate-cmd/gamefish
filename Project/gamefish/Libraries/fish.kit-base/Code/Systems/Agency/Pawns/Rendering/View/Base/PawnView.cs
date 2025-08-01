@@ -82,9 +82,9 @@ public partial class PawnView : Module, ISimulate
 	{
 		HandleInput();
 
-		OnPerspectiveUpdate( deltaTime );
-
 		UpdateTransition( deltaTime );
+
+		OnPerspectiveUpdate( deltaTime );
 
 		UpdatePawn();
 	}

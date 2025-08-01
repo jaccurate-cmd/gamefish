@@ -56,52 +56,54 @@ public abstract partial class BasePawn : DestructibleEntity
 	/// <summary>
 	/// Called when the <see cref="Agent"/> property has been set to a new value.
 	/// </summary>
-	protected virtual void OnSetOwner( Agent old, Agent agent )
+	protected virtual void OnSetOwner( Agent oldAgent, Agent newAgent )
 	{
 		if ( !Networking.IsHost || !this.IsValid() )
 			return;
 
 		// Debug logging.
-		if ( old.IsValid() )
+		if ( oldAgent.IsValid() )
 		{
-			this.Log( agent.IsValid()
-				? $"owner changed: [{old}] -> [{agent}]"
-				: $"lost owner: [{old}]" );
+			this.Log( newAgent.IsValid()
+				? $"owner changed: [{oldAgent}] -> [{newAgent}]"
+				: $"lost owner: [{oldAgent}]" );
 		}
-		else if ( agent.IsValid() )
+		else if ( newAgent.IsValid() )
 		{
-			this.Log( $"gained owner:[{agent}]" );
+			this.Log( $"gained owner:[{newAgent}]" );
 		}
 
 		// Old agent might've been destroyed, but not null.
-		if ( old is not null )
+		if ( oldAgent is not null )
 		{
 			// If valid: tell previous agent to drop this pawn.
-			if ( old.IsValid() )
-				old.RemovePawn( this );
+			if ( oldAgent.IsValid() )
+				oldAgent.RemovePawn( this );
 
 			// Let the pawn know they're dropped.
-			OnDropped( old );
+			OnDropped( oldAgent );
 		}
 
 		// New agent must be valid.
-		if ( agent.IsValid() )
+		if ( newAgent.IsValid() )
 		{
 			// Tell the new agent to register this pawn.
-			if ( agent.AddPawn( this ) )
+			if ( newAgent.AddPawn( this ) )
 			{
-				OnTaken( old, agent );
+				OnTaken( oldAgent, newAgent );
 			}
 			else
 			{
-				this.Warn( $"failed to add Pawn:[{this}] to Agent:[{agent}]" );
+				this.Warn( $"failed to add Pawn:[{this}] to Agent:[{newAgent}]" );
 				Agent = null;
 			}
 		}
 		else
 		{
+			WishVelocity = default;
+
 			// Always drop ownership if we don't belong to an agent.
-			Network.DropOwnership();
+			UpdateNetworking( null );
 		}
 	}
 

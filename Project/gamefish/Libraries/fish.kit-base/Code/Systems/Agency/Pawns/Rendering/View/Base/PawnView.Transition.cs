@@ -72,10 +72,10 @@ partial class PawnView
 		if ( !pawn.IsValid() )
 			return;
 
-		var tWorld = WorldTransform;
+		var tWorld = ViewTransform;
 
-		PreviousPosition = useWorldPosition ? WorldPosition : null;
-		PreviousOffset = new( GetOrigin().ToLocal( tWorld ) );
+		PreviousPosition = useWorldPosition ? ViewPosition : null;
+		PreviousOffset = new( GetViewOrigin().ToLocal( tWorld ) );
 
 		TransitionFraction = 0f;
 		_transVel = 0f;
@@ -114,7 +114,7 @@ partial class PawnView
 	/// </summary>
 	protected virtual void SetTransformFromRelative()
 	{
-		var tOrigin = GetOrigin();
+		var tOrigin = GetViewOrigin();
 
 		if ( PreviousOffset is Offset prevOffset )
 		{
@@ -129,16 +129,16 @@ partial class PawnView
 				tLerped.Position = prevPos.LerpTo( tRelative.Position, TransitionFraction );
 			}
 
-			TrySetPosition( tLerped.Position );
-			TrySetRotation( tLerped.Rotation );
+			ViewPosition = tLerped.Position;
+			ViewRotation = tLerped.Rotation;
 		}
 		else
 		{
 			// No transitioning.
 			var tRelative = Relative.ToWorld( tOrigin );
 
-			TrySetPosition( tRelative.Position );
-			TrySetRotation( tRelative.Rotation );
+			ViewPosition = tRelative.Position;
+			ViewRotation = tRelative.Rotation;
 		}
 	}
 }

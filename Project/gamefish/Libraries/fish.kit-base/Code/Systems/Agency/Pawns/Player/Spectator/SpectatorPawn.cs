@@ -66,17 +66,17 @@ public partial class SpectatorPawn : BasePawn
 	public virtual string SpectateNextAction { get; set; } = "Attack2";
 	public virtual bool AllowSpectateNext => !string.IsNullOrWhiteSpace( SpectateNextAction );
 
+	/// <summary> How fast the spectator is moving. </summary>
+	[Property]
+	[Feature( ENTITY ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
+	public override Vector3 Velocity { get; set; }
+
 	/// <summary> Spectators can never be spectated. </summary>
 	public override bool AllowSpectators => false;
 
 	/// <summary> Spectators can never be spectated. </summary>
 	public override bool AllowSpectator( BasePawn spec )
 		=> false;
-
-	/// <summary> How fast the spectator is moving. </summary>
-	[Property]
-	[Feature( ENTITY ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
-	public override Vector3 Velocity { get; set; }
 
 	protected override void OnEnabled()
 	{
@@ -85,11 +85,23 @@ public partial class SpectatorPawn : BasePawn
 		base.OnEnabled();
 	}
 
-	protected override void OnTaken( Agent old, Agent agent )
+	protected override void OnTaken( Agent oldAgent, Agent newAgent )
 	{
-		base.OnTaken( old, agent );
+		base.OnTaken( oldAgent, newAgent );
 
-		View?.StartTransition();
+		if ( !newAgent.IsOwner() )
+			return;
+
+		if ( Scene?.Camera?.WorldTransform is not Transform tView )
+			return;
+
+		var view = View;
+
+		if ( !view.IsValid() )
+			return;
+
+		view.TrySetTransform( tView );
+		view.StartTransition( useWorldPosition: true );
 	}
 
 	public override void FrameSimulate( in float deltaTime )
@@ -135,7 +147,10 @@ public partial class SpectatorPawn : BasePawn
 		if ( !view.IsValid() )
 			return;
 
-		view.StartTransition( useWorldPosition: true );
+		if ( next.IsValid() )
+			view.StartTransition( useWorldPosition: true );
+		else
+			view.Mode = PawnView.Perspective.FirstPerson;
 	}
 
 	public override bool CanSpectate( BasePawn target )
