@@ -2,8 +2,6 @@ namespace GameFish;
 
 partial class BasePawn : ISimulate
 {
-	public const string INPUT = "🕹 Input";
-
 	public virtual Vector3 WishVelocity
 	{
 		get => _wishVelocity;

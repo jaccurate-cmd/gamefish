@@ -7,8 +7,6 @@ namespace GameFish;
 [EditorHandle( Icon = "person" )]
 public abstract partial class BasePawn : DestructibleEntity
 {
-	public const string PAWN = "🐴 Pawn";
-
 	// public override string ToString()
 	// => $"{GetType().ToSimpleString( includeNamespace: false )}|Agent:{Agent?.ToString() ?? "none"}";
 

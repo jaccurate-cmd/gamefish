@@ -6,7 +6,7 @@ namespace GameFish;
 /// </summary>
 [Icon( "psychology" )]
 [EditorHandle( Icon = "psychology" )]
-public abstract partial class Agent : BaseEntity
+public abstract partial class Agent : ModuleEntity
 {
 	public const string FEATURE_AGENT = "🧠 Agent";
 	public const string GROUP_ID = "🆔 Identity";

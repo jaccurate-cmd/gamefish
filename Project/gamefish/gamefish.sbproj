@@ -25,6 +25,11 @@
     "CsProjName": "",
     "StartupScene": "scenes/gamefish/example1.scene",
     "LaunchMode": "Normal",
-    "SystemScene": "scenes/gamefish/system.scene"
+    "SystemScene": "scenes/gamefish/system.scene",
+    "ControlModes": {
+      "Keyboard": false,
+      "VR": false,
+      "Gamepad": false
+    }
   }
 }

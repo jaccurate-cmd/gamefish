@@ -12,8 +12,11 @@ public partial class BaseEntity : Component, ITransform
 
 	public const string MODULES = "🧩 Modules";
 
-	public const string NPC = "🤖 NPC";
+	public const string INPUT = "🕹 Input";
+
 	public const string MODEL = "🕺 Model";
+	public const string PAWN = "🐴 Pawn";
+	public const string NPC = "🤖 NPC";
 
 	public const string TAG_ENTITY = "entity";
 	public const string TAG_PROJECTILE = "projectile";

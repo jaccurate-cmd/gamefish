@@ -39,7 +39,7 @@ partial class SpectatorView
 			StopOrbiting();
 	}
 
-	public override void UpdateViewTransform( bool updateView = true, bool updateObject = true )
+	/*public override void UpdateViewTransform( bool updateView = true, bool updateObject = true )
 	{
 		if ( !IsOrbiting )
 		{
@@ -53,7 +53,7 @@ partial class SpectatorView
 
 		if ( updateObject )
 			TrySetTransform( ViewTransform.WithRotation( rView ) );
-	}
+	}*/
 
 	protected override void DoAiming()
 	{

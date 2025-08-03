@@ -2,8 +2,6 @@ namespace GameFish;
 
 partial class PawnView
 {
-	public const string INPUT = "🕹 Input";
-
 	public const string AIMING = "Aiming";
 	public const string COLLISION = "Collision";
 
