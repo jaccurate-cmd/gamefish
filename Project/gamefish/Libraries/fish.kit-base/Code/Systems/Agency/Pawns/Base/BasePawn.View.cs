@@ -30,7 +30,7 @@ partial class BasePawn
 	/// <summary>
 	/// Where bullets and first person views should be pointed.
 	/// </summary>
-	[Sync]
+	[Sync( SyncFlags.Interpolate )]
 	public virtual Rotation EyeRotation { get => WorldRotation; set => WorldRotation = value; }
 
 	public Vector3 EyeForward => EyeRotation.Forward;
