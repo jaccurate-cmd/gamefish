@@ -13,10 +13,17 @@ public abstract partial class BasePawn : DestructibleEntity
 	// => $"{GetType().ToSimpleString( includeNamespace: false )}|Agent:{Agent?.ToString() ?? "none"}";
 
 	/// <summary>
+	/// Is this controlled by a player agent?
+	/// </summary>
+	[Property]
+	[Feature( PAWN ), Group( DEBUG )]
+	public virtual bool IsPlayer => Agent?.IsPlayer ?? false;
+
+	/// <summary>
 	/// The agent controlling this pawn. Could be a player or NPC.
 	/// </summary>
-	[Sync( SyncFlags.FromHost )]
 	[Property, Feature( PAWN )]
+	[Sync( SyncFlags.FromHost )]
 	public Agent Agent
 	{
 		get => _owner;
