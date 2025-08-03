@@ -23,9 +23,9 @@ partial class PawnView
 
 	public virtual Vector3 PawnEyePosition => TargetPawn?.EyePosition ?? ViewPosition;
 	public virtual Rotation PawnEyeRotation => TargetPawn?.EyeRotation ?? ViewRotation;
-	public Vector3 PawnScale => TargetPawn?.WorldScale ?? Vector3.One;
+	public virtual Vector3 PawnScale => TargetPawn?.WorldScale ?? Vector3.One;
 
-	public virtual Transform PawnEyeTransform => TargetPawn?.EyeTransform ?? WorldTransform;
+	public virtual Transform PawnEyeTransform => new( PawnEyePosition, PawnEyeRotation, PawnScale );
 
 	/// <summary>
 	/// Distance from this view to the pawn's first-person origin.

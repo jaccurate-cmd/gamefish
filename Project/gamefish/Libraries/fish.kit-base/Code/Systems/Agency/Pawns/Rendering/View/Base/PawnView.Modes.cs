@@ -197,7 +197,7 @@ partial class PawnView
 	{
 		try
 		{
-			CustomSetAction( TargetPawn, this );
+			CustomSetAction?.Invoke( TargetPawn, this );
 		}
 		catch ( Exception e )
 		{

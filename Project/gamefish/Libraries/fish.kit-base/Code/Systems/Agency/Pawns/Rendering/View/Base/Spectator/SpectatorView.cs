@@ -26,10 +26,7 @@ public partial class SpectatorView : PawnView
 	protected override void SetTransformFromRelative()
 	{
 		if ( !IsSpectating )
-		{
-			Relative = new();
 			return;
-		}
 
 		base.SetTransformFromRelative();
 	}
@@ -48,7 +45,7 @@ public partial class SpectatorView : PawnView
 		if ( !PreviousOffset.HasValue )
 			return;
 
-		// Stop all spectating while flying around.
+		// Stop any transitioning while flying around.
 		if ( !IsSpectating )
 		{
 			StopTransition();
@@ -56,17 +53,6 @@ public partial class SpectatorView : PawnView
 		}
 
 		base.UpdateTransition( in deltaTime );
-	}
-
-	protected override void DoAiming()
-	{
-		// Prevent aiming while spectating in first person.
-		if ( Mode is Perspective.FirstPerson )
-			if ( SpectatorPawn is SpectatorPawn spec && spec.IsValid() )
-				if ( spec.Spectating.IsValid() )
-					return;
-
-		base.DoAiming();
 	}
 
 	public override void CycleMode( in int dir )

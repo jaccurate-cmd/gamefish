@@ -46,7 +46,7 @@ partial class PawnView
 	{
 		try
 		{
-			CustomUpdateAction( TargetPawn, this );
+			CustomUpdateAction?.Invoke( TargetPawn, this );
 		}
 		catch ( Exception e )
 		{
