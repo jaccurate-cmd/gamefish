@@ -42,6 +42,7 @@ partial class BasePawn
 	/// </summary>
 	[Button]
 	[Feature( SPECTATING ), Group( DEBUG )]
+	[ShowIf( nameof( AllowSpectators ), true )]
 	public virtual void StopSpectating()
 	{
 	}
