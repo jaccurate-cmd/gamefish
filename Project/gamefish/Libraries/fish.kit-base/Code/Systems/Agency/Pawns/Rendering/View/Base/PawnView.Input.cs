@@ -23,7 +23,7 @@ partial class PawnView
 	[Title( "Forward" )]
 	[Feature( INPUT ), Group( CYCLING )]
 	[ShowIf( nameof( AllowCyclingMode ), true )]
-	public string CycleModeForwardAction { get; set; } = "View";
+	public virtual string CycleModeForwardAction { get; set; } = "View";
 
 	/// <summary>
 	/// The button to press to select the next mode.
@@ -33,17 +33,17 @@ partial class PawnView
 	[Title( "Backward" )]
 	[Feature( INPUT ), Group( CYCLING )]
 	[ShowIf( nameof( AllowCyclingMode ), true )]
-	public string CycleModeBackwardAction { get; set; }
+	public virtual string CycleModeBackwardAction { get; set; }
 
 	[Property]
 	[Feature( INPUT ), Group( AIMING )]
-	public bool PitchClamping { get; set; } = true;
+	public virtual bool PitchClamping { get; set; } = true;
 
 	[Property]
 	[Range( 0, 180 )]
 	[Feature( INPUT ), Group( AIMING )]
 	[ShowIf( nameof( PitchClamping ), true )]
-	public FloatRange PitchRange { get; set; } = new( -89.9f, 89.9f );
+	public virtual FloatRange PitchRange { get; set; } = new( -89.9f, 89.9f );
 
 	/// <summary>
 	/// An Euler angle representing where this view is looking.
