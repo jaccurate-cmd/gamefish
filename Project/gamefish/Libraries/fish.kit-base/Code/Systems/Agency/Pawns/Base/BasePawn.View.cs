@@ -49,9 +49,14 @@ partial class BasePawn
 	/// <summary>
 	/// Lets this pawn manipulate what is probably the main camera.
 	/// </summary>
-	public virtual void ApplyView( CameraComponent cam, ref Transform tView )
+	public virtual bool TryApplyView( CameraComponent cam, ref Transform tView )
 	{
-		tView = View?.GetViewTransform() ?? tView;
+		if ( View is not PawnView view || !view.IsValid() )
+			return false;
+
+		tView = view.GetViewTransform();
+
+		return true;
 	}
 
 	/// <summary>

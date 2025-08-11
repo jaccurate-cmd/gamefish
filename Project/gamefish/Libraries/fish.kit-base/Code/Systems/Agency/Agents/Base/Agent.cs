@@ -18,11 +18,28 @@ public abstract partial class Agent : ModuleEntity
 	public virtual bool IsPlayer { get; } = false;
 
 	/// <summary>
-	/// Which pawns are known to be under this agent's control?
+	/// What specific pawn(if any) is under this agent's control?
 	/// </summary>
 	[Sync( SyncFlags.FromHost )]
 	[Property, ReadOnly, Feature( FEATURE_AGENT )]
-	public NetList<BasePawn> Pawns { get; set; }
+	public BasePawn Pawn { get; set; }
+
+	[Property]
+	[Title( "Set Pawn" )]
+	[HideIf( nameof( InEditor ), true )]
+	[Feature( FEATURE_AGENT ), Category( "Debug" )]
+	public BasePawn SetDebugPawn
+	{
+		get => _debugPawn;
+		set
+		{
+			_debugPawn = value;
+			if ( !_debugPawn.IsValid() ) return;
+			SetPawn<BasePawn>( _debugPawn.GameObject );
+		}
+	}
+
+	private BasePawn _debugPawn;
 
 	public virtual Identity Identity { get; protected set; }
 	public virtual Connection Connection => Connection.Host;
@@ -68,23 +85,7 @@ public abstract partial class Agent : ModuleEntity
 	{
 		base.OnDestroy();
 
-		DropAllPawns();
-	}
-
-	public void DropAllPawns()
-	{
-		if ( !Networking.IsHost )
-			return;
-
-		if ( Pawns is null )
-			return;
-
-		// rndtrash: another place where the "Collection was modified" exception occurs
-		foreach ( var pawn in Pawns.ToList() )
-			if ( pawn.IsValid() && pawn.Agent == this )
-				pawn.Agent = null;
-
-		Pawns?.Clear();
+		TryDropPawn();
 	}
 
 	/// <returns> A random default spawn point's transform(if any). </returns>
@@ -96,37 +97,18 @@ public abstract partial class Agent : ModuleEntity
 
 	protected bool InEditor => Scene?.IsEditor ?? true;
 
-	[Property]
-	[Title( "Set Pawn" )]
-	[HideIf( nameof( InEditor ), true )]
-	[Feature( FEATURE_AGENT ), Category( "Debug" )]
-	public BasePawn SetDebugPawn
-	{
-		get => _debugPawn;
-		set
-		{
-			_debugPawn = value;
-			if ( !_debugPawn.IsValid() ) return;
-			SetPawn<BasePawn>( _debugPawn.GameObject );
-		}
-	}
-
-	private BasePawn _debugPawn;
-
 	/// <summary>
 	/// Spawns a <see cref="BasePawn"/> prefab and assigns it to this agent.
 	/// </summary>
 	/// <param name="prefab"></param>
-	/// <param name="dropAll"> Set this as the only owned pawn? </param>
-	public BasePawn SetPawn( PrefabFile prefab, bool dropAll = true )
-		=> SetPawn<BasePawn>( prefab, dropAll: dropAll );
+	public BasePawn SetPawn( PrefabFile prefab )
+		=> SetPawn<BasePawn>( prefab );
 
 	/// <summary>
 	/// Spawns a <typeparamref name="TPawn"/> prefab and assigns it to this agent.
 	/// </summary>
 	/// <param name="prefab"></param>
-	/// <param name="dropAll"> Set this as the only owned pawn? </param>
-	public TPawn SetPawn<TPawn>( PrefabFile prefab, bool dropAll = true ) where TPawn : BasePawn
+	public TPawn SetPawn<TPawn>( PrefabFile prefab ) where TPawn : BasePawn
 	{
 		if ( !Networking.IsHost )
 		{
@@ -151,16 +133,15 @@ public abstract partial class Agent : ModuleEntity
 		if ( !prefab.TrySpawn( spawnPoint.GetValueOrDefault().WithScale( 1f ), out var go ) )
 			return null;
 
-		return SetPawn<TPawn>( go, dropAll: dropAll, failDestroy: true );
+		return SetPawn<TPawn>( go, failDestroy: true );
 	}
 
 	/// <summary>
 	/// Assigns a pawn to this agent from an existing object.
 	/// </summary>
 	/// <param name="go"> The <see cref="GameObject"/> with <typeparamref name="TPawn"/> on it. </param>
-	/// <param name="dropAll"> Set this as the only owned pawn? </param>
 	/// <param name="failDestroy"> Destroy the object upon failure? </param>
-	public TPawn SetPawn<TPawn>( GameObject go, bool dropAll = true, bool failDestroy = false ) where TPawn : BasePawn
+	public TPawn SetPawn<TPawn>( GameObject go, bool failDestroy = false ) where TPawn : BasePawn
 	{
 		if ( !Networking.IsHost )
 		{
@@ -174,42 +155,41 @@ public abstract partial class Agent : ModuleEntity
 			return null;
 		}
 
-		var pComp = go.Components.Get<TPawn>( true );
+		var failed = false;
+		var newPawn = go.Components.Get<TPawn>( true );
 
-		if ( !pComp.IsValid() )
+		if ( !newPawn.IsValid() )
 		{
+			failed = true;
 			this.Warn( $"failed to find type:[{typeof( TPawn )}] on object:[{go}]" );
+		}
 
-			if ( failDestroy )
-			{
-				this.Warn( $"failure detected. destroying object:[{go}]" );
-				go.Destroy();
-			}
+		if ( !TrySetPawn( newPawn ) )
+		{
+			failed = true;
+			this.Warn( $"failed to set pawn:[{newPawn}]" );
+		}
+
+		if ( failed && failDestroy )
+		{
+			this.Warn( $"failure detected. destroying object:[{go}]" );
+			go.Destroy();
 
 			return null;
 		}
 
-		pComp.Agent = this;
-
-		if ( dropAll && Pawns is not null )
-		{
-			// rndtrash: make a new list to avoid a weird "Collection was modified" exception
-			foreach ( var p in Pawns.Where( p => p.IsValid() && p != pComp ).ToList() )
-				p.Agent = null;
-		}
-
-		return pComp;
+		return newPawn;
 	}
 
 	/// <summary>
 	/// Called by the host to register a pawn assigned to this agent.
 	/// </summary>
-	public virtual bool AddPawn( BasePawn pawn )
+	public virtual bool TrySetPawn( BasePawn pawn )
 	{
 		if ( !Networking.IsHost )
 			return false;
 
-		if ( !this.IsValid() || !Scene.IsValid() || Scene.IsEditor )
+		if ( !this.IsValid() || !Scene.IsValid() )
 			return false;
 
 		if ( !pawn.IsValid() )
@@ -238,78 +218,37 @@ public abstract partial class Agent : ModuleEntity
 			}
 		}
 
-		if ( Pawns is null )
-			Pawns = [pawn];
-		else if ( !Pawns.Contains( pawn ) )
-			Pawns.Add( pawn );
+		if ( !pawn.TrySetOwner( this ) )
+			Pawn = pawn;
 
 		this.Log( $"added pawn:[{pawn}]" );
 
-		ValidatePawns();
-
-		OnGainPawn( pawn );
-
 		return true;
 	}
 
-	public virtual bool RemovePawn( BasePawn pawn )
+	public bool TryDropPawn()
 	{
 		if ( !Networking.IsHost )
 			return false;
 
-		if ( !this.IsValid() || !Scene.IsValid() || Scene.IsEditor )
-			return false;
+		if ( Pawn is not BasePawn pawn || !pawn.IsValid() )
+			return true;
 
-		if ( pawn is null )
-			return false;
-
-		ValidatePawns();
-
-		OnLosePawn( pawn );
-
-		return true;
+		return pawn.TryDropOwner();
 	}
 
 	/// <summary>
-	/// Called after a pawn we owned was confirmed to be removed.
+	/// Called when a pawn we owned was confirmed to be removed.
 	/// </summary>
-	protected virtual void OnLosePawn( BasePawn pawn )
+	public virtual void OnLosePawn( BasePawn pawn )
 	{
 	}
 
 	/// <summary>
-	/// Called after a pawn we didn't own is confirmed to be owned.
+	/// Called when a pawn we didn't own is confirmed to be owned.
 	/// </summary>
-	protected virtual void OnGainPawn( BasePawn pawn )
+	public virtual void OnGainPawn( BasePawn pawn )
 	{
-	}
-
-	/// <summary>
-	/// Clears out references to invalid or unowned pawns.
-	/// </summary>
-	protected virtual void ValidatePawns()
-	{
-		if ( !Networking.IsHost )
-			return;
-
-		if ( !this.IsValid() || !Scene.IsValid() || Scene.IsEditor )
-			return;
-
-		if ( Pawns is null )
-			return;
-
-		var toRemove = new List<BasePawn>();
-
-		foreach ( var pawn in Pawns )
-		{
-			if ( !pawn.IsValid() || pawn.Agent != this )
-			{
-				// this.Log( $"removed invalid pawn:[{pawn}]" );
-				toRemove.Add( pawn );
-			}
-		}
-
-		toRemove.ForEach( cl => Pawns.Remove( cl ) );
 	}
 
 	/// <summary>
@@ -349,11 +288,10 @@ public abstract partial class Agent : ModuleEntity
 		if ( !pawn.IsValid() || !pawn.AllowOwnership( this ) )
 			return Result( AttemptStatus.Failure );
 
-		pawn.Agent = this;
+		if ( !pawn.TrySetOwner( this ) )
+			return Result( AttemptStatus.Failure );
 
-		RpcTryTakePawnHostResponse( pawn, AttemptStatus.Success );
-
-		return AttemptStatus.Success;
+		return Result( AttemptStatus.Success );
 	}
 
 	/// <summary>
@@ -387,11 +325,10 @@ public abstract partial class Agent : ModuleEntity
 			return;
 		}
 
-		if ( Pawns is null )
+		if ( Pawn is not BasePawn pawn || !pawn.IsValid() )
 			return;
 
-		foreach ( var pawn in Pawns )
-			if ( pawn.CanSimulate() )
-				pawn.FrameSimulate( in deltaTime );
+		if ( pawn.CanSimulate() )
+			pawn.FrameSimulate( in deltaTime );
 	}
 }

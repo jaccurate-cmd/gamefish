@@ -40,7 +40,7 @@ public partial class Client : Agent
 	/// <summary> Is the identity's connection defined and active? </summary>
 	[ReadOnly]
 	[Property, Feature( FEATURE_AGENT )]
-	public override bool Connected => Connection is not null && Connection.IsActive;
+	public override bool Connected => Connection is Connection cn && (!Networking.IsActive || cn.IsActive);
 
 	public override string Name => Connection?.DisplayName ?? base.Name;
 
@@ -74,21 +74,19 @@ public partial class Client : Agent
 	/// </summary>
 	public virtual void UpdateCamera()
 	{
-		if ( Pawns is null || !Scene.IsValid() )
+		if ( Scene?.Camera is not CameraComponent cam || !cam.IsValid() )
 			return;
 
-		var cam = Scene.Camera;
+		if ( Pawn is not BasePawn pawn || !pawn.IsValid() )
+			return;
 
-		if ( !cam.IsValid() )
+		if ( !pawn.CanSimulate() )
 			return;
 
 		var tView = cam.WorldTransform;
 
-		foreach ( var pawn in Pawns )
-			if ( pawn.CanSimulate() )
-				pawn.ApplyView( cam, ref tView );
-
-		cam.WorldTransform = tView;
+		if ( pawn.TryApplyView( cam, ref tView ) )
+			cam.WorldTransform = tView;
 	}
 
 	/// <summary>

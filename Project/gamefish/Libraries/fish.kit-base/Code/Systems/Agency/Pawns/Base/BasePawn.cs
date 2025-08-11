@@ -25,13 +25,16 @@ public abstract partial class BasePawn : DestructibleEntity
 	public Agent Agent
 	{
 		get => _owner;
-		set
+		protected set
 		{
 			if ( _owner == value )
 				return;
 
-			if ( value is not null && !AllowOwnership( value ) )
-				return;
+			if ( Networking.IsHost )
+			{
+				if ( value is not null && !AllowOwnership( value ) )
+					return;
+			}
 
 			var old = _owner;
 
@@ -58,6 +61,50 @@ public abstract partial class BasePawn : DestructibleEntity
 
 	protected BaseActor _actor;
 
+	public virtual bool TrySetOwner( Agent newAgent )
+	{
+		if ( !Networking.IsHost || !this.IsValid() )
+			return false;
+
+		if ( !newAgent.IsValid() )
+			return TryDropOwner();
+
+		if ( Agent == newAgent )
+			return true;
+
+		if ( !AllowOwnership( newAgent ) )
+			return false;
+
+		Agent = newAgent;
+
+		if ( Agent != newAgent )
+			return false;
+
+		newAgent.OnGainPawn( this );
+
+		return true;
+	}
+
+	public virtual bool TryDropOwner()
+	{
+		if ( !Networking.IsHost )
+			return false;
+
+		var owner = Agent;
+
+		if ( !this.IsValid() || !owner.IsValid() )
+			return true;
+
+		Agent = null;
+
+		if ( Agent.IsValid() )
+			return false;
+
+		owner.OnLosePawn( this );
+
+		return true;
+	}
+
 	/// <summary>
 	/// Called when the <see cref="Agent"/> property has been set to a new value.
 	/// </summary>
@@ -83,17 +130,21 @@ public abstract partial class BasePawn : DestructibleEntity
 		{
 			// If valid: tell previous agent to drop this pawn.
 			if ( oldAgent.IsValid() )
-				oldAgent.RemovePawn( this );
-
-			// Let the pawn know they're dropped.
-			OnDropped( oldAgent );
+			{
+				if ( oldAgent.Pawn == this && oldAgent.TryDropPawn() )
+					OnDropped( oldAgent );
+			}
+			else
+			{
+				OnDropped( oldAgent );
+			}
 		}
 
 		// New agent must be valid.
 		if ( newAgent.IsValid() )
 		{
 			// Tell the new agent to register this pawn.
-			if ( newAgent.AddPawn( this ) )
+			if ( newAgent.TrySetPawn( this ) )
 			{
 				OnTaken( oldAgent, newAgent );
 			}
@@ -127,7 +178,7 @@ public abstract partial class BasePawn : DestructibleEntity
 	}
 
 	/// <summary>
-	/// Can an agent take ownership of this pawn?
+	/// Can a valid agent take ownership of this pawn?
 	/// </summary>
 	/// <returns> If ownership would be allowed. </returns>
 	public virtual bool AllowOwnership( Agent agent )

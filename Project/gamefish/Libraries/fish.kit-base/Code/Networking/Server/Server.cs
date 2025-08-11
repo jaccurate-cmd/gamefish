@@ -109,7 +109,7 @@ public partial class Server : Singleton<Server>, Component.INetworkListener
 
 		// Spawn and assign their default pawn.
 		if ( cl.IsValid() )
-			cl.SetPawn( PlayerPawnPrefab, dropAll: true );
+			cl.SetPawn( PlayerPawnPrefab );
 
 		return cl as TClient;
 	}

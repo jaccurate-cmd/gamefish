@@ -54,40 +54,39 @@ public partial class ClientPawnCyclerModule : Module
 
 		var prefab = PawnToggleList.ElementAtOrDefault( PawnIndex );
 
-		if ( ParentAgent is Client cl && cl.IsValid() )
-		{
-			var previousPawns = cl.Pawns?.ToArray() ?? [];
-
-			var pawn = cl.SetPawn( prefab );
-
-			if ( pawn.IsValid() )
-			{
-				var prevPawn = previousPawns.FirstOrDefault();
-				var vPrev = prevPawn?.WorldPosition;
-				var rPrev = prevPawn?.WorldRotation;
-				var viewPrev = prevPawn?.View?.WorldTransform;
-
-				if ( vPrev.HasValue )
-					pawn.TrySetPosition( vPrev.Value );
-
-				if ( rPrev.HasValue )
-					pawn.TrySetRotation( Rotation.FromYaw( rPrev.Value.Yaw() ) );
-
-				if ( viewPrev is Transform tView && pawn.View is PawnView pv )
-				{
-					pv.ViewPosition = tView.Position;
-					pv.ViewRotation = tView.Rotation;
-				}
-			}
-
-			this.Log( "Cycling to pawn:" + pawn );
-
-			foreach ( var oldPawn in previousPawns )
-				oldPawn?.GameObject?.Destroy();
-		}
-		else
+		if ( ParentAgent is not Client cl || !cl.IsValid() )
 		{
 			this.Warn( "No valid client parent." );
+			return;
 		}
+
+		var oldPawn = cl.Pawn;
+		var pawn = cl.SetPawn( prefab );
+
+		if ( !pawn.IsValid() )
+		{
+			this.Warn( $"failed to set pawn prefab of index {PawnIndex}" );
+			return;
+		}
+
+		var vPrev = oldPawn?.WorldPosition;
+		var rPrev = oldPawn?.WorldRotation;
+		var viewPrev = oldPawn?.View?.WorldTransform;
+
+		if ( vPrev.HasValue )
+			pawn.TrySetPosition( vPrev.Value );
+
+		if ( rPrev.HasValue )
+			pawn.TrySetRotation( Rotation.FromYaw( rPrev.Value.Yaw() ) );
+
+		if ( viewPrev is Transform tView && pawn.View is PawnView pv )
+		{
+			pv.ViewPosition = tView.Position;
+			pv.ViewRotation = tView.Rotation;
+		}
+
+		this.Log( "Cycling to pawn:" + pawn );
+
+		oldPawn?.GameObject?.Destroy();
 	}
 }
