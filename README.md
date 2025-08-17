@@ -8,7 +8,7 @@ If you like what you see then remember: it's all MIT, just pinky promise to let 
 
 ### What?
 
-A series of kits(including the "base" kit).
+A series of kits, including the "base" kit that has a ton of great utilities.
 
 A "kit" lets you drop something in your project and get started with a type of game right away.
 
