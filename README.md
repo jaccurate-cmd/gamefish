@@ -2,13 +2,13 @@
 
 It ain't done yet, but it's got some gems already. Take a peek.
 
-If you like what you see then remember: it's all MIT, just pinky promise to let us know you used it.
+If you like what you see then remember: it's all MIT licensed. And we do like hearing that you used it.
 
 # Game Fish
 
 ### What?
 
-A series of kits, including the "base" kit that has a ton of great utilities.
+It'll be a series of "kits" with a base library that already has a ton of great utilities.
 
 A "kit" lets you drop something in your project and get started with a type of game right away.
 
