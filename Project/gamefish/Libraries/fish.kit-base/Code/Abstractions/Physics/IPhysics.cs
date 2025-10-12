@@ -18,7 +18,4 @@ public interface IPhysics : IVelocity, ITransform
 				Rigidbody.Velocity = value;
 		}
 	}
-
-	Vector3 IVelocity.GetVelocity() => Velocity;
-	void IVelocity.SetVelocity( in Vector3 vel ) => Velocity = vel;
 }

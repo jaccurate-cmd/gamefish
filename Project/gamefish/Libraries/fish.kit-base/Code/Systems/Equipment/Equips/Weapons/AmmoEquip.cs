@@ -7,20 +7,17 @@ namespace GameFish;
 /// </summary>
 public abstract partial class AmmoEquip : BaseEquip
 {
-	public const string GROUP_AMMO = "Ammo";
-	public const string GROUP_BULLET = "Bullet";
-	public const string GROUP_PROJECTILE = "Projectile";
-
 	[Property]
-	[Feature( WEAPON ), Group( "Ammo" )]
+	[Feature( WEAPON ), Group( AMMO )]
 	public virtual bool HasAmmo { get; set; } = true;
 
+	[Title( "Capacity" )]
 	[ShowIf( nameof( HasAmmo ), true )]
-	[Property, Feature( WEAPON ), Group( "Ammo" ), Title( "Max Ammo" )]
+	[Property, Feature( WEAPON ), Group( AMMO )]
 	public virtual int DefaultMaxAmmo { get; set; } = 20;
 
 	[ShowIf( nameof( HasAmmo ), true )]
-	[Property, Feature( WEAPON ), Group( "Ammo" )]
+	[Property, Feature( WEAPON ), Group( AMMO )]
 	public float ReloadDuration { get; set; } = 1f;
 
 	public virtual int Ammo { get => _ammo; set => _ammo = Math.Max( 0, value ); }
@@ -47,9 +44,9 @@ public abstract partial class AmmoEquip : BaseEquip
 		}
 	}
 
-	public override void OnHolster( BasePawn owner, PawnEquipment inv )
+	protected override void OnHolster()
 	{
-		base.OnHolster( owner, inv );
+		base.OnHolster();
 
 		Reloading = false;
 	}

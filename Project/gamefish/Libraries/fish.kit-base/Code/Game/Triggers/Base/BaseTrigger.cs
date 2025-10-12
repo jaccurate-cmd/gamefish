@@ -8,65 +8,65 @@ namespace GameFish;
 /// Capable of creating, updating and rendering its collision.
 /// </summary>
 [Title( "Trigger" )]
+[Group( Library.NAME )]
 [Icon( "highlight_alt" )]
-[Group( COMPONENT_GROUP )]
 [EditorHandle( "materials/tools/mesh_icons/quad.png" )]
-public partial class BaseTrigger : Component, Component.ITriggerListener, Component.ExecuteInEditor
+public partial class BaseTrigger : BaseEntity, Component.ITriggerListener, Component.ExecuteInEditor
 {
-	public const string COMPONENT_GROUP = "Triggers";
-
-	public const string GROUP_DEBUG = "🐞 Debug";
-	public const string GROUP_COLLIDER = "🏀 Collider";
-	public const string GROUP_CALLBACK = "⚡ Callbacks";
-
-	public const int ORDER_CALLBACK = 420;
-
-	public const string TAG_TRIGGER = "trigger";
-	public const string TAG_LADDER = "ladder";
+	protected const int TRIGGER_ORDER = ENTITY_ORDER - 50;
+	protected const int CALLBACKS_ORDER = 42069;
 
 	public enum ColliderType
 	{
 		/// <summary>
 		/// Doesn't create any colliders. Lets you add your own.
 		/// </summary>
-		Manual,
+		Manual = 0,
 
 		/// <summary>
-		/// Automatically creates and resizes a box collider.
+		/// Creates a <see cref="BoxCollider"/>.
 		/// </summary>
-		Box,
+		Box = 1,
 
 		/// <summary>
-		/// Automatically creates a sphere collider.
+		/// Creates a <see cref="SphereCollider"/>.
 		/// </summary>
-		Sphere,
+		Sphere = 2,
+
+		/// <summary>
+		/// Creates a cylindrical <see cref="HullCollider"/>.
+		/// </summary>
+		Cylinder = 3,
 	}
 
 	/// <summary>
 	/// Allows automatically creating, updating and previewing a collider.
 	/// </summary>
-	[Property, Group( GROUP_COLLIDER )]
+	[Property, Feature( TRIGGER ), Group( COLLISION )]
 	public virtual ColliderType Collider
 	{
 		get => _colType;
 		set { _colType = value; UpdateColliders(); }
 	}
-	private ColliderType _colType = ColliderType.Box;
+
+	protected ColliderType _colType = ColliderType.Box;
 
 	public virtual bool UsingBox => Collider is ColliderType.Box;
 	public virtual bool UsingSphere => Collider is ColliderType.Sphere;
+	public virtual bool UsingCylinder => Collider is ColliderType.Cylinder;
 
 	[ShowIf( nameof( UsingBox ), true )]
-	[Property, Group( GROUP_COLLIDER )]
+	[Property, Feature( TRIGGER ), Group( COLLISION )]
 	public virtual BBox BoxSize
 	{
 		get => _boxSize;
 		set { _boxSize = value; UpdateColliders(); }
 	}
-	private BBox _boxSize = new( new Vector3( -64, -128f, -128f ), new Vector3( 64f, 128f, 128f ) );
+
+	protected BBox _boxSize = new( new Vector3( -128f, -128f, -128f ), new Vector3( 128f, 128f, 128f ) );
 
 	[ShowIf( nameof( UsingSphere ), true )]
-	[Property, Group( GROUP_COLLIDER )]
+	[Property, Feature( TRIGGER ), Group( COLLISION )]
 	public float SphereRadius
 	{
 		get => _sphereRadius;
@@ -76,49 +76,119 @@ public partial class BaseTrigger : Component, Component.ITriggerListener, Compon
 			UpdateColliders();
 		}
 	}
-	private float _sphereRadius = 64f;
+
+	protected float _sphereRadius = 128f;
+
+	[ShowIf( nameof( UsingCylinder ), true )]
+	[Property, Feature( TRIGGER ), Group( COLLISION )]
+	public float CylinderRadius
+	{
+		get => _cylinderRadius;
+		set
+		{
+			_cylinderRadius = value;
+			UpdateColliders();
+		}
+	}
+
+	protected float _cylinderRadius = 128f;
+
+	[ShowIf( nameof( UsingCylinder ), true )]
+	[Property, Feature( TRIGGER ), Group( COLLISION )]
+	public float CylinderHeight
+	{
+		get => _cylinderHeight;
+		set
+		{
+			_cylinderHeight = value;
+			UpdateColliders();
+		}
+	}
+
+	protected float _cylinderHeight = 128f;
+
+	[Range( 3, 32, clamped: true )]
+	[ShowIf( nameof( UsingCylinder ), true )]
+	[Property, Feature( TRIGGER ), Group( COLLISION )]
+	public int CylinderSides
+	{
+		get => _cylinderSides;
+		set
+		{
+			_cylinderSides = value;
+			UpdateColliders();
+		}
+	}
+
+	protected int _cylinderSides = 16;
+
 
 	/// <summary>
-	/// Print debug logs?
+	/// Print debug logs related to triggering?
 	/// </summary>
-	[Property, Group( GROUP_DEBUG )]
-	public bool DebugLogging { get; set; } = false;
+	[Property, Feature( TRIGGER ), Group( DEBUG )]
+	public bool DebugTrigger { get; set; } = false;
 
 	/// <summary>
 	/// Render gizmos in play mode?
 	/// </summary>
-	[Property, Group( GROUP_DEBUG )]
+	[Property, Feature( TRIGGER ), Group( DEBUG )]
 	public bool DebugGizmos { get; set; } = false;
 
+	/// <summary>
+	/// Enables overriding the default color for the collider gizmo.
+	/// </summary>
+	[Title( "Use Custom Color" )]
+	[Property, Feature( TRIGGER ), Group( DEBUG )]
+	public bool UseCustomColor { get; set; } = false;
+
+	/// <summary>
+	/// Which custom color to use for the collider gizmo(if enabled).
+	/// </summary>
+	[Title( "Collider Color" )]
+	[Property, Feature( TRIGGER ), Group( DEBUG )]
+	[ShowIf( nameof( UseCustomColor ), true )]
+	public virtual Color CustomColor { get; set; } = Color.White;
+
+	/// <summary>
+	/// The opacity of the solid part of the shape.
+	/// </summary>
+	[Title( "Solid Alpha" )]
+	[Range( 0f, 1f, clamped: true )]
+	[Property, Feature( TRIGGER ), Group( DEBUG )]
+	public float DebugGizmoSolidAlpha { get; set; } = 0f;
+
+
 	/// <summary> An object that passed filters just touched this. </summary>
-	[Order( ORDER_CALLBACK )]
-	[Property, Group( GROUP_CALLBACK )]
+	[Order( CALLBACKS_ORDER )]
+	[Property, Feature( TRIGGER ), Group( CALLBACKS )]
 	public Action<BaseTrigger, GameObject> OnEnter { get; set; }
 
 	/// <summary> An object that passed filters just exited this. </summary>
-	[Order( ORDER_CALLBACK )]
-	[Property, Group( GROUP_CALLBACK )]
+	[Order( CALLBACKS_ORDER )]
+	[Property, Feature( TRIGGER ), Group( CALLBACKS )]
 	public Action<BaseTrigger, GameObject> OnExit { get; set; }
 
 	/// <summary> A passing object just entered this as it was previously empty. </summary>
-	[Order( ORDER_CALLBACK )]
-	[Property, Group( GROUP_CALLBACK )]
+	[Order( CALLBACKS_ORDER )]
+	[Property, Feature( TRIGGER ), Group( CALLBACKS )]
 	public Action<BaseTrigger, GameObject> OnFirstEnter { get; set; }
 
 	/// <summary> The only object occupying this trigger just exited. </summary>
-	[Order( ORDER_CALLBACK )]
-	[Property, Group( GROUP_CALLBACK )]
+	[Order( CALLBACKS_ORDER )]
+	[Property, Feature( TRIGGER ), Group( CALLBACKS )]
 	public Action<BaseTrigger, GameObject> OnEmptied { get; set; }
 
 	/// <summary> Called every update for each object within this trigger. </summary>
-	[Order( ORDER_CALLBACK )]
-	[Property, Group( GROUP_CALLBACK )]
+	[Order( CALLBACKS_ORDER )]
+	[Property, Feature( TRIGGER ), Group( CALLBACKS )]
 	public Action<BaseTrigger, GameObject> OnInsideUpdate { get; set; }
 
 	/// <summary> Called every update for each object within this trigger. </summary>
-	[Order( ORDER_CALLBACK )]
-	[Property, Group( GROUP_CALLBACK )]
+	[Order( CALLBACKS_ORDER )]
+	[Property, Feature( TRIGGER ), Group( CALLBACKS )]
 	public Action<BaseTrigger, GameObject> OnInsideFixedUpdate { get; set; }
+
 
 	/// <summary>
 	/// Has <see cref="OnStart"/> been called yet?
@@ -134,9 +204,15 @@ public partial class BaseTrigger : Component, Component.ITriggerListener, Compon
 
 	public BoxCollider Box { get; set; }
 	public SphereCollider Sphere { get; set; }
+	public HullCollider Cylinder { get; set; }
+
+	/// <summary>
+	/// The color of this trigger's gizmos. Supports custom coloring.
+	/// </summary>
+	public Color GizmoColor => UseCustomColor ? CustomColor : DefaultGizmoColor;
+	public virtual Color DefaultGizmoColor { get; } = Color.Green.Desaturate( 0.8f ).Darken( 0.2f );
 
 	public virtual TagSet DefaultTags { get; } = [TAG_TRIGGER];
-	public virtual Color GizmoColor { get; } = Color.Green.Desaturate( 0.8f ).Darken( 0.2f );
 
 	protected override Task OnLoad()
 	{
@@ -165,7 +241,7 @@ public partial class BaseTrigger : Component, Component.ITriggerListener, Compon
 
 	protected void DebugLog( params object[] log )
 	{
-		if ( DebugLogging )
+		if ( DebugTrigger )
 			this.Log( log );
 	}
 
@@ -174,7 +250,7 @@ public partial class BaseTrigger : Component, Component.ITriggerListener, Compon
 		base.OnUpdate();
 
 		if ( DebugGizmos )
-			DrawGizmos();
+			DrawTriggerGizmos();
 
 		if ( this.InEditor() )
 			return;
@@ -220,16 +296,16 @@ public partial class BaseTrigger : Component, Component.ITriggerListener, Compon
 			return;
 
 		// Box
-		if ( UsingBox )
+		if ( Collider is ColliderType.Box )
 		{
 			if ( !Box.IsValid() )
 				Box = Components.GetOrCreate<BoxCollider>( FindMode.EverythingInSelf );
 
-			Box.Enabled = !this.InEditor();
-			Box.IsTrigger = true;
-
 			Box.Scale = BoxSize.Size;
 			Box.Center = BoxSize.Mins + BoxSize.Extents;
+
+			Box.Enabled = !this.InEditor();
+			Box.IsTrigger = true;
 		}
 		else if ( Box.IsValid() )
 		{
@@ -237,19 +313,40 @@ public partial class BaseTrigger : Component, Component.ITriggerListener, Compon
 		}
 
 		// Sphere
-		if ( UsingSphere )
+		if ( Collider is ColliderType.Sphere )
 		{
 			if ( !Sphere.IsValid() )
 				Sphere = Components.GetOrCreate<SphereCollider>( FindMode.EverythingInSelf );
 
+			Sphere.Radius = SphereRadius;
+
 			Sphere.Enabled = !this.InEditor();
 			Sphere.IsTrigger = true;
-
-			Sphere.Radius = SphereRadius;
 		}
 		else if ( Sphere.IsValid() )
 		{
 			Sphere.Enabled = false;
+		}
+
+		// Cylinder
+		if ( Collider is ColliderType.Cylinder )
+		{
+			if ( !Cylinder.IsValid() )
+				Cylinder = Components.GetOrCreate<HullCollider>( FindMode.EverythingInSelf );
+
+			Cylinder.Radius = CylinderRadius;
+			Cylinder.Radius2 = CylinderRadius;
+			Cylinder.Height = CylinderHeight;
+			Cylinder.Slices = CylinderSides;
+
+			Cylinder.Type = HullCollider.PrimitiveType.Cylinder;
+
+			Cylinder.IsTrigger = true;
+			Cylinder.Enabled = !this.InEditor();
+		}
+		else if ( Cylinder.IsValid() )
+		{
+			Cylinder.Enabled = false;
 		}
 	}
 
@@ -354,10 +451,21 @@ public partial class BaseTrigger : Component, Component.ITriggerListener, Compon
 	{
 		base.DrawGizmos();
 
+		DrawTriggerGizmos();
+	}
+
+	public virtual void DrawTriggerGizmos()
+	{
+		var aSolid = this.InGame() || Gizmo.IsSelected ? 1f : 0.6f;
+
+		var lineColor = GizmoColor;
+		var solidColor = lineColor.WithAlpha( DebugGizmoSolidAlpha * aSolid );
+
 		_ = Collider switch
 		{
-			ColliderType.Box => this.DrawBox( BoxSize, GizmoColor, Color.Transparent ),
-			ColliderType.Sphere => this.DrawSphere( SphereRadius, Sphere?.Center ?? default, GizmoColor ),
+			ColliderType.Box => this.DrawBox( BoxSize, lineColor, solidColor ),
+			ColliderType.Sphere => this.DrawSphere( SphereRadius, Sphere?.Center ?? Vector3.Zero, lineColor, solidColor ),
+			ColliderType.Cylinder => this.DrawCylinder( CylinderRadius, CylinderHeight, lineColor, solidColor, CylinderSides ),
 			_ => false
 		};
 	}

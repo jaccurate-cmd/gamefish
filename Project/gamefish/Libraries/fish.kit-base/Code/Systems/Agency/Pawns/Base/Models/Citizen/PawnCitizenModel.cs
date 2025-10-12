@@ -2,7 +2,7 @@ namespace GameFish;
 
 public partial class PawnCitizenModel : PawnSkinnedModel
 {
-	protected override void SetModelOpacity( in float a )
+	public override void SetOpacity( in float a )
 	{
 		if ( !SkinRenderer.IsValid() )
 			return;

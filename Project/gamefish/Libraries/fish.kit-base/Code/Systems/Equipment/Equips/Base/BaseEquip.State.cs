@@ -2,6 +2,18 @@ namespace GameFish;
 
 partial class BaseEquip
 {
+	[Property]
+	[Feature( EQUIP ), Group( DEBUG )]
+	[ShowIf( nameof( InGame ), true )]
+	public bool IsDeployed => this.IsValid() && EquipState == EquipState.Deployed;
+
+	[Property]
+	[Title( "Equip State" )]
+	[Feature( EQUIP ), Group( DEBUG )]
+	[ShowIf( nameof( InGame ), true )]
+	protected EquipState DebugEquipState => EquipState;
+
+	[Sync]
 	public EquipState EquipState
 	{
 		get => _equipState;
@@ -12,12 +24,38 @@ partial class BaseEquip
 
 			_equipState = value;
 
-			if ( Scene.IsValid() && !Scene.IsEditor )
+			if ( this.InGame() )
 				OnEquipStateChanged( _equipState );
 		}
 	}
 
 	protected EquipState _equipState;
+
+	[Property]
+	[Feature( EQUIP ), Group( DEBUG )]
+	public PawnEquipment Inventory
+		=> Owner?.GetModule<PawnEquipment>();
+
+	protected virtual void OnEquipStateChanged( EquipState state )
+	{
+		if ( this.InEditor() || !GameObject.IsValid() )
+			return;
+
+		// Log.Info( $"DEBUG: {this}.EquipState = {state}" );
+
+		switch ( EquipState )
+		{
+			case EquipState.Dropped:
+				OnDrop();
+				break;
+			case EquipState.Deployed:
+				OnDeploy();
+				break;
+			case EquipState.Holstered:
+				OnHolster();
+				break;
+		}
+	}
 
 	protected override void OnPreRender()
 	{
@@ -48,35 +86,20 @@ partial class BaseEquip
 			WorldRenderer.Enabled = worldModel;
 	}
 
-	protected virtual void OnEquipStateChanged( EquipState state )
+	protected virtual void OnEquip( BasePawn owner )
 	{
-		// Log.Info( $"DEBUG: {this}.EquipState = {state}" );
 
-		switch ( EquipState )
-		{
-			case EquipState.Dropped:
-				break;
-			case EquipState.Deployed:
-				break;
-			case EquipState.Holstered:
-				break;
-		}
 	}
 
-	public virtual void OnEquip( BasePawn owner, PawnEquipment inv )
-	{
-		UpdateNetworking( inv?.Pawn?.Agent?.Connection );
-	}
-
-	public virtual void OnDrop( BasePawn owner, PawnEquipment inv )
+	protected virtual void OnDrop()
 	{
 	}
 
-	public virtual void OnDeploy( BasePawn owner, PawnEquipment inv )
+	protected virtual void OnDeploy()
 	{
 	}
 
-	public virtual void OnHolster( BasePawn owner, PawnEquipment inv )
+	protected virtual void OnHolster()
 	{
 	}
 }

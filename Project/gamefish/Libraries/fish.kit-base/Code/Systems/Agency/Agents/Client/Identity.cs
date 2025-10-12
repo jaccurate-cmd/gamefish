@@ -82,7 +82,7 @@ public partial struct Identity : IValid
 
 		Server.Instance?.RegisterIdentity( ref this );
 
-		GameFish.Log( this, "created" );
+		Print.InfoFrom( this, "created" );
 	}
 
 	public override readonly int GetHashCode() => HashCode.Combine( Created.GetHashCode(), Id.GetHashCode(), Name?.GetHashCode() );

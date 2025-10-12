@@ -91,9 +91,7 @@ public partial class SpectatorPawn : BasePawn
 		if ( Scene?.Camera?.WorldTransform is not Transform tView )
 			return;
 
-		var view = View;
-
-		if ( !view.IsValid() )
+		if ( View is not PawnView view || !view.IsValid() )
 			return;
 
 		view.ViewPosition = tView.Position;
@@ -106,6 +104,11 @@ public partial class SpectatorPawn : BasePawn
 	public override void FrameSimulate( in float deltaTime )
 	{
 		base.FrameSimulate( deltaTime );
+	}
+
+	protected override void UpdateController( in float deltaTime, in bool isFixedUpdate )
+	{
+		base.UpdateController( deltaTime, isFixedUpdate );
 
 		HandleInput();
 

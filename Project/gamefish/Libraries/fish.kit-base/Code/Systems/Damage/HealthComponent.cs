@@ -7,12 +7,12 @@ namespace GameFish;
 [Icon( "monitor_heart" )]
 public partial class HealthComponent : Component, IHealth
 {
-	public const string HEALTH = BaseEntity.HEALTH;
-	public const string VALUES = DestructibleEntity.VALUES;
+	protected const string HEALTH = Library.HEALTH;
+	protected const string VALUES = DestructibleEntity.VALUES;
 
 	[Sync]
 	[Property, Feature( HEALTH )]
-	public bool IsAlive { get; set; } = true;
+	public bool IsAlive { get; protected set; } = true;
 
 	/// <summary> Is this capable of ever taking damage? </summary>
 	[Property, Feature( HEALTH )]
@@ -22,7 +22,7 @@ public partial class HealthComponent : Component, IHealth
 	[Property, Title( "Initial" )]
 	[ShowIf( nameof( IsDestructible ), true )]
 	[Group( VALUES ), Feature( HEALTH )]
-	public float Health { get; set; } = 100f;
+	public float Health { get; protected set; } = 100f;
 
 	[Sync]
 	[Property, Title( "Max" )]
@@ -32,32 +32,35 @@ public partial class HealthComponent : Component, IHealth
 
 	[Property]
 	[ShowIf( nameof( IsDestructible ), true )]
-	[Feature( HEALTH ), Group( BaseEntity.DEBUG )]
+	[Feature( HEALTH ), Group( Library.DEBUG )]
 	public float DebugDamage { get; set; } = 25f;
-
-	public IEnumerable<IHealthEvent> HealthEvents
-		=> Components?.GetAll<IHealthEvent>( FindMode.EnabledInSelfAndDescendants ) ?? [];
 
 	[Button]
 	[Title( "Take Damage" )]
 	[ShowIf( nameof( IsDestructible ), true )]
-	[Feature( HEALTH ), Group( BaseEntity.DEBUG )]
+	[Feature( HEALTH ), Group( Library.DEBUG )]
 	protected void DebugTakeDamage()
 		=> TryDamage( new() { Damage = DebugDamage } );
+
+	public IEnumerable<IHealthEvent> HealthEvents
+		=> Components?.GetAll<IHealthEvent>( FindMode.EnabledInSelfAndDescendants ) ?? [];
 
 	public void OnDamage( in DamageInfo dmgInfo )
 		=> TryDamage( dmgInfo );
 
 	public virtual void SetHealth( in float hp )
 	{
+		if ( IsProxy )
+			return;
+
 		Health = hp.Clamp( 0f, MaxHealth );
 
 		foreach ( var e in HealthEvents )
 			e.OnSetHealth( hp );
 
-		if ( Health > 0 )
+		if ( !IsAlive && Health > 0 )
 			Revive();
-		else if ( Health <= 0 )
+		else if ( IsAlive && Health <= 0 )
 			Die();
 	}
 
@@ -82,7 +85,7 @@ public partial class HealthComponent : Component, IHealth
 			return;
 
 		IsAlive = true;
-		Health = Health.Max( restoreHealth ? MaxHealth : 1 );
+		Health = Health.Max( restoreHealth ? MaxHealth : Health.Max( 1 ) );
 
 		OnRevival();
 	}

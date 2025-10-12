@@ -9,83 +9,86 @@ namespace GameFish;
 [Title( "Filtered Trigger" )]
 public partial class FilterTrigger : BaseTrigger
 {
-	public const string FEATURE_FILTERS = "📋 Filters";
-
 	public const string GROUP_FILTER_TAGS = "🏳 Tag Filter";
 	public const string GROUP_FILTER_TYPE = "⌨ Type Filter";
 	public const string GROUP_FILTER_FUNC = "💻 Function Filter";
 
-	public const int ORDER_FILTER_TAGS = 69;
-	public const int ORDER_FILTER_TYPE = 88;
+	public const int FILTER_TAGS_ORDER = TRIGGER_ORDER + 10;
+	public const int FILTER_TYPE_ORDER = FILTER_TAGS_ORDER + 1;
+	public const int FILTER_FUNC_ORDER = FILTER_TYPE_ORDER + 2;
 
 	/// <summary>
 	/// If true: include/exclude by type.
 	/// </summary>
-	[Order( ORDER_FILTER_TYPE )]
-	[Feature( FEATURE_FILTERS )]
+	[Feature( FILTERS )]
+	[Order( FILTER_TYPE_ORDER )]
 	[Property, Group( GROUP_FILTER_TYPE )]
-	public bool FilterType { get; set; } = true;
+	public bool FilterType { get; set; } = false;
 
 	/// <summary>
 	/// They must have this type of component on them.
 	/// </summary>
-	[Order( ORDER_FILTER_TYPE )]
-	[Feature( FEATURE_FILTERS )]
+	[Feature( FILTERS )]
+	[Title( "Require Type" )]
+	[Order( FILTER_TYPE_ORDER )]
 	[ShowIf( nameof( FilterType ), true )]
 	[TargetType( typeof( Component ) )]
 	[Property, Group( GROUP_FILTER_TYPE )]
-	public Type RequireType { get; set; } = typeof( BasePlayer );
+	public Type FilterRequireType { get; set; } = typeof( BasePlayer );
 
 	/// <summary>
 	/// How to look for the component.
 	/// </summary>
-	[Order( ORDER_FILTER_TYPE )]
-	[Feature( FEATURE_FILTERS )]
+	[Feature( FILTERS )]
+	[Title( "Find Mode" )]
+	[Order( FILTER_TYPE_ORDER )]
 	[ShowIf( nameof( FilterType ), true )]
 	[TargetType( typeof( Component ) )]
 	[Property, Group( GROUP_FILTER_TYPE )]
-	public FindMode FindMode { get; set; } = FindMode.EnabledInSelf | FindMode.InAncestors;
+	public FindMode FilterFindMode { get; set; } = FindMode.EnabledInSelf | FindMode.InAncestors;
 
 	/// <summary>
 	/// If true: include/exclude by tags.
 	/// </summary>
-	[Order( ORDER_FILTER_TAGS )]
-	[Feature( FEATURE_FILTERS )]
+	[Feature( FILTERS )]
+	[Order( FILTER_TAGS_ORDER )]
 	[Property, Group( GROUP_FILTER_TAGS )]
 	public bool FilterTags { get; set; } = true;
 
 	/// <summary>
 	/// An object with any of these tags are accepted.
 	/// </summary>
-	[Order( ORDER_FILTER_TAGS )]
-	[Feature( FEATURE_FILTERS )]
+	[Feature( FILTERS )]
+	[Title( "Include Tags" )]
+	[Order( FILTER_TAGS_ORDER )]
 	[ShowIf( nameof( FilterTags ), true )]
 	[Property, Group( GROUP_FILTER_TAGS )]
-	public TagFilter IncludeTags { get; set; } = new() { Enabled = true, Tags = [BaseEntity.TAG_PLAYER] };
+	public TagFilter FilterIncludeTags { get; set; } = new() { Enabled = true, Tags = [TAG_PAWN] };
 
 	/// <summary>
 	/// An object with any of these tags are always ignored. <br />
-	/// They're excluded even if they have an <see cref="IncludeTags"/> tag.
+	/// They're excluded even if they have an <see cref="FilterIncludeTags"/> tag.
 	/// </summary>
-	[Order( ORDER_FILTER_TAGS )]
-	[Feature( FEATURE_FILTERS )]
+	[Feature( FILTERS )]
+	[Title( "Exclude Tags" )]
+	[Order( FILTER_TAGS_ORDER )]
 	[Property, Group( GROUP_FILTER_TAGS )]
 	[ShowIf( nameof( FilterTags ), true )]
-	public TagFilter ExcludeTags { get; set; }
+	public TagFilter FilterExcludeTags { get; set; }
 
 	/// <summary>
 	/// An additional, final check you can do in ActionGraph.
 	/// </summary>
-	[Order( ORDER_FILTER_TYPE + 1 )]
-	[Feature( FEATURE_FILTERS )]
+	[Feature( FILTERS )]
+	[Order( FILTER_FUNC_ORDER )]
 	[Property, Group( GROUP_FILTER_FUNC ), Title( "Passes Filter" )]
-	public Func<BaseTrigger, GameObject, bool> FunctionFilter { get; set; }
+	public Func<BaseTrigger, GameObject, bool> FilterFunction { get; set; }
 
-	[Order( ORDER_CALLBACK )]
-	[Property, Group( GROUP_CALLBACK )]
+	[Order( CALLBACKS_ORDER )]
+	[Property, Feature( TRIGGER ), Group( CALLBACKS )]
 	public Action<BaseTrigger, GameObject> OnFailedFilter { get; set; }
 
-	public override Color GizmoColor { get; } = Color.Green.Desaturate( 0.6f ).Darken( 0.25f );
+	public override Color DefaultGizmoColor { get; } = Color.Green.Desaturate( 0.6f ).Darken( 0.25f );
 
 	protected override bool TestFilters( GameObject obj )
 	{
@@ -125,11 +128,11 @@ public partial class FilterTrigger : BaseTrigger
 		if ( !TypesPassFilters( obj ) )
 			return false;
 
-		if ( FunctionFilter is not null )
+		if ( FilterFunction is not null )
 		{
 			try
 			{
-				return FunctionFilter.Invoke( this, obj );
+				return FilterFunction.Invoke( this, obj );
 			}
 			catch ( Exception e )
 			{
@@ -149,10 +152,10 @@ public partial class FilterTrigger : BaseTrigger
 		if ( !obj.IsValid() )
 			return false;
 
-		if ( !FilterType || RequireType is null )
+		if ( !FilterType || FilterRequireType is null )
 			return true;
 
-		return obj.Components.Get( RequireType, FindMode ).IsValid();
+		return obj.Components.Get( FilterRequireType, FilterFindMode ).IsValid();
 	}
 
 	/// <summary>
@@ -170,11 +173,11 @@ public partial class FilterTrigger : BaseTrigger
 		var passed = false;
 
 		// Include
-		if ( IncludeTags.HasAny( tags ) )
+		if ( FilterIncludeTags.HasAny( tags ) )
 			passed = true;
 
 		// Exclude
-		if ( ExcludeTags.HasAny( tags ) )
+		if ( FilterExcludeTags.HasAny( tags ) )
 			return false;
 
 		return passed;

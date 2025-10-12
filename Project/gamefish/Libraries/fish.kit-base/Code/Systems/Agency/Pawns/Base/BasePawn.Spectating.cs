@@ -2,6 +2,8 @@ namespace GameFish;
 
 partial class BasePawn
 {
+	protected const int SPECTATOR_ORDER = 500;
+
 	/// <summary>
 	/// If true: indicate that spectators can spectate this pawn. <br />
 	/// If false: all non-forced spectating is blocked.

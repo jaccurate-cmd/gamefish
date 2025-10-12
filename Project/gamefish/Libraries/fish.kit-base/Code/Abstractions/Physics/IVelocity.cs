@@ -5,18 +5,7 @@ namespace GameFish;
 /// </summary>
 public interface IVelocity
 {
-    /// <summary>
-    /// The velocity this object current has, though <see cref="GetVelocity"/> may give you a modified value.
-    /// </summary>
-    public virtual Vector3 Velocity { get => GetVelocity(); set => SetVelocity( value ); }
-
-    /// <returns> Gets the velocity and its factors. </returns>
-    public Vector3 GetVelocity();
-
-    /// <summary>
-    /// Sets the velocity in a way that lets the object process it.
-    /// </summary>
-    public void SetVelocity( in Vector3 vel );
+    public Vector3 Velocity { get; set; }
 
     /// <summary>
     /// Tries to modify the velocity. Lets the object modify the result.
@@ -26,12 +15,12 @@ public interface IVelocity
     {
         if ( !ITransform.IsValid( vel ) )
         {
-            result = GetVelocity();
+            result = vel;
             return false;
         }
 
-        SetVelocity( vel );
-        result = GetVelocity();
+        Velocity = vel;
+        result = vel;
 
         return true;
     }

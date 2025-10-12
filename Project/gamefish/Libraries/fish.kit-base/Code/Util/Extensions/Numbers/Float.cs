@@ -2,7 +2,7 @@ using System;
 
 namespace GameFish;
 
-public static partial class GameFish
+partial class Library
 {
 	/// <summary>
 	/// <see cref="MathF.Abs"/>
@@ -19,6 +19,18 @@ public static partial class GameFish
 	/// <returns> A sign that's never zero(will be 1 instead). </returns>
 	public static float Direction( this in float n )
 		=> n.Sign() == 1 ? 1 : -1;
+
+	/// <returns> If the number was within the range. </returns>
+	public static bool Within( this in float n, in float min, in float max )
+		=> n >= min && n <= max;
+
+	/// <returns> If the number was within the range. </returns>
+	public static bool Within( this in float n, in IntRange range )
+		=> range.Within( in n );
+
+	/// <returns> If the number was within the range. </returns>
+	public static bool Within( this in float n, in FloatRange range )
+		=> range.Within( in n );
 
 	/// <summary>
 	/// <see cref="MathF.Round(float)"/>

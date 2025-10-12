@@ -14,7 +14,7 @@ public struct WeightedList<T>
 	private double? TotalWeight { get; set; }
 
 	[Hide, ReadOnly]
-	[Group( BaseEntity.DEBUG )]
+	[Group( Library.DEBUG )]
 	public readonly double? TotalWeightCached => TotalWeight;
 
 	public WeightedList() { }

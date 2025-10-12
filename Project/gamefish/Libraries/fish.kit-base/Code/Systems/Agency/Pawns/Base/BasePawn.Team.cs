@@ -10,8 +10,9 @@ partial class BasePawn : ITeam
 		get => _team;
 		protected set
 		{
+			var oldTeam = _team;
 			_team = value;
-			OnSetTeam( value );
+			OnSetTeam( value, oldTeam );
 		}
 	}
 
@@ -22,27 +23,30 @@ partial class BasePawn : ITeam
 	/// </summary>
 	public string TeamTag => Team?.Tag;
 
+	/// <summary>
+	/// Assigns this pawn's team.
+	/// </summary>
 	public virtual void SetTeam( Team team )
 		=> Team = team;
 
-	public virtual void OnSetTeam( Team team )
-		=> Team.UpdateTags( GameObject, team?.Tag );
+	public virtual void OnSetTeam( Team newTeam, Team oldTeam = null )
+		=> Team.UpdateTags( GameObject, newTeam?.Tag );
 
 	/// <returns> If they are neutral, a friend or an enemy. </returns>
-	public virtual Relationship GetRelationship( ITeam t )
+	public virtual Relationship GetRelationship( ITeam other )
 	{
-		if ( Team is not Team myTeam )
+		if ( Team is null )
 		{
-			if ( t.Team is Team defaultTeam )
-				return defaultTeam.DefaultRelationship;
+			if ( other?.Team is not null )
+				return other.Team.DefaultRelationship;
 
 			return Relationship.Neutral;
 		}
 
-		if ( t.Team is not Team theirTeam )
-			return myTeam.DefaultRelationship;
+		if ( other is null || other.Team is null )
+			return Team.DefaultRelationship;
 
-		return myTeam.GetRelationship( theirTeam );
+		return Team.GetRelationship( other.Team );
 	}
 
 	public bool IsNeutral( ITeam pawn )
@@ -55,10 +59,10 @@ partial class BasePawn : ITeam
 		=> GetRelationship( pawn ) is Relationship.Ally;
 
 	/// <returns></returns>
-	public virtual Relationship GetRelationship( GameObject obj, FindMode findMode = FindMode.EverythingInSelf )
+	public virtual Relationship GetRelationship( GameObject obj, FindMode findMode = FindMode.EverythingInSelf | FindMode.InAncestors )
 	{
 		if ( !obj.IsValid() )
-			return Relationship.Neutral;
+			return Team.IsValid() ? Team.DefaultRelationship : Relationship.Neutral;
 
 		if ( obj.Components.TryGet<ITeam>( out var t, findMode ) )
 			return GetRelationship( t );

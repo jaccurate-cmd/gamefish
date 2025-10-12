@@ -7,8 +7,6 @@ namespace GameFish;
 [Icon( "videocam" )]
 public partial class PawnView : Module, ISimulate
 {
-	public const string SPECTATING = BasePawn.SPECTATOR;
-
 	public const string CYCLING = "Cycling";
 	public const string TRANSITIONING = "Transitioning";
 

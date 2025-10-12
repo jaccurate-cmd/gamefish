@@ -59,8 +59,8 @@ public abstract partial class DataFile<TDataComp, TDataClass> : Singleton<TDataC
 	/// <summary>
 	/// If the file data has been modified in some way since saving.
 	/// </summary>
-	[Range( 5f, 60f, step: 1f, clamped: false )]
 	[Property, Group( GROUP_FILE )]
+	[Range( 5f, 60f, clamped: false ), Step( 1 )]
 	public float AutoSaveDelay { get; set; } = 30f;
 
 	[JsonIgnore]

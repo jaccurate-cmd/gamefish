@@ -35,6 +35,7 @@ public struct FloatRange
 	public readonly float GetRandom()
 		=> Random.Float( _min, _max );
 
+	public static implicit operator FloatRange( in IntRange r ) => new( r.Min, r.Max );
 	public static implicit operator FloatRange( in Range r ) => new( r.Start.Value, r.End.Value );
 	public static implicit operator FloatRange( in RangedFloat r ) => new( r.Min, r.Max );
 }

@@ -1,71 +1,64 @@
-using System;
-
 namespace GameFish;
 
 /// <summary>
 /// 🚀 Shoots projectiles.
 /// </summary>
 [Icon( "rocket_launch" )]
-public partial class ProjectileWeapon : AmmoEquip
+public partial class ProjectileWeapon : BaseWeapon
 {
 	[Property]
-	[Feature( WEAPON ), Group( GROUP_PROJECTILE )]
-	public virtual float Speed { get; set; } = 1500f;
-
-	[Property]
 	[Title( "Prefab" )]
-	[Feature( WEAPON ), Group( GROUP_PROJECTILE )]
-	public virtual PrefabFile ProjectilePrefab { get; set; }
+	[Feature( WEAPON ), Group( PROJECTILE )]
+	public virtual PrefabFile ProjectilePrefab { get; set; } = Prefab.GetFile( "prefabs/gamefish/kit_fps/projectiles/missile1.prefab" );
 
 	/// <summary>
-	/// The distance to spawn the projectile from the aiming origin.
+	/// The projectile's velocity relative to the owner's aim. <br />
+	/// The <c>X</c> axis is forward speed.
 	/// </summary>
 	[Property]
-	[Title( "Initial Distance" )]
-	[Feature( WEAPON ), Group( GROUP_PROJECTILE )]
-	public float ProjectileStartDistance { get; set; } = 16f;
+	[Title( "Velocity" )]
+	[Feature( WEAPON ), Group( PROJECTILE )]
+	public virtual Vector3 ProjectileVelocity { get; set; } = new Vector3( 1500f, 0f, 0f );
 
 	/// <summary>
-	/// Set the prefab's scale when it's spawned?
+	/// Offsets the projectile given its spawning transform is spawned by this position/rotation.
 	/// </summary>
-	[Header( "Overrides" )]
-	[Property, Title( "Scaling" )]
-	[Feature( WEAPON ), Group( GROUP_PROJECTILE )]
-	public virtual bool OverrideScale { get; set; }
+	[Property]
+	[InlineEditor]
+	[Title( "Spawn Offset" )]
+	[Feature( WEAPON ), Group( PROJECTILE )]
+	public virtual Offset ProjectileOffset { get; set; } = new( Vector3.Forward * 16f, Rotation.Identity );
 
 	/// <summary>
 	/// What to override the spawned prefab's scale with.
 	/// </summary>
 	[Property]
-	[ShowIf( nameof( OverrideScale ), true )]
-	[Feature( WEAPON ), Group( GROUP_PROJECTILE )]
-	public virtual Vector3 Scale { get; set; } = Vector3.One;
+	[Title( "Scale" )]
+	[Feature( WEAPON ), Group( PROJECTILE )]
+	public virtual Vector3 ProjectileScale { get; set; } = Vector3.One;
 
-	public override void OnPrimary()
+	protected override void OnPrimary()
 	{
-		var proj = SpawnProjectile();
-
-		if ( proj.IsValid() && proj.Components.TryGet<Rigidbody>( out var rb ) )
-			rb.Velocity = Owner.EyeForward * Speed;
+		TrySpawnProjectile( out var _ );
 	}
 
-	public virtual GameObject SpawnProjectile( Vector3? pos = null, Rotation? r = null, Vector3? scale = null )
+	/// <returns> The default world transform for the projectile to spawn at. </returns>
+	public virtual Transform GetProjectileTransform()
 	{
-		pos ??= AimPosition + (AimDirection * ProjectileStartDistance);
-
-		if ( !ProjectilePrefab.TrySpawn( pos.Value, out var go ) )
-			return null;
-
-		r ??= Rotation.LookAt( AimDirection );
-
-		if ( !scale.HasValue && OverrideScale )
-			scale = Scale;
-
-		go.WorldRotation = r.Value;
-
-		if ( scale.HasValue )
-			go.WorldScale = scale.Value;
-
-		return go;
+		return new Transform( AimPosition, AimRotation, ProjectileScale )
+			.AddOffset( ProjectileOffset );
 	}
+
+	/// <returns> The velocity to apply relative to an aiming rotation. </returns>
+	public virtual Vector3 GetProjectileVelocity( in Rotation rAim )
+		=> ProjectileVelocity != default
+			? rAim * ProjectileVelocity
+			: default;
+
+	/// <summary>
+	/// Tries to spawn a projectile using the given(or default) transform.
+	/// </summary>
+	/// <returns> If the projectile could be spawned. </returns>
+	public virtual bool TrySpawnProjectile( out GameObject proj, Transform? tProj = null )
+		=> (proj = SpawnProjectile( ProjectilePrefab, tProj ?? GetProjectileTransform() )).IsValid();
 }

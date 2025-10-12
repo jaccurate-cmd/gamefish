@@ -2,28 +2,41 @@ namespace GameFish;
 
 partial class BasePawn
 {
-	/// <returns> Every valid <typeparamref name="TPawn"/> regardless of enabled state. (expensive!) </returns>
+	/// <returns> Every valid <typeparamref name="TPawn"/> regardless of enabled state. </returns>
+	/// <remarks>
+	/// This method is expensive! <br />
+	/// Consider using <see cref="GetAllActive"/> instead.
+	/// </remarks>
 	public static IEnumerable<TPawn> GetAll<TPawn>() where TPawn : BasePawn
 		=> Game.ActiveScene?.Components?.GetAll<TPawn>( FindMode.EverythingInSelfAndDescendants )
 			?.Where( p => p.IsValid() )
 			?? [];
 
-	/// <returns> Every valid and active <typeparamref name="TPawn"/>. (might be expensive) </returns>
+	/// <returns> Every valid and active <typeparamref name="TPawn"/>. </returns>
 	public static IEnumerable<TPawn> GetAllActive<TPawn>() where TPawn : BasePawn
-		=> Game.ActiveScene?.GetAll<TPawn>()
-			?.Where( p => p.IsValid() )
-			?? [];
+		=> Game.ActiveScene?.GetAll<TPawn>() ?? [];
 
-	/// <returns> Every pawn owned by the <typeparamref name="TPawn"/>(or empty if null). </returns>
-	public static IEnumerable<TPawn> GetAllOwnedBy<TPawn>( Agent owner, bool isActive = false ) where TPawn : BasePawn
+	/// <returns> Every valid and active pawn. </returns>
+	public static IEnumerable<BasePawn> GetAllActive()
+		=> GetAllActive<BasePawn>();
+
+	/// <typeparam name="TPawn"></typeparam>
+	/// <param name="owner"></param>
+	/// <param name="isActive"> If true: gets every pawn even if disabled. </param>
+	/// <returns> Every pawn owned by the <paramref name="owner"/>(or empty if null). </returns>
+	public static IEnumerable<TPawn> GetAllOwnedBy<TPawn>( Agent owner, bool isActive = true ) where TPawn : BasePawn
 	{
 		if ( !owner.IsValid() )
 			return [];
 
-		return isActive
+		return (isActive
 			? GetAllActive<TPawn>().Where( p => p.Agent == owner )
-			: GetAll<TPawn>().Where( p => p.Agent == owner );
+			: GetAll<TPawn>().Where( p => p.Agent == owner )) ?? [];
 	}
+
+	/// <returns> Every pawn owned by the <paramref name="owner"/>(or empty if null). </returns>
+	public static IEnumerable<BasePawn> GetAllOwnedBy( Agent owner, bool isActive = false )
+		=> GetAllOwnedBy<BasePawn>( owner, isActive );
 
 	/// <summary>
 	/// A consistent way of getting a pawn from a <see cref="GameObject"/>.

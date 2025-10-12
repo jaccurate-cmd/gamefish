@@ -4,10 +4,12 @@ namespace GameFish;
 /// Used to identify and store information about a team.
 /// </summary>
 [AssetType( Name = "Team Definition", Extension = "team", Category = "Game Fish" )]
-public partial class Team : GameResource
+public partial class Team : GameResource, ITeam
 {
 	protected override Bitmap CreateAssetTypeIcon( int width, int height )
 		=> CreateSimpleAssetTypeIcon( "flag", width, height, Color.White, Color.Black );
+
+	Team ITeam.Team => this;
 
 	/// <summary>
 	/// The prefix to use for finding and assigning tags to objects.
@@ -51,13 +53,40 @@ public partial class Team : GameResource
 
 	public Relationship GetRelationship( Team team )
 	{
+		if ( team is null )
+			return DefaultRelationship;
+
 		if ( team == this )
 			return SelfRelationship;
+
+		if ( Relationships is null )
+			return DefaultRelationship;
 
 		return Relationships
 			.Where( r => r.Team == team )
 			.Select( r => r.Relationship )
 			.FirstOrDefault( DefaultRelationship );
+	}
+
+	public bool IsAlly( Team team )
+		=> GetRelationship( team ) is Relationship.Ally;
+
+	public bool IsEnemy( Team team )
+		=> GetRelationship( team ) is Relationship.Enemy;
+
+	public bool IsAlly( GameObject obj )
+		=> obj.IsValid() && TryGetTeam( obj, out var team ) && IsAlly( team );
+
+	public bool IsEnemy( GameObject obj )
+		=> obj.IsValid() && TryGetTeam( obj, out var team ) && IsEnemy( team );
+
+	public static bool TryGetTeam( GameObject obj, out Team team )
+	{
+		if ( obj.IsValid() && obj.Components.TryGet<ITeam>( out var iTeam, FindMode.EnabledInSelf | FindMode.InAncestors ) )
+			return (team = iTeam.Team).IsValid();
+
+		team = null;
+		return false;
 	}
 
 	/// <summary>

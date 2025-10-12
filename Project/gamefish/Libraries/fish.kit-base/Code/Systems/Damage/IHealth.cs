@@ -4,13 +4,8 @@ namespace GameFish;
 
 public interface IHealth : Component.IDamageable
 {
-	abstract bool IsAlive { get; set; }
-
-	/// <summary> Is this capable of ever taking damage? </summary>
-	abstract bool IsDestructible { get; set; }
-
-	abstract float Health { get; set; }
-	abstract float MaxHealth { get; set; }
+	public bool IsAlive { get; }
+	public float Health { get; }
 
 	/// <summary>
 	/// The collection of <see cref="IHealthEvent"/>s relevant to this object. <br />
@@ -27,13 +22,6 @@ public interface IHealth : Component.IDamageable
 	public void SetHealth( in float hp );
 	public void ModifyHealth( in float hp );
 
-	public void Die();
-	public void Revive( bool restoreHealth = false );
-
-	public void OnDeath();
-	public void OnRevival();
-
 	public bool CanDamage( in DamageInfo dmgInfo );
 	public bool TryDamage( DamageInfo dmgInfo );
-	public void ApplyDamage( DamageInfo dmgInfo );
 }

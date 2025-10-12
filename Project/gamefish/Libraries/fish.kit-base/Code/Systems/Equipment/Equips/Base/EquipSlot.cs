@@ -1,10 +1,11 @@
 namespace GameFish;
 
 /// <summary>
-/// Fancy words representing numbers 1-10.
+/// Fancy words representing numbers 1-9.
 /// </summary>
 public enum EquipSlot : int
 {
+	None = 0,
 	Primary = 1,
 	Secondary = 2,
 	Tertiary = 3,
@@ -14,5 +15,4 @@ public enum EquipSlot : int
 	Septenary = 7,
 	Octonary = 8,
 	Nonary = 9,
-	Denary = 10,
 }

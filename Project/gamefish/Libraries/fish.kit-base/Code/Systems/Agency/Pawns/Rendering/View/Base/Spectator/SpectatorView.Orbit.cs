@@ -39,6 +39,7 @@ partial class SpectatorView
 			StopOrbiting();
 	}
 
+	/*
 	protected override void DoAiming()
 	{
 		if ( IsSpectating && Mode is Perspective.FirstPerson )
@@ -59,4 +60,5 @@ partial class SpectatorView
 
 		base.DoAiming();
 	}
+	*/
 }

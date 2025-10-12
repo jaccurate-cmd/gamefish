@@ -17,7 +17,7 @@ public static partial class DamageTags
 	public const string IMPACT = "impact";
 
 	public const string BULLET = "bullet";
-	public const string EXPLOSIVE = "boom";
+	public const string EXPLOSIVE = "explosive";
 
 	/// <summary>
 	/// General melee attack tag.

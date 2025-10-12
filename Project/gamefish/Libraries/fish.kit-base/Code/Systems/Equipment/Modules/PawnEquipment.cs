@@ -1,36 +1,44 @@
 using System;
+using Sandbox.UI;
 
 namespace GameFish;
 
 /// <summary>
 /// Manages and optionally spawns equipment.
 /// </summary>
+[Icon( "backpack" )]
 public partial class PawnEquipment : Module
 {
 	public const string GROUP_SLOTTING = "Slotting";
 	public const string GROUP_INVENTORY = "Inventory";
 
 	/// <summary> If true: only try to pick up weapons in their intended slot. </summary>
-	[Group( GROUP_SLOTTING ), Title( "Strict" )]
-	[Property, Feature( EQUIP )]
+	[Title( "Strict" )]
+	[Property, Feature( EQUIP ), Group( GROUP_SLOTTING )]
 	public virtual bool StrictSlots { get; set; }
 
 	/// <summary> If true: prevent picking up multiple instances of a weapon. </summary>
-	[Group( GROUP_SLOTTING ), Title( "Unique" )]
-	[Property, Feature( EQUIP )]
+	[Title( "Unique" )]
+	[Property, Feature( EQUIP ), Group( GROUP_SLOTTING )]
 	public virtual bool UniqueEquips { get; set; } = true;
 
 	/// <summary> How many weapons can fit in each individual slot? </summary>
-	[Group( GROUP_SLOTTING ), Title( "Size" )]
+	[Title( "Size" )]
 	[Range( 1, 4, clamped: false ), Step( 1f )]
-	[Property, Feature( EQUIP )]
+	[Property, Feature( EQUIP ), Group( GROUP_SLOTTING )]
 	public virtual int SlotCapacity { get; set; } = 1;
 
 	/// <summary> How many equipment slots are available overall? </summary>
-	[Group( GROUP_SLOTTING ), Title( "Available" )]
+	[Title( "Available" )]
 	[Range( 0, 10, clamped: false ), Step( 1f )]
-	[Property, Feature( EQUIP )]
+	[Property, Feature( EQUIP ), Group( GROUP_SLOTTING )]
 	public virtual int SlotCount { get; set; } = 10;
+
+	/// <summary> How many equipment slots are available overall? </summary>
+	[Title( "Input Prefix" )]
+	[Range( 0, 10, clamped: false ), Step( 1f )]
+	[Property, Feature( EQUIP ), Group( GROUP_SLOTTING )]
+	public virtual string InputPrefix { get; set; } = "Slot";
 
 	/// <summary>
 	/// Automatically give the loadout when this module first starts? <br />
@@ -45,22 +53,25 @@ public partial class PawnEquipment : Module
 
 	[InlineEditor, ReadOnly]
 	[Sync( SyncFlags.FromHost )]
-	[ShowIf( nameof( PlayingScene ), true )]
+	[ShowIf( nameof( InGame ), true )]
 	[Property, Feature( EQUIP ), Group( GROUP_INVENTORY )]
-	public NetList<BaseEquip> Equipped { get; } = [];
+	public NetList<BaseEquip> Equipped { get; set; } = [];
 
 	/// <summary>
 	/// The equipment actively deployed(if any).
 	/// </summary>
+	[Sync]
 	public BaseEquip ActiveEquip
 	{
-		get => _activeEquip;
+		get => _activeEquip.IsValid() && _activeEquip.Active
+			? _activeEquip : null;
+
 		set
 		{
 			if ( !value.IsValid() )
 			{
 				Holster( _activeEquip );
-				_activeEquip = value;
+				_activeEquip = null;
 
 				return;
 			}
@@ -97,6 +108,74 @@ public partial class PawnEquipment : Module
 		}
 	}
 
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		if ( IsProxy )
+			return;
+
+		var owner = Pawn;
+
+		if ( !owner.IsValid() || !owner.IsAlive )
+			return;
+
+		SelectEquipUpdate();
+	}
+
+	protected virtual void SelectEquipUpdate()
+	{
+		if ( Equipped is null || Equipped.Count == 0 )
+			return;
+
+		// Scrolling
+		var yScroll = Input.MouseWheel.y.Sign();
+
+		if ( yScroll != 0f )
+		{
+			// this.Log( yScroll );
+
+			var slots = Equipped
+				.Where( e => e.IsValid() )
+				.Select( e => e.Slot )
+				.Distinct()
+				.Order()
+				.ToList();
+
+			var currentSlot = ActiveEquip.IsValid() ? ActiveEquip.Slot : 0;
+			var slotIndex = slots.IndexOf( currentSlot );
+
+			if ( slotIndex == -1 || !slots.Contains( currentSlot ) )
+			{
+				ActiveEquip = Equipped.FirstOrDefault() ?? ActiveEquip;
+				return;
+			}
+
+			var nextSlotIndex = (slotIndex + yScroll).UnsignedMod( slots.Count );
+			var nextSlot = slots.ElementAtOrDefault( nextSlotIndex );
+			var selectEquip = Equipped.FirstOrDefault( e => e.IsValid() && e.Slot == nextSlot );
+
+			if ( selectEquip.IsValid() )
+			{
+				ActiveEquip = selectEquip;
+				return;
+			}
+		}
+
+		// Slot Pressing
+		foreach ( var equip in Equipped )
+		{
+			if ( !equip.IsValid() )
+				continue;
+
+			if ( Input.Pressed( InputPrefix + equip.Slot ) )
+			{
+				ActiveEquip = equip;
+				return;
+			}
+		}
+	}
+
 	public virtual void GiveLoadout()
 	{
 		if ( Loadout is null )
@@ -105,7 +184,12 @@ public partial class PawnEquipment : Module
 		foreach ( var entry in Loadout )
 		{
 			// this.Log( entry );
-			TryEquip( entry.Prefab, entry.Slot?.AsInt() );
+			int? slot = entry.Slot?.AsInt();
+
+			if ( slot.HasValue && slot.Value <= 0 )
+				slot = null;
+
+			TryEquip( entry.Prefab, out _, slot );
 		}
 	}
 
@@ -124,7 +208,6 @@ public partial class PawnEquipment : Module
 			return;
 
 		e.EquipState = EquipState.Holstered;
-		e.OnHolster( Pawn, this );
 	}
 
 	protected virtual void Deploy( BaseEquip e )
@@ -132,10 +215,18 @@ public partial class PawnEquipment : Module
 		if ( !e.IsValid() )
 			return;
 
+		// Holster previous equipment.
+		if ( ActiveEquip.IsValid() && ActiveEquip.IsDeployed )
+		{
+			if ( ActiveEquip == e )
+				return;
+
+			Holster( ActiveEquip );
+		}
+
 		// this.Log( $"Deployed equip:[{e}]" );
 
 		e.EquipState = EquipState.Deployed;
-		e.OnDeploy( Pawn, this );
 	}
 
 	public virtual bool TryRemove( BaseEquip e )
@@ -162,15 +253,33 @@ public partial class PawnEquipment : Module
 		throw new NotImplementedException();
 	}
 
-	public virtual bool TryEquip( PrefabFile p, int? slot = null )
+	public virtual bool TryEquip( string classId, out BaseEquip e, int? slot = null )
 	{
+		if ( !TryGetPrefab( classId, out var ePrefab ) )
+		{
+			e = null;
+			return false;
+		}
+
+		return TryEquip( ePrefab, out e, slot );
+	}
+
+	public virtual bool TryEquip( PrefabFile p, out BaseEquip e, int? slot = null )
+	{
+		e = null;
+
+		if ( !Networking.IsHost )
+			return false;
+
 		if ( !p.TrySpawn( WorldPosition, out var go ) )
 		{
 			this.Warn( $"Tried to equip invalid equipment prefab:[{p}]" );
 			return false;
 		}
 
-		if ( TryEquip( go.Components.Get<BaseEquip>( FindMode.EverythingInSelf ) ) )
+		e = go.Components.Get<BaseEquip>( FindMode.EverythingInSelf );
+
+		if ( TryEquip( e, slot ) )
 			return true;
 
 		go.Destroy();
@@ -179,6 +288,9 @@ public partial class PawnEquipment : Module
 
 	public virtual bool TryEquip( BaseEquip e, int? slot = null )
 	{
+		if ( !Networking.IsHost )
+			return false;
+
 		var pawn = Pawn;
 
 		if ( !pawn.IsValid() )
@@ -197,12 +309,17 @@ public partial class PawnEquipment : Module
 		if ( UniqueEquips && Any( e.ClassId ) )
 			return false;
 
+		// The "None" EquipSlot is zero. Nullify for simplicity.
+		if ( slot.HasValue && slot.Value <= 0 )
+			slot = null;
+
 		// Allow restricting to a specific slot.
 		if ( StrictSlots )
 		{
-			slot ??= e.DefaultSlot;
+			var defaultSlot = e.DefaultSlot.AsInt();
+			slot ??= defaultSlot;
 
-			if ( slot != e.DefaultSlot )
+			if ( slot != defaultSlot )
 				return false;
 		}
 		else
@@ -213,7 +330,7 @@ public partial class PawnEquipment : Module
 				return false;
 		}
 
-		var inSlot = GetInSlot( slot );
+		var inSlot = GetAllInSlot( slot );
 
 		if ( inSlot.Count() > SlotCapacity )
 		{
@@ -225,21 +342,17 @@ public partial class PawnEquipment : Module
 		if ( !e.AllowEquip( pawn ) )
 			return false;
 
-		e.EquipState = ActiveEquip == e
-			? EquipState.Deployed
-			: EquipState.Holstered;
+		// Assign the slot so it can be swapped between.
+		e.Slot = slot.Value;
 
-		e.GameObject.SetParent( GameObject, keepWorldPosition: false );
-		e.LocalPosition = Vector3.Zero;
+		// Network spawn it before making it a child!
+		e.UpdateNetworking( null );
 
-		e.Owner = pawn;
+		// Setting this should parent it and shit.
+		e.SetOwner( pawn );
 
+		// So that clients know what's up.
 		RefreshList();
-
-		e.OnEquip( pawn, this );
-
-		if ( !ActiveEquip.IsValid() )
-			ActiveEquip = e;
 
 		return true;
 	}

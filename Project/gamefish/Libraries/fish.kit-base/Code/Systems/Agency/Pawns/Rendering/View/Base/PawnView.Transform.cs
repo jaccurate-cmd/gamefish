@@ -16,7 +16,7 @@ partial class PawnView
 		set { _viewRotation = value; }
 	}
 
-	protected Rotation _viewRotation;
+	protected Rotation _viewRotation = Rotation.Identity;
 
 	public Vector3 ViewForward => ViewRotation.Forward;
 	public Transform ViewTransform => new( ViewPosition, ViewRotation, WorldScale );

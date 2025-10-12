@@ -3,16 +3,29 @@ namespace GameFish;
 public static class OffsetExtensions
 {
 	/// <summary>
-	/// Lerps a transform to an offset's position/rotation while preserving its original scale. <br />
-	/// This is typically best used on local transforms.
+	/// Adds an offset's position/rotation relatively to a transform.
 	/// </summary>
+	/// <remarks> This can be useful on either world or local transforms. </remarks>
+	public static Transform AddOffset( this in Transform t, in Offset offset )
+		=> t.ToWorld( offset );
+
+	/// <summary>
+	/// Lerps a transform to an offset's position/rotation while preserving its original scale.
+	/// </summary>
+	/// <remarks>
+	/// This is typically best used on local transforms.
+	/// You probably don't want to use it on world transforms.
+	/// </remarks>
 	public static Transform LerpTo( this in Transform t, in Offset offset, in float frac )
 		=> t.LerpTo( offset.Transform.WithScale( t.Scale ), frac );
 
 	/// <summary>
-	/// Sets a transform to an offset's position/rotation while preserving its original scale. <br />
-	/// This is typically best used on local transforms.
+	/// Sets a transform to an offset's position/rotation while preserving its original scale.
 	/// </summary>
+	/// <remarks>
+	/// This is typically best used on local transforms.
+	/// You probably don't want to use it on world transforms.
+	/// </remarks>
 	public static Transform SetOffset( this in Transform t, in Offset offset )
 		=> offset.Transform.WithScale( t.Scale );
 

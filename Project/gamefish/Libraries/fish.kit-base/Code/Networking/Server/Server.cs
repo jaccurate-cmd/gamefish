@@ -1,19 +1,29 @@
 using System;
+using Sandbox.Network;
 
 namespace GameFish;
 
 /// <summary>
-/// The networking manager.
+/// The networking manager. <br />
+/// It spawns players and manages clients. <br />
+/// <br />
+/// <b> NOTE: </b> You are encouraged to inherit and override this component.
 /// </summary>
 [Icon( "dns" )]
 public partial class Server : Singleton<Server>, Component.INetworkListener
 {
-	public const string FEATURE_DEBUG = "🐞 Debug";
+	protected new const int DEBUG_ORDER = 9999;
 
-	[Property, Feature( Agent.FEATURE_AGENT )]
+	protected override bool? IsNetworkedOverride => true;
+
+	[Property]
+	[Feature( DEBUG ), Order( DEBUG_ORDER )]
+	public bool IsServerActive => Networking.IsActive;
+
+	[Property, Feature( Library.AGENT )]
 	public PrefabFile PlayerClientPrefab { get; set; }
 
-	[Property, Feature( Agent.FEATURE_AGENT )]
+	[Property, Feature( Library.AGENT )]
 	public PrefabFile PlayerPawnPrefab { get; set; }
 
 	[Sync( SyncFlags.FromHost )]
@@ -36,7 +46,58 @@ public partial class Server : Singleton<Server>, Component.INetworkListener
 	{
 		base.OnStart();
 
-		Networking.CreateLobby( new() );
+		Initialize();
+	}
+
+	/// <summary>
+	/// Called whenever the scene starts(assuming it does with this component). <br />
+	/// By default this starts a new lobby, but you can prevent this.
+	/// </summary>
+	public virtual void Initialize()
+	{
+		if ( Networking.IsHost && !Networking.IsActive )
+			TryCreateLobby();
+	}
+
+	/// <summary>
+	/// Allows you to configure the next lobby created. <br />
+	/// This is a good place to apply user settings.
+	/// </summary>
+	/// <param name="context"> What kind of lobby? Could be an enum or a string. </param>
+	/// <param name="privacy"> The privacy level. Typically defaults to public. </param>
+	/// <returns> The new lobby's settings. </returns>
+	public virtual LobbyConfig GetLobbyConfig( object context = null, LobbyPrivacy? privacy = null )
+	{
+		var cfg = new LobbyConfig();
+
+		if ( privacy.HasValue )
+			cfg.Privacy = privacy.Value;
+
+		return cfg;
+	}
+
+	/// <summary>
+	/// Attempts to start a new lobby of some kind.
+	/// </summary>
+	/// <remarks>
+	/// Will use <see cref="GetLobbyConfig"/> if <paramref name="cfgOverride"/> is not specified.
+	/// </remarks>
+	/// <param name="context"> What kind of lobby? Could be an enum or a string. </param>
+	/// <param name="cfgOverride"> The configuration to force. </param>
+	/// <returns> If the new lobby could be created. </returns>
+	public virtual bool TryCreateLobby( object context = null, LobbyConfig? cfgOverride = null )
+	{
+		if ( Networking.IsActive )
+		{
+			this.Warn( "Lobby creation failed: must close the active lobby first." );
+			return false;
+		}
+
+		var cfg = cfgOverride ?? GetLobbyConfig();
+
+		Networking.CreateLobby( cfg );
+
+		return true;
 	}
 
 	public void OnActive( Connection cn )
@@ -112,16 +173,6 @@ public partial class Server : Singleton<Server>, Component.INetworkListener
 			cl.SetPawn( PlayerPawnPrefab );
 
 		return cl as TClient;
-	}
-
-	public static Client FindClient( Connection cn )
-	{
-		if ( cn is null )
-			return null;
-
-		var existing = ValidClients.FirstOrDefault( cl => cl.CompareConnection( cn ) );
-
-		return existing;
 	}
 
 	protected virtual void RegisterClient( Client cl )

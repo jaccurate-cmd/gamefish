@@ -2,7 +2,7 @@ namespace GameFish;
 
 partial class Random
 {
-	private static double TotalWeight<T>( Dictionary<T, float> dict )
+	public static double GetTotalWeight<T>( Dictionary<T, float> dict )
 	{
 		double weight = 0d;
 
@@ -20,7 +20,7 @@ partial class Random
 	/// <param name="result"> The random result(or <c>default</c>). </param>
 	/// <returns> If a value was able to be retrieved. </returns>
 	public static bool TryGetWeighted<T>( Dictionary<T, float> dict, out T result )
-		=> TryGetWeighted( dict, TotalWeight( dict ), out result );
+		=> TryGetWeighted( dict, GetTotalWeight( dict ), out result );
 
 	/// <summary>
 	/// Pick a random key from a dictionary with the likelihood being increased by its value. <br />
@@ -35,7 +35,7 @@ partial class Random
 	{
 		if ( dict is null )
 		{
-			GameFish.Warn( $"{nameof( Random )}.{nameof( TryGetWeighted )}", "passed in dictionary was null!" );
+			Print.Warn( $"{typeof( Random )}.{nameof( TryGetWeighted )}", "passed in dictionary was null!" );
 
 			result = default;
 			return false;

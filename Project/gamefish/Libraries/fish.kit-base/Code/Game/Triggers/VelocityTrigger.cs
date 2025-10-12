@@ -10,16 +10,12 @@ namespace GameFish;
 [EditorHandle( Icon = "🌬" )]
 public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 {
+	protected const int FORCES_ORDER = TRIGGER_ORDER - 10;
+
 	public const string TITLE_METHOD = "Method";
 	public const string TITLE_RELATION = "Relation";
 	public const string TITLE_VELOCITY = "Velocity";
 	public const string TITLE_NEGATION = "Negation";
-
-	public const string FEATURE_FORCES = "💨 Forces";
-
-	public const string GROUP_LINEAR = "➡ Momentum";
-	public const string GROUP_ANGULAR = "♻ Rotation";
-	public const string GROUP_DRAG = "🐌 Drag";
 
 	public enum VelocityMethod
 	{
@@ -77,93 +73,127 @@ public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 		Opposing,
 	}
 
-	[Property, Group( GROUP_COLLIDER )]
+	[Order( TRIGGER_ORDER )]
+	[Property, Feature( TRIGGER ), Group( COLLISION )]
 	public override ColliderType Collider
 	{
 		get => _colType;
 		set { _colType = value; UpdateColliders(); }
 	}
-	private ColliderType _colType = ColliderType.Box;
 
+	[Order( TRIGGER_ORDER )]
 	[ShowIf( nameof( UsingBox ), true )]
-	[Property, Group( GROUP_COLLIDER )]
+	[Property, Feature( TRIGGER ), Group( COLLISION )]
 	public override BBox BoxSize
 	{
 		get => _boxSize;
 		set { _boxSize = value; UpdateColliders(); }
 	}
-	private BBox _boxSize = BBox.FromPositionAndSize( Vector3.Zero, 256f );
 
 	/// <summary>
 	/// When/how linear velocity(momentum) should be added.
 	/// </summary>
+	[Order( FORCES_ORDER )]
 	[Title( TITLE_METHOD )]
-	[Property, Feature( FEATURE_FORCES ), Group( GROUP_LINEAR )]
+	[Property, Feature( FORCES ), Group( MOMENTUM )]
 	public virtual VelocityMethod LinearMethod { get; set; } = VelocityMethod.Continuous;
 
 	/// <summary>
 	/// What direction linear velocity(momentum) should be added towards.
 	/// </summary>
+	[Order( FORCES_ORDER )]
 	[Title( TITLE_RELATION )]
-	[Property, Feature( FEATURE_FORCES ), Group( GROUP_LINEAR )]
+	[Property, Feature( FORCES ), Group( MOMENTUM )]
 	public virtual VelocityRelation LinearRelation { get; set; } = VelocityRelation.Absolute;
 
 	/// <summary>
 	/// Allows you to (optionally) cancel out all/opposing momentum.
 	/// </summary>
+	[Order( FORCES_ORDER )]
 	[Title( TITLE_NEGATION )]
-	[Property, Feature( FEATURE_FORCES ), Group( GROUP_LINEAR )]
+	[Property, Feature( FORCES ), Group( MOMENTUM )]
 	public virtual VelocityNegation LinearNegation { get; set; } = VelocityNegation.Opposing;
+
+	public bool IsOpposing => LinearNegation is VelocityNegation.Opposing;
+	public bool HasImpulseOpposition => IsOpposing && LinearMethod is VelocityMethod.Instantaneous;
+	public bool HasContinuousOpposition => IsOpposing && LinearMethod is VelocityMethod.Continuous;
+
+	/// <summary>
+	/// Instantly multiplies the momentum being being cancelled out in the opposite direction.
+	/// </summary>
+	[Order( FORCES_ORDER )]
+	[Title( "Negation Scale" )]
+	[Range( 0f, 1f, clamped: true ), Step( .001f )]
+	[ShowIf( nameof( HasImpulseOpposition ), true )]
+	[Property, Feature( FORCES ), Group( MOMENTUM )]
+	public virtual float LinearImpulseNegationScale { get; set; } = 1f;
+
+	/// <summary>
+	/// Increases the speed at which previous velocity is negated.
+	/// </summary>
+	[Order( FORCES_ORDER )]
+	[Title( "Negation Scale" )]
+	[Range( 0f, 50f, clamped: false ), Step( 0.5f )]
+	[ShowIf( nameof( HasContinuousOpposition ), true )]
+	[Property, Feature( FORCES ), Group( MOMENTUM )]
+	public virtual float LinearContinuousNegationScale { get; set; } = 10f;
 
 	/// <summary>
 	/// How much linear velocity(momentum) to add.
 	/// </summary>
+	[Order( FORCES_ORDER )]
 	[Title( TITLE_VELOCITY )]
-	[Property, Feature( FEATURE_FORCES ), Group( GROUP_LINEAR )]
+	[Property, Feature( FORCES ), Group( MOMENTUM )]
 	public virtual Vector3 LinearVelocity { get; set; } = Vector3.Up * 1000f;
 
 	/// <summary>
 	/// When/how angular velocity(torque/rotation) should be added.
 	/// </summary>
+	[Order( FORCES_ORDER )]
 	[Title( TITLE_METHOD )]
-	[Property, Feature( FEATURE_FORCES ), Group( GROUP_ANGULAR )]
-	public virtual VelocityMethod AngularMethod { get; set; } = VelocityMethod.Continuous;
+	[Property, Feature( FORCES ), Group( ROTATION )]
+	public virtual VelocityMethod AngularMethod { get; set; } = VelocityMethod.None;
 
 	/// <summary>
 	/// What orientation angular velocity(torque/rotation) should be added around.
 	/// </summary>
+	[Order( FORCES_ORDER )]
 	[Title( TITLE_RELATION )]
-	[Property, Feature( FEATURE_FORCES ), Group( GROUP_ANGULAR )]
+	[Property, Feature( FORCES ), Group( ROTATION )]
 	public virtual VelocityRelation AngularRelation { get; set; } = VelocityRelation.Absolute;
 
 	/// <summary>
 	/// How much angular velocity(torque/rotation) to add.
 	/// </summary>
+	[Order( FORCES_ORDER )]
 	[Title( TITLE_VELOCITY )]
-	[Property, Feature( FEATURE_FORCES ), Group( GROUP_ANGULAR )]
+	[Property, Feature( FORCES ), Group( ROTATION )]
 	public virtual Vector3 AngularVelocity { get; set; } = default;
 
 	/// <summary>
 	/// If true: objects within this move/spin slower.
 	/// </summary>
-	[Property, Feature( FEATURE_FORCES ), Group( GROUP_DRAG )]
+	[Order( FORCES_ORDER )]
+	[Property, Feature( FORCES ), Group( DRAG )]
 	public virtual bool Drag { get; set; } = false;
 
 	/// <summary>
 	/// Higher numbers slow down momentum more.
 	/// </summary>
-	[Property, Feature( FEATURE_FORCES ), Group( GROUP_DRAG )]
+	[Order( FORCES_ORDER )]
+	[Property, Feature( FORCES ), Group( DRAG )]
 	public virtual float LinearDrag { get; set; } = 5f;
 
 	/// <summary>
 	/// Higher numbers slow down turning/spinning more.
 	/// </summary>
-	[Property, Feature( FEATURE_FORCES ), Group( GROUP_DRAG )]
+	[Order( FORCES_ORDER )]
+	[Property, Feature( FORCES ), Group( DRAG )]
 	public virtual float AngularDrag { get; set; } = 5f;
 
 	public Rotation DefaultRotation { get; } = Rotation.Identity;
 
-	public override Color GizmoColor { get; } = Color.Cyan.LerpTo( Color.Green, 0.35f ).Desaturate( 0.5f );
+	public override Color DefaultGizmoColor { get; } = Color.Cyan.LerpTo( Color.Green, 0.35f ).Desaturate( 0.5f );
 
 	protected override void OnUpdate()
 	{
@@ -178,13 +208,13 @@ public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 
 		Vector3 center = Collider switch
 		{
-			ColliderType.Manual => default,
+			ColliderType.Manual => Vector3.Zero,
 			ColliderType.Box => BoxSize.Center,
-			ColliderType.Sphere => Sphere?.Center ?? default,
-			_ => default
+			ColliderType.Sphere => Sphere?.Center ?? Vector3.Zero,
+			_ => Vector3.Zero
 		};
 
-		var r = GetForceRotation( null, LinearRelation );
+		var r = GetForceRotation( DefaultRotation, LinearRelation );
 		var v = r * LinearVelocity.Normal * 64f;
 
 		this.DrawArrow( center, center + v, GizmoColor, tWorld: new( WorldPosition ) );
@@ -202,60 +232,77 @@ public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 
 		// Continuous forces/drag.
 		foreach ( var obj in Touching )
-			if ( TryGetRigidbody( obj, out var rb ) )
-				SetVelocity( rb, GetLinearVelocity( rb, onEnter: false ), GetAngularVelocity( rb, instant: false ) );
+			AffectVelocity( obj, instant: false );
 	}
 
 	protected override void OnTouchStart( GameObject obj )
 	{
 		base.OnTouchStart( obj );
 
-		if ( TryGetRigidbody( obj, out var rb ) )
-			SetVelocity( rb, GetLinearVelocity( rb, onEnter: true ), GetAngularVelocity( rb, instant: true ) );
+		AffectVelocity( obj, instant: true );
 	}
 
-	protected virtual Rotation GetForceRotation( Rigidbody rb, in VelocityRelation relEnum )
+	public virtual void AffectVelocity( GameObject obj, bool instant )
+	{
+		if ( !obj.IsValid() )
+			return;
+
+		if ( TryGetRigidbody( obj, out var rb ) )
+		{
+			SetVelocity( rb,
+				GetLinearVelocity( rb.Velocity, rb.WorldRotation, instant: instant ),
+				GetAngularVelocity( rb.AngularVelocity, rb.WorldRotation, instant: instant )
+			);
+		}
+		else if ( TryGetController( obj, out var c ) )
+		{
+			SetVelocity( c, GetLinearVelocity( c.Velocity, c.WorldRotation, instant: instant ) );
+		}
+	}
+
+	protected virtual Rotation GetForceRotation( in Rotation baseRotation, in VelocityRelation relEnum )
 		=> relEnum switch
 		{
 			VelocityRelation.Absolute => DefaultRotation,
 			VelocityRelation.Trigger => WorldRotation,
-			VelocityRelation.Object => rb.IsValid() ? rb.WorldRotation : DefaultRotation,
+			VelocityRelation.Object => baseRotation,
 			_ => DefaultRotation
 		};
 
-	protected virtual Vector3 GetLinearVelocity( Rigidbody rb, in bool onEnter )
+	protected virtual Vector3 GetLinearVelocity( Vector3 vel, Rotation r, in bool instant )
 	{
-		if ( !Scene.IsValid() || !rb.IsValid() )
+		if ( !Scene.IsValid() )
 			return default;
-
-		Vector3 vel = rb.Velocity;
 
 		if ( LinearMethod is VelocityMethod.None )
 			goto Dragging;
 
-		if ( onEnter && LinearMethod is not VelocityMethod.Instantaneous )
+		if ( instant && LinearMethod is not VelocityMethod.Instantaneous )
 			goto Dragging;
 
-		if ( !onEnter && LinearMethod is not VelocityMethod.Continuous )
+		if ( !instant && LinearMethod is not VelocityMethod.Continuous )
 			goto Dragging;
 
-		var r = GetForceRotation( rb, LinearRelation );
+		r = GetForceRotation( r, LinearRelation );
 		var force = r * LinearVelocity;
 
 		Vector3 NegatedVelocity( in Vector3 dir )
 		{
-			if ( vel.Dot( in dir ) >= 0f )
+			if ( vel.Dot( in dir ) > 0f )
 				return vel;
 
-			return vel.SubtractDirection( -dir );
+			return vel.SubtractDirection( -dir.ClampLength( 1f ) );
 		}
 
-		if ( onEnter )
+		if ( instant )
 		{
+			if ( LinearMethod is not VelocityMethod.Instantaneous )
+				goto Dragging;
+
 			// Instantaneous force.
 			vel = LinearNegation switch
 			{
-				VelocityNegation.Opposing => NegatedVelocity( force.Normal ) + force,
+				VelocityNegation.Opposing => NegatedVelocity( force.Normal * LinearImpulseNegationScale ) + force,
 				VelocityNegation.Total => force,
 				VelocityNegation.None => vel + force,
 				_ => vel
@@ -263,12 +310,15 @@ public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 		}
 		else
 		{
+			if ( LinearMethod is not VelocityMethod.Continuous )
+				goto Dragging;
+
 			// Continuous force.
 			var dt = Scene.FixedDelta;
 
 			vel = LinearNegation switch
 			{
-				VelocityNegation.Opposing => NegatedVelocity( force.Normal ),
+				VelocityNegation.Opposing => NegatedVelocity( force.Normal * LinearContinuousNegationScale * dt ),
 				VelocityNegation.Total => Vector3.Zero,
 				_ => vel
 			};
@@ -279,18 +329,17 @@ public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 		// Apply drag.
 		Dragging:
 
-		if ( !onEnter && Drag && LinearDrag != 0f )
-			vel -= vel.ClampLength( LinearDrag * Scene.FixedDelta );
+		if ( !instant && Drag && LinearDrag != 0f )
+			vel -= vel.ClampLength( LinearDrag.Abs() * Scene.FixedDelta ) * LinearDrag.Sign();
 
 		return vel;
 	}
 
-	protected virtual Vector3 GetAngularVelocity( Rigidbody rb, in bool instant )
+	protected virtual Vector3 GetAngularVelocity( Vector3 angVel, Rotation r, in bool instant )
 	{
-		if ( !Scene.IsValid() || !rb.IsValid() )
+		if ( !Scene.IsValid() )
 			return default;
 
-		Vector3 vel = rb.AngularVelocity;
 		Vector3 velAdd;
 
 		if ( AngularMethod is VelocityMethod.None )
@@ -303,7 +352,7 @@ public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 		}
 		else
 		{
-			var r = GetForceRotation( rb, AngularRelation );
+			r = GetForceRotation( r, AngularRelation );
 
 			if ( instant )
 				velAdd = r * AngularVelocity;
@@ -312,15 +361,15 @@ public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 		}
 
 		if ( !instant && Drag && AngularDrag != 0f )
-			velAdd -= rb.AngularVelocity.ClampLength( AngularDrag * Scene.FixedDelta );
+			velAdd -= angVel.ClampLength( AngularDrag.Abs() * Scene.FixedDelta ) * AngularDrag.Sign();
 
 		// Add velocity(helpful comment).
-		vel += velAdd;
+		angVel += velAdd;
 
-		return vel;
+		return angVel;
 	}
 
-	public static bool TryGetRigidbody( GameObject obj, out Rigidbody rb )
+	protected static bool TryGetRigidbody( GameObject obj, out Rigidbody rb )
 	{
 		if ( !obj.IsValid() )
 		{
@@ -329,6 +378,18 @@ public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 		}
 
 		return obj.Components.TryGet( out rb, FindMode.EnabledInSelf | FindMode.InAncestors );
+	}
+
+	protected static bool TryGetController( GameObject obj, out BaseController c )
+	{
+
+		if ( !obj.IsValid() )
+		{
+			c = null;
+			return false;
+		}
+
+		return obj.Components.TryGet( out c, FindMode.EnabledInSelf | FindMode.InAncestors );
 	}
 
 	/// <summary>
@@ -341,8 +402,14 @@ public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 
 		rb.Velocity = linear;
 		rb.AngularVelocity = angular;
+	}
 
-		if ( rb.Components.TryGet<BaseController>( out var c ) )
+	/// <summary>
+	/// Directly modifies the velocity of <paramref name="c"/>.
+	/// </summary>
+	public virtual void SetVelocity( BaseController c, in Vector3 linear )
+	{
+		if ( c.IsValid() )
 			c.Velocity = linear;
 	}
 
@@ -353,5 +420,7 @@ public partial class VelocityTrigger : FilterTrigger, Component.ExecuteInEditor
 	{
 		if ( TryGetRigidbody( obj, out var rb ) )
 			SetVelocity( rb, in linear, in angular );
+		else if ( TryGetController( obj, out var c ) )
+			SetVelocity( c, in linear );
 	}
 }

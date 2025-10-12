@@ -8,15 +8,15 @@ public enum EquipState
 	/// <summary>
 	/// Probably on the ground somewhere.
 	/// </summary>
-	Dropped,
+	Dropped = 1,
 
 	/// <summary>
 	/// Actively held in an <see cref="BasePawn"/>'s hands.
 	/// </summary>
-	Deployed,
+	Deployed = 2,
 
 	/// <summary>
 	/// Kept in <see cref="PawnEquipment.Equipped"/> but not visible.
 	/// </summary>
-	Holstered,
+	Holstered = 3,
 }

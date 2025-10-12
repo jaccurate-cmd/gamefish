@@ -4,18 +4,22 @@ namespace GameFish;
 
 partial class PawnEquipment
 {
-	protected void RefreshList()
+	public void RefreshList()
 	{
+		Equipped ??= [];
+
 		if ( !Networking.IsHost || Equipped is null )
+			return;
+
+		if ( Pawn is not BasePawn pawn || !pawn.IsValid() )
 			return;
 
 		// Add any missing equips.
 		var toAdd = new List<BaseEquip>();
 
-		foreach ( var e in Components.GetAll<BaseEquip>( FindMode.EverythingInSelfAndDescendants ) )
-			if ( e.IsValid() && e.EquipState is not EquipState.Dropped )
-				if ( !Equipped.Contains( e ) )
-					toAdd.Add( e );
+		foreach ( var e in pawn.Components.GetAll<BaseEquip>( FindMode.EverythingInSelfAndDescendants ) )
+			if ( e.IsValid() && !Equipped.Contains( e ) )
+				toAdd.Add( e );
 
 		toAdd.ForEach( Equipped.Add );
 
@@ -23,7 +27,7 @@ partial class PawnEquipment
 		var toRemove = new List<BaseEquip>();
 
 		foreach ( var e in Equipped )
-			if ( !e.IsValid() || e.EquipState is EquipState.Dropped )
+			if ( !e.IsValid() )
 				toRemove.Add( e );
 
 		toRemove.ForEach( e => { Equipped.Remove( e ); e.Destroy(); } );
@@ -40,7 +44,7 @@ partial class PawnEquipment
 			.Distinct();
 
 		var counts = slots
-			.ToDictionary( s => s, s => GetInSlot( s ).Count() );
+			.ToDictionary( s => s, s => GetAllInSlot( s ).Count() );
 
 		for ( var i = 1; i <= SlotCount; i++ )
 			if ( !counts.TryGetValue( i, out var count ) || count < SlotCapacity )
@@ -65,6 +69,13 @@ partial class PawnEquipment
 	}
 
 	/// <summary>
+	/// Gets all valid held equipment.
+	/// </summary>
+	/// <returns> All valid equipment(or empty, never null). </returns>
+	public IEnumerable<BaseEquip> GetAll()
+		=> Equipped?.Where( e => e.IsValid() ) ?? [];
+
+	/// <summary>
 	/// Gets all held equipment with an ID(if any).
 	/// </summary>
 	/// <returns> All equipment(or empty, never null) with that ID. </returns>
@@ -80,12 +91,7 @@ partial class PawnEquipment
 		=> e is not null && Any<T>();
 
 	public bool Any<T>()
-	{
-		if ( Equipped is null )
-			return false;
-
-		return Equipped.Any( e => e.IsValid() && e is T );
-	}
+		=> Equipped?.Any( e => e.IsValid() && e is T ) is true;
 
 	/// <summary>
 	/// Gets the first instance(if any) of an equip of a specific type.
@@ -103,12 +109,14 @@ partial class PawnEquipment
 	/// Gets all held equipment of the provided type.
 	/// </summary>
 	/// <returns> All equipment(or empty, never null) with that type. </returns>
-	public IEnumerable<BaseEquip> GetAll<T>() where T : BaseEquip
+	public IEnumerable<T> GetAll<T>() where T : BaseEquip
 	{
 		if ( Equipped is null )
 			return [];
 
-		return Equipped.Where( e => e.IsValid() && e is T );
+		return Equipped
+			.Where( e => e.IsValid() && e is T )
+			.Select( e => e as T );
 	}
 
 	/// <summary>
@@ -118,10 +126,7 @@ partial class PawnEquipment
 	public bool TryGet<T>( out T equip ) where T : BaseEquip
 		=> (equip = Get<T>()).IsValid();
 
-	/// <summary>
-	/// Gets all equipment stuck in a slot.
-	/// </summary>
-	/// <returns> All equipment in that slot(or empty, never null). </returns>
+	/// <returns> If there is any equipment in a specific slot. </returns>
 	public bool AnyInSlot( int? slot )
 	{
 		if ( slot is null || Equipped is null )
@@ -131,14 +136,26 @@ partial class PawnEquipment
 	}
 
 	/// <summary>
-	/// Gets all equipment stuck in a slot.
+	/// Gets all equipment assigned to a specific slot.
 	/// </summary>
 	/// <returns> All equipment in that slot(or empty, never null). </returns>
-	public IEnumerable<BaseEquip> GetInSlot( int? slot )
+	public IEnumerable<BaseEquip> GetAllInSlot( int? slot )
 	{
 		if ( slot is null || Equipped is null )
 			return [];
 
 		return Equipped.Where( e => e.IsValid() && e.Slot == slot );
+	}
+
+	/// <summary>
+	/// Gets the first equipment of a specific slot.
+	/// </summary>
+	/// <returns> The first found equipment in that slot(or null). </returns>
+	public BaseEquip GetFirstInSlot( int? slot )
+	{
+		if ( slot is null || Equipped is null )
+			return null;
+
+		return Equipped.FirstOrDefault( e => e.IsValid() && e.Slot == slot );
 	}
 }

@@ -40,15 +40,14 @@ public partial class SpectatorView : PawnView
 		OrbitingReset = null;
 
 		base.StartTransition( useWorldPosition );
-
-		ParentPawn?.SetVelocity( default );
 	}
 
 	public override void StopTransition()
 	{
 		base.StopTransition();
 
-		ParentPawn?.SetVelocity( default );
+		if ( ParentPawn is var pawn && pawn.IsValid() )
+			pawn.Velocity = default;
 	}
 
 	protected override void UpdateTransition( in float deltaTime )

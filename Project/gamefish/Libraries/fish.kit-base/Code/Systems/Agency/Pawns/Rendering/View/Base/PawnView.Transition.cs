@@ -121,11 +121,11 @@ partial class PawnView
 			// Smoothed transitioning.
 			var offsLerped = prevOffset.LerpTo( Relative, TransitionFraction );
 
-			var tLerped = offsLerped.ToWorld( tOrigin );
+			var tLerped = offsLerped.AddTo( tOrigin );
 
 			if ( PreviousPosition is Vector3 prevPos )
 			{
-				var tRelative = Relative.ToWorld( tOrigin );
+				var tRelative = Relative.AddTo( tOrigin );
 				tLerped.Position = prevPos.LerpTo( tRelative.Position, TransitionFraction );
 			}
 
@@ -135,7 +135,7 @@ partial class PawnView
 		else
 		{
 			// No transitioning.
-			var tRelative = Relative.ToWorld( tOrigin );
+			var tRelative = Relative.AddTo( tOrigin );
 
 			ViewPosition = tRelative.Position;
 			ViewRotation = tRelative.Rotation;

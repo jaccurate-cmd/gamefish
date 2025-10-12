@@ -2,6 +2,7 @@ namespace GameFish;
 
 partial class BasePawn : ISimulate
 {
+	// TODO: Move spec refs to this in a new controller.
 	public virtual Vector3 WishVelocity
 	{
 		get => _wishVelocity;
@@ -17,7 +18,7 @@ partial class BasePawn : ISimulate
 			return false;
 
 		if ( Agent.IsPlayer )
-			return Agent == Client.Local;
+			return Agent.IsOwner();
 
 		return false;
 	}
@@ -27,8 +28,8 @@ partial class BasePawn : ISimulate
 
 	public virtual void FrameSimulate( in float deltaTime )
 	{
-		UpdateController( in deltaTime );
-		UpdateView( in deltaTime );
+		UpdateController( in deltaTime, isFixedUpdate: false );
+		SimulateView( in deltaTime );
 	}
 
 	public virtual void FixedSimulate( in float deltaTime )

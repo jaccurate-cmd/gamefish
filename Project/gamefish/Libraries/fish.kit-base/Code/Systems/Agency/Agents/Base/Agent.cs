@@ -8,26 +8,23 @@ namespace GameFish;
 [EditorHandle( Icon = "psychology" )]
 public abstract partial class Agent : ModuleEntity
 {
-	public const string FEATURE_AGENT = "🧠 Agent";
-	public const string GROUP_ID = "🆔 Identity";
-
 	/// <summary>
 	/// Is this meant to be owned by a player?
 	/// </summary>
-	[Property, Feature( FEATURE_AGENT )]
+	[Property, Feature( AGENT )]
 	public virtual bool IsPlayer { get; protected set; } = false;
 
 	/// <summary>
 	/// What specific pawn(if any) is under this agent's control?
 	/// </summary>
 	[Sync( SyncFlags.FromHost )]
-	[Property, ReadOnly, Feature( FEATURE_AGENT )]
+	[Property, ReadOnly, Feature( AGENT )]
 	public BasePawn Pawn { get; set; }
 
 	[Property]
 	[Title( "Set Pawn" )]
 	[HideIf( nameof( InEditor ), true )]
-	[Feature( FEATURE_AGENT ), Category( "Debug" )]
+	[Feature( AGENT ), Category( "Debug" )]
 	public BasePawn SetDebugPawn
 	{
 		get => _debugPawn;
@@ -95,8 +92,6 @@ public abstract partial class Agent : ModuleEntity
 			?.WorldTransform.WithScale( 1f );
 	}
 
-	protected bool InEditor => Scene?.IsEditor ?? true;
-
 	/// <summary>
 	/// Spawns a <see cref="BasePawn"/> prefab and assigns it to this agent.
 	/// </summary>
@@ -130,7 +125,7 @@ public abstract partial class Agent : ModuleEntity
 			return null;
 		}
 
-		if ( !prefab.TrySpawn( spawnPoint.GetValueOrDefault().WithScale( 1f ), out var go ) )
+		if ( !prefab.TrySpawn( spawnPoint.Value.WithScale( Vector3.One ), out var go ) )
 			return null;
 
 		return SetPawn<TPawn>( go, failDestroy: true );
@@ -218,7 +213,7 @@ public abstract partial class Agent : ModuleEntity
 			}
 		}
 
-		if ( !pawn.TrySetOwner( this ) )
+		if ( pawn.TrySetOwner( this ) )
 			Pawn = pawn;
 
 		this.Log( $"added pawn:[{pawn}]" );

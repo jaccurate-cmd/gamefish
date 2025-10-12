@@ -43,4 +43,12 @@ public interface ITransform
 	/// </summary>
 	/// <returns> If the scale wasn't a NaN or infinity. </returns>
 	public bool TrySetScale( in Vector3 newScale );
+
+	/// <summary>
+	/// Allows this object to specify how it is teleported. <br />
+	/// Example: you could have a wheel of a car teleport the entire car.
+	/// </summary>
+	/// <returns> If the teleport was a success. </returns>
+	public virtual bool TryTeleport( in Transform tDest )
+		=> false;
 }

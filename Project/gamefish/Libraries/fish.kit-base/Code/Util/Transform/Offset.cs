@@ -1,26 +1,25 @@
+using System.Text.Json.Serialization;
+
 namespace GameFish;
 
 /// <summary>
-/// A position and a rotation, but not scale. <br />
-/// Makes it very easy to animate programmatically(mainly tweening).
+/// A position and a rotation, but not scale.
+/// Makes it very easy to animate programmatically. <br />
+/// Example: tweening between transforms.
 /// </summary>
 public partial struct Offset
 {
 	[InlineEditor]
 	public Vector3 Position { readonly get => _pos; set { _pos = value; } }
-
-	[Hide]
+	[Hide, JsonIgnore]
 	private Vector3 _pos = Vector3.Zero;
 
 	[InlineEditor]
 	public Rotation Rotation { readonly get => _r; set { _r = value; } }
-
-	[Hide]
+	[Hide, JsonIgnore]
 	private Rotation _r = Rotation.Identity;
 
-	public static Vector3 Scale => Vector3.One;
-
-	[Hide]
+	[Hide, JsonIgnore]
 	public Transform Transform
 	{
 		readonly get => new( Position, Rotation, Scale );
@@ -30,6 +29,11 @@ public partial struct Offset
 			Rotation = value.Rotation;
 		}
 	}
+
+	public static Vector3 Scale => Vector3.One;
+
+	public static implicit operator Transform( in Offset offset ) => offset.Transform;
+	public static implicit operator Offset( in Transform t ) => new( t );
 
 	public Offset()
 	{
@@ -53,8 +57,11 @@ public partial struct Offset
 	public readonly Offset LerpTo( in Offset offset, in float frac )
 		=> new( Transform.LerpTo( offset.Transform, frac ) );
 
-	/// <param name="t"> The transform to offset from. </param>
-	/// <returns> The resulting transform of this offset from the specified transform. </returns>
-	public readonly Transform ToWorld( in Transform t )
-		=> t.ToWorld( Transform );
+	/// <summary>
+	/// Adds this offset to a transform. <br />
+	/// </summary>
+	/// <remarks> This is ideal for affecting world transforms. </remarks>
+	/// <returns> A transform offset by this position and rotation. </returns>
+	public readonly Transform AddTo( in Transform t )
+		=> t.AddOffset( this );
 }

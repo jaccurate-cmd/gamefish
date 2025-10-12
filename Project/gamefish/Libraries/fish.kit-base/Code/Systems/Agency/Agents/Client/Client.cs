@@ -15,12 +15,12 @@ public partial class Client : Agent
 
 	private static Client _local;
 
-	[Property, Feature( FEATURE_AGENT )]
+	[Property, Feature( AGENT )]
 	public override bool IsPlayer { get; protected set; }
 
 	[ReadOnly]
 	[Sync( SyncFlags.FromHost )]
-	[Property, Feature( FEATURE_AGENT )]
+	[Property, Feature( AGENT )]
 	public override Identity Identity
 	{
 		get => _id;
@@ -44,7 +44,7 @@ public partial class Client : Agent
 
 	/// <summary> Is the identity's connection defined and active? </summary>
 	[ReadOnly]
-	[Property, Feature( FEATURE_AGENT )]
+	[Property, Feature( AGENT )]
 	public override bool Connected => Connection is Connection cn && (!Networking.IsActive || cn.IsActive);
 
 	public override string Name => Connection?.DisplayName ?? base.Name;
@@ -67,9 +67,18 @@ public partial class Client : Agent
 	{
 		base.OnDestroy();
 
-		if ( GameObject.IsValid() && this.InGame() )
+		if ( !this.InGame() )
+			return;
+
+		// Cleanup the pawn upon leaving.
+		// TODO: Let pawns prevent this.
+		if ( Pawn.IsValid() )
+			Pawn.GameObject?.Destroy();
+
+		// Destroy the entire client object with the component.
+		if ( GameObject.IsValid() )
 		{
-			this.Log( $"was destroyed. cleaning up object:[{GameObject}]" );
+			// this.Log( $"was destroyed. cleaning up object:[{GameObject}]" );
 			GameObject.Destroy();
 		}
 	}

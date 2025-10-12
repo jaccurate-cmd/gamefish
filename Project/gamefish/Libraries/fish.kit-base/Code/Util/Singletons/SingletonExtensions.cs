@@ -1,6 +1,6 @@
 namespace GameFish;
 
-public static partial class GameFish
+partial class Library
 {
 	/// <summary>
 	/// Retrieves the first valid instance of a component in the scene and caches it. <br />

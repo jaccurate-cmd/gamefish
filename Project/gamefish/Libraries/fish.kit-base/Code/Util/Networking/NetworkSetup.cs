@@ -1,6 +1,6 @@
 namespace GameFish;
 
-public static partial class GameFish
+partial class Library
 {
 	/// <summary>
 	/// Sets the object's network settings, network spawning if necessary and/or trying to set the owner.

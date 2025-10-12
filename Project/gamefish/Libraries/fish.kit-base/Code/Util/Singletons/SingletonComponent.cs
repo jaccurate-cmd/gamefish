@@ -4,8 +4,15 @@ namespace GameFish;
 /// A component you can access anywhere using its <see cref="Instance"/> property.
 /// </summary>
 /// <typeparam name="TComp"> The component you want to be a singleton. </typeparam>
-public abstract class Singleton<TComp> : Component where TComp : Component
+public abstract class Singleton<TComp> : ModuleEntity where TComp : ModuleEntity
 {
+	protected override NetworkMode NetworkingModeDefault => NetworkMode.Object;
+	protected override OwnerTransfer NetworkTransferModeDefault => OwnerTransfer.Fixed;
+	protected override NetworkOrphaned NetworkOrphanedModeDefault => NetworkOrphaned.Host;
+
+	public override Connection DefaultNetworkOwner => Connection.Host;
+
+	[SkipHotload]
 	private static TComp _instance;
 
 	/// <summary>
