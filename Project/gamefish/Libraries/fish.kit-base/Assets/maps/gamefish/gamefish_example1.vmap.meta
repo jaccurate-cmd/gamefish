@@ -14,8 +14,8 @@
       "Mounts": null,
       "IsStandaloneOnly": false,
       "Metadata": {
-        "SingleAssetSource": "maps/example/gamefish_example1.vmap",
-        "ParentPackage": "fish.game_fish"
+        "SingleAssetSource": "maps/gamefish/gamefish_example1.vmap",
+        "ParentPackage": "fish.gamefish"
       }
     }
   }
