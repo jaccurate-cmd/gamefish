@@ -10,9 +10,7 @@ partial class Pawn
 	[Feature( PAWN ), Group( MOVEMENT )]
 	public virtual BaseController Controller
 	{
-		get => _controller.IsValid() ? _controller
-			: _controller = Components?.Get<BaseController>( FindMode.EverythingInSelf );
-
+		get => _controller.GetCached( GameObject );
 		set => _controller = value;
 	}
 
@@ -20,6 +18,7 @@ partial class Pawn
 
 	/// <summary>
 	/// Could be an animated model or a sprite.
+	/// Used to fade model(s) in/out from distance.
 	/// </summary>
 	[Property]
 	[Feature( PAWN ), Group( BODY )]

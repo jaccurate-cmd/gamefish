@@ -10,6 +10,7 @@ partial class PawnCitizenModel
 
 	/// <summary> How tall are we? </summary>
 	[Feature( MODEL )]
+	[DefaultValue( 0.5f )]
 	[Property, Range( 0.5f, 1.5f ), Title( "Avatar Height Scale" )]
 	public float? Height { get; set; }
 

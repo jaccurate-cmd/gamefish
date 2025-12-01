@@ -11,13 +11,33 @@ public partial class FacepunchController : BaseController
 	[Feature( PAWN )]
 	public PlayerController PlayerController
 	{
-		get => _pc.IsValid() ? _pc
-			: _pc = Components?.Get<PlayerController>( FindMode.EverythingInSelf );
-
+		get => _pc.GetCached( GameObject );
 		set { _pc = value; }
 	}
 
 	protected PlayerController _pc;
+
+	protected override void OnStart()
+	{
+		base.OnStart();
+
+		if ( !PlayerController.IsValid() )
+		{
+			this.Warn( "needs a PlayerController to function!" );
+		}
+		else
+		{
+			PlayerController.UseCameraControls = false;
+		}
+	}
+
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		if ( PlayerController.IsValid() )
+			PlayerController.UseInputControls = Pawn.IsValid() && Pawn.AllowInput();
+	}
 
 	public override Vector3 GetLocalEyePosition()
 	{
@@ -27,27 +47,14 @@ public partial class FacepunchController : BaseController
 		return base.GetLocalEyePosition();
 	}
 
-	protected override void OnStart()
-	{
-		base.OnStart();
+	public override void SetLocalEyePosition( Vector3 pos ) { }
 
-		if ( !PlayerController.IsValid() )
-			this.Warn( "needs a PlayerController to function!" );
+	protected override void OnSetLocalEyeRotation( in Rotation r )
+	{
+		if ( PlayerController.IsValid() )
+			PlayerController.EyeAngles = r;
 	}
 
-	protected override void OnUpdate()
-	{
-		base.OnUpdate();
-
-		// Toggle the FP controller's input system with respect to our agency system.
-		if ( PlayerController is PlayerController c && c.IsValid() )
-		{
-			c.UseInputControls = Pawn is Pawn pawn
-				&& pawn.IsValid() && pawn.AllowInput();
-
-			LocalEyeRotation = WorldTransform.RotationToLocal( c.EyeAngles );
-		}
-	}
 
 	// The engine's controller handles this stuff.
 	protected override void Move( in float deltaTime ) { }
