@@ -83,10 +83,10 @@ public partial class EquipMeleeFunction : EquipFunction
 		{
 			if ( AttackKnockback != 0f )
 			{
-				if ( obj.Components.TryGet<Rigidbody>( out var rb, FindMode.EnabledInSelf | FindMode.InAncestors ) )
+				if ( obj.Components.TryGet<IVelocity>( out var vel, FindMode.EnabledInSelf | FindMode.InAncestors ) )
+					vel.TryImpulse( tr.Direction * AttackKnockback );
+				else if ( obj.Components.TryGet<Rigidbody>( out var rb, FindMode.EnabledInSelf | FindMode.InAncestors ) )
 					rb.Velocity += tr.Direction * AttackKnockback;
-				else if ( obj.Components.TryGet<IVelocity>( out var vel, FindMode.EnabledInSelf | FindMode.InAncestors ) )
-					vel.TryModifyVelocity( tr.Direction * AttackKnockback );
 			}
 
 			// Blood effect or something.

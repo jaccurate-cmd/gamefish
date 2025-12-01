@@ -44,6 +44,15 @@ public partial class PhysicsEntity : ModuleEntity, IPhysics
 		}
 	}
 
+	[Rpc.Owner( NetFlags.Unreliable | NetFlags.SendImmediate )]
+	public virtual void SendImpulse( Vector3 vel )
+	{
+		if ( !ITransform.IsValid( in vel ) )
+			return;
+
+		Velocity += vel;
+	}
+
 	public override bool TryTeleport( in Transform tWorld )
 	{
 		WorldPosition = tWorld.Position;

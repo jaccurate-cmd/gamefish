@@ -5,37 +5,23 @@ namespace GameFish;
 /// </summary>
 public interface IVelocity
 {
-    public Vector3 Velocity { get; set; }
+	public Vector3 Velocity { get; set; }
 
-    /// <summary>
-    /// Tries to modify the velocity. Lets the object modify the result.
-    /// </summary>
-    /// <returns> If this object allows adding of the velocity. </returns>
-    public bool TryModifyVelocity( in Vector3 vel, out Vector3 result )
-    {
-        if ( !ITransform.IsValid( vel ) )
-        {
-            result = vel;
-            return false;
-        }
+	/// <summary>
+	/// Attempts to push this physics object.
+	/// </summary>
+	/// <returns> If we were allowed to send this impulse. </returns>
+	public virtual bool TryImpulse( in Vector3 vel )
+	{
+		if ( !ITransform.IsValid( in vel ) )
+			return false;
 
-        Velocity = vel;
-        result = vel;
+		SendImpulse( vel );
+		return true;
+	}
 
-        return true;
-    }
-
-    /// <summary>
-    /// Tries to modify the velocity. Lets the object modify the result.
-    /// </summary>
-    /// <returns> If this object allows adding of the velocity. </returns>
-    public bool TryModifyVelocity( in Vector3 vel )
-        => TryModifyVelocity( vel, out _ );
-
-    /// <summary>
-    /// Put your movement/physics code here.
-    /// </summary>
-    public void ApplyVelocity( in float deltaTime )
-    {
-    }
+	/// <summary>
+	/// Networks impulse velocity to the owner.
+	/// </summary>
+	public void SendImpulse( Vector3 vel );
 }
