@@ -94,9 +94,11 @@ public partial struct DamageSettings
 
 	public DamageSettings() { }
 
-	public DamageSettings( TagSet tags, in bool useRange = false, in bool useForces = false, in bool useHitboxes = false )
+	public DamageSettings( in float dmgBase, TagSet tags, in bool useRange = false, in bool useForces = false, in bool useHitboxes = false )
 	{
-		Types = tags ?? [];
+		BaseDamage = dmgBase;
+
+		Types = tags;
 
 		EnableRange = useRange;
 		EnableForces = useForces;
@@ -107,22 +109,22 @@ public partial struct DamageSettings
 		=> Types = [.. tags?.Where( tag => tag.IsValidTag() ) ?? []];
 
 	/// <summary>
-	/// Tells you how much force to apply with respect to its force settings.
+	/// Tells you what impulse to apply with respect to its force settings.
 	/// </summary>
-	/// <param name="dir"> The direction to apply the force. </param>
+	/// <param name="dir"> The direction to apply the impulse. </param>
 	/// <param name="dmg"> The damage that was dealt. </param>
-	/// <returns> The amount of force to apply in the attack direction. </returns>
-	public readonly Vector3 GetForce( in Vector3 dir, in float dmg )
+	/// <returns> The impulse to apply in the attack direction. </returns>
+	public readonly Vector3 GetImpulse( in Vector3 dir, in float dmg )
 	{
 		if ( !EnableForces )
 			return Vector3.Zero;
 
-		var force = dir * Impulse;
+		var vel = dir * Impulse;
 
 		if ( ScaleForces )
-			force *= dmg;
+			vel *= dmg;
 
-		return force;
+		return vel;
 	}
 
 	/// <returns> The damage that should be dealt with respect to range. </returns>
