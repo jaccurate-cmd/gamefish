@@ -20,8 +20,11 @@ public partial struct ImpactData : IValid
 	public GameObject GameObject { get; set; }
 	/// <summary> The impacted collider. </summary>
 	public Collider Collider { get; set; }
+
 	/// <summary> The impacted hitbox. </summary>
 	public Hitbox Hitbox { get; set; }
+	/// <summary> The impacted shape. </summary>
+	public PhysicsShape Shape { get; set; }
 
 	public Vector3 HitPosition { get; set; }
 	public Vector3 HitNormal { get; set; }
@@ -40,13 +43,15 @@ public partial struct ImpactData : IValid
 	/// <summary>
 	/// Creates impact data manually.
 	/// </summary>
-	public ImpactData( GameObject mover, GameObject hitObj, in Vector3 hitPos, in Vector3 hitNormal, Collider cHit = null, Hitbox hitbox = null, in Vector3? endPos = null )
+	public ImpactData( GameObject mover, GameObject hitObj, in Vector3 hitPos, in Vector3 hitNormal, Collider cHit = null, Hitbox hitbox = null, PhysicsShape shape = null, in Vector3? endPos = null )
 	{
 		Mover = mover;
 
 		GameObject = hitObj;
 		Collider = cHit;
+
 		Hitbox = hitbox;
+		Shape = shape;
 
 		HitPosition = hitPos;
 		HitNormal = hitNormal;
@@ -61,10 +66,11 @@ public partial struct ImpactData : IValid
 
 		GameObject = c.Other.GameObject;
 		Collider = c.Other.Collider;
-		Hitbox = null;
 
 		HitPosition = c.Contact.Point;
 		HitNormal = c.Contact.Normal;
+
+		Shape = c.Other.Shape;
 
 		EndPosition = null;
 	}
@@ -77,7 +83,9 @@ public partial struct ImpactData : IValid
 
 		GameObject = tr.GameObject;
 		Collider = tr.Collider;
+
 		Hitbox = tr.Hitbox;
+		Shape = tr.Shape;
 
 		HitPosition = tr.HitPosition;
 		HitNormal = tr.Normal;
