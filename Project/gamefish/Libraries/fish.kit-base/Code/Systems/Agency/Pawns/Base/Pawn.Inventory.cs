@@ -7,15 +7,16 @@ partial class Pawn
 	[Property]
 	[Feature( PAWN ), Group( EQUIPMENT )]
 	public virtual PawnEquipment Equipment
-		=> !_equipment.IsValid() || _equipment.Parent != this
-			? _equipment = GetModule<PawnEquipment>()
-			: _equipment;
+	{
+		get => _equipment.GetCached( this );
+		set => _equipment = value;
+	}
 
 	protected PawnEquipment _equipment;
 
 	[Property, JsonIgnore]
-	[Feature( PAWN ), Group( EQUIPMENT )]
 	[ShowIf( nameof( InGame ), true )]
+	[Feature( PAWN ), Group( EQUIPMENT )]
 	public virtual Equipment ActiveEquip
 	{
 		get => Equipment?.ActiveEquip;

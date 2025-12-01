@@ -232,6 +232,9 @@ public partial class PawnEquipment : Module
 
 	public virtual bool TryDeploy( Equipment equip )
 	{
+		if ( IsProxy )
+			return false;
+
 		if ( !equip.IsValid() || !equip.CanDeploy( from: ActiveEquip ) )
 			return false;
 
