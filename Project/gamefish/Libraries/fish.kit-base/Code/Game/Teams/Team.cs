@@ -19,12 +19,12 @@ public partial class Team : GameResource, ITeam
 	public const string PREFIX = "team_";
 
 	[JsonIgnore, ReadOnly]
-	public string Tag => PREFIX + ResourceName;
+	public string Tag => ResourceName.IsBlank() ? null : PREFIX + ResourceName;
 
 	public string Name { get; set; } = "???";
 
 	/// <summary>
-	/// If true: you can pick this team if the mode allows it.
+	/// Can you ever pick this team?
 	/// </summary>
 	public bool IsSelectable { get; set; } = false;
 
@@ -42,6 +42,7 @@ public partial class Team : GameResource, ITeam
 	[Group( RELATIONSHIPS )]
 	public Relationship DefaultRelationship { get; set; } = Relationship.Enemy;
 
+	[WideMode]
 	[Group( RELATIONSHIPS )]
 	public List<TeamRelationship> Relationships
 	{
@@ -75,15 +76,16 @@ public partial class Team : GameResource, ITeam
 		=> GetRelationship( team ) is Relationship.Enemy;
 
 	public bool IsAlly( GameObject obj )
-		=> obj.IsValid() && TryGetTeam( obj, out var team ) && IsAlly( team );
+		=> obj.IsValid() && TryGet( obj, out var team ) && IsAlly( team );
 
 	public bool IsEnemy( GameObject obj )
-		=> obj.IsValid() && TryGetTeam( obj, out var team ) && IsEnemy( team );
+		=> obj.IsValid() && TryGet( obj, out var team ) && IsEnemy( team );
 
-	public static bool TryGetTeam( GameObject obj, out Team team )
+	public static bool TryGet( GameObject obj, out Team team, FindMode findMode = FindMode.EnabledInSelf | FindMode.InAncestors )
 	{
-		if ( obj.IsValid() && obj.Components.TryGet<ITeam>( out var iTeam, FindMode.EnabledInSelf | FindMode.InAncestors ) )
-			return (team = iTeam.Team).IsValid();
+		if ( obj.IsValid() && obj.Components.TryGet<ITeam>( out var iTeam, findMode ) )
+			if ( (team = iTeam.Team).IsValid() )
+				return true;
 
 		team = null;
 		return false;
@@ -111,7 +113,7 @@ public partial class Team : GameResource, ITeam
 			foreach ( var tag in tags.Where( tag => tag.StartsWith( PREFIX ) ) )
 				tags.Remove( tag );
 
-			if ( !string.IsNullOrWhiteSpace( teamTag ) )
+			if ( !teamTag.IsBlank() )
 				tags.Add( teamTag );
 		}
 	}
