@@ -2,10 +2,10 @@ namespace GameFish;
 
 partial class Entity
 {
-	public static PrefabFile GetPrefab( string classId )
-		=> TryGetPrefab( classId, out var prefabFile ) ? prefabFile : null;
+	public static PrefabFile GetEntityPrefab( string classId )
+		=> TryGetEntityPrefab( classId, out var prefabFile ) ? prefabFile : null;
 
-	public static bool TryGetPrefab( string classId, out PrefabFile prefabFile )
+	public static bool TryGetEntityPrefab( string classId, out PrefabFile prefabFile )
 	{
 		prefabFile = null;
 
@@ -39,7 +39,7 @@ partial class Entity
 		if ( !Server.CheatsEnabled && !Server.CanCheat( Rpc.Caller ) )
 			return;
 
-		if ( !TryGetPrefab( classId, out var prefabFile ) )
+		if ( !TryGetEntityPrefab( classId, out var prefabFile ) )
 		{
 			Print.WarnFrom( typeof( Entity ), $"Couldn't find Entity with ID:\"{classId}\"." );
 			return;

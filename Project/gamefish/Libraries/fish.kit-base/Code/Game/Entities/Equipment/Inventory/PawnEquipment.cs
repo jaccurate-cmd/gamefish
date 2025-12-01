@@ -300,7 +300,7 @@ public partial class PawnEquipment : Module
 
 	public virtual bool TryEquip( string classId, out Equipment e, int? slot = null )
 	{
-		if ( !TryGetPrefab( classId, out var ePrefab ) )
+		if ( !TryGetEntityPrefab( classId, out var ePrefab ) )
 		{
 			e = null;
 			return false;
