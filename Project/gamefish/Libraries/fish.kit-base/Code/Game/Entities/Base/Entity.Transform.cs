@@ -1,6 +1,6 @@
 namespace GameFish;
 
-partial class BaseEntity : ITransform
+partial class Entity : ITransform
 {
 	public virtual Vector3 Center => WorldPosition;
 }

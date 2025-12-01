@@ -5,7 +5,7 @@ namespace GameFish;
 /// <summary>
 /// An entity that supports <see cref="Module"/>s.
 /// </summary>
-public partial class ModuleEntity : BaseEntity, Component.INetworkSpawn
+public partial class ModuleEntity : Entity, Component.INetworkSpawn
 {
 	/// <summary>
 	/// The cached list of modules belonging to this entity.

@@ -3,7 +3,7 @@ namespace GameFish;
 /// <summary>
 /// The most basic form of something that can separately exist.
 /// </summary>
-public abstract partial class BaseEntity : BaseClass, ITransform
+public abstract partial class Entity : BaseClass, ITransform
 {
 	protected const int DEBUG_ORDER = DEFAULT_ORDER - 100;
 	protected const int ENTITY_ORDER = DEFAULT_ORDER + 100;

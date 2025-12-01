@@ -2,7 +2,7 @@ using System;
 
 namespace GameFish;
 
-partial class BaseEntity
+partial class Entity
 {
 	protected const string NETWORK_INFO =
 		"These are this component's intended networking settings.\n\n" +

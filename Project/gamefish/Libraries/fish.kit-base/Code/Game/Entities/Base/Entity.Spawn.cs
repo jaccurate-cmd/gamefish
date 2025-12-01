@@ -1,6 +1,6 @@
 namespace GameFish;
 
-partial class BaseEntity
+partial class Entity
 {
 	public static PrefabFile GetPrefab( string classId )
 		=> TryGetPrefab( classId, out var prefabFile ) ? prefabFile : null;
@@ -12,14 +12,14 @@ partial class BaseEntity
 		if ( string.IsNullOrWhiteSpace( classId ) || PrefabLibrary.All is null )
 			return false;
 
-		foreach ( var def in PrefabLibrary.FindByComponent<BaseEntity>() )
+		foreach ( var def in PrefabLibrary.FindByComponent<Entity>() )
 		{
 			if ( !def.Prefab.IsValid() )
 				continue;
 
 			var comps = def.PrefabScene?.Components;
 
-			if ( comps is null || !comps.TryGet<BaseEntity>( out var ent, FindMode.EverythingInSelf ) )
+			if ( comps is null || !comps.TryGet<Entity>( out var ent, FindMode.EverythingInSelf ) )
 				continue;
 
 			if ( ent.IsClass && ent.ClassId == classId )
@@ -41,7 +41,7 @@ partial class BaseEntity
 
 		if ( !TryGetPrefab( classId, out var prefabFile ) )
 		{
-			Print.WarnFrom( typeof( BaseEntity ), $"Couldn't find Entity with ID:\"{classId}\"." );
+			Print.WarnFrom( typeof( Entity ), $"Couldn't find Entity with ID:\"{classId}\"." );
 			return;
 		}
 
@@ -60,7 +60,7 @@ partial class BaseEntity
 			prefabFile.TrySpawn( out go );
 		}
 
-		if ( go.IsValid() && go.Components.TryGet<BaseEntity>( out var ent ) )
+		if ( go.IsValid() && go.Components.TryGet<Entity>( out var ent ) )
 			ent.TrySetNetworkOwner( Connection.Host );
 	}
 }

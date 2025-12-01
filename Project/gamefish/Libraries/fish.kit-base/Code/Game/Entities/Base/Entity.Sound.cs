@@ -2,7 +2,7 @@ using Sandbox.Audio;
 
 namespace GameFish;
 
-partial class BaseEntity
+partial class Entity
 {
 	/// <summary>
 	/// Attaches an existing sound handle to this object.
