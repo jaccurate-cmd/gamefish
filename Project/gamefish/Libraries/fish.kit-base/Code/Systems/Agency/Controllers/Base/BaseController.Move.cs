@@ -47,6 +47,16 @@ partial class BaseController
 	[Feature( PAWN ), Order( MOVEMENT_ORDER )]
 	public virtual Friction Friction { get; set; }
 
+	public virtual Vector3 Velocity
+	{
+		get => Pawn?.Velocity ?? Vector3.Zero;
+		set
+		{
+			if ( Pawn.IsValid() )
+				Pawn.Velocity = value;
+		}
+	}
+
 	[Sync]
 	public Vector3 WishVelocity
 	{

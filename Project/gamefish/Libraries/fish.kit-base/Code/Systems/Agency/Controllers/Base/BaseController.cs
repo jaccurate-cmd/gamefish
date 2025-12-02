@@ -1,10 +1,14 @@
+using System.Text.Json.Serialization;
+
 namespace GameFish;
 
 /// <summary>
-/// Something that takes input to move around. Meant to be controlled by a pawn.
+/// Something that takes input to move around.
+/// <br /> <br />
+/// <b> NOTE: </b> Meant to be controlled by a pawn.
 /// </summary>
 [Icon( "directions_run" )]
-public abstract partial class BaseController : PhysicsEntity
+public abstract partial class BaseController : Module
 {
 	protected const int PAWN_ORDER = DEFAULT_ORDER - 444;
 
@@ -23,19 +27,17 @@ public abstract partial class BaseController : PhysicsEntity
 	protected const string JUMPING = "Jumping";
 	protected const int JUMPING_ORDER = 6000;
 
+	public override bool IsParent( ModuleEntity comp )
+		=> comp is Pawn;
+
 	/// <summary>
 	/// The pawn using this for movement etc.
-	/// It should be on the same object.
+	/// <br /> <br />
+	/// <b> NOTE: </b> It should be on the same object.
 	/// </summary>
-	[Property]
+	[Property, ReadOnly, JsonIgnore]
 	[Feature( PAWN ), Order( PAWN_ORDER )]
-	public Pawn Pawn
-	{
-		get => _pawn.IsValid() && _pawn.GameObject == GameObject ? _pawn
-			: _pawn = Components?.Get<Pawn>( FindMode.EverythingInSelf );
-
-		set { _pawn = value; }
-	}
+	public Pawn Pawn => Parent as Pawn;
 
 	protected Pawn _pawn;
 
