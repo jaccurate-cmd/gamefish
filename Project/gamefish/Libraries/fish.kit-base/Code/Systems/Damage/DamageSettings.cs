@@ -12,6 +12,7 @@ public partial struct DamageSettings
 	const int FORCE_ORDER = 10;
 	const int HITBOXES_ORDER = 15;
 
+
 	/// <summary>
 	/// The baseline/maximum damage dealt.
 	/// </summary>
@@ -19,12 +20,12 @@ public partial struct DamageSettings
 	[Title( "Base" )]
 	public float BaseDamage { get; set; } = 20f;
 
-
 	/// <summary>
 	/// Damage type tags.
 	/// </summary>
 	[KeyProperty]
 	public TagSet Types { get; set; }
+
 
 	/// <summary>
 	/// Allows applying forces on hit.
@@ -109,7 +110,7 @@ public partial struct DamageSettings
 		=> Types = [.. tags?.Where( tag => tag.IsValidTag() ) ?? []];
 
 	/// <summary>
-	/// Tells you what impulse to apply with respect to its force settings.
+	/// Tells you what impulse to apply with respect to force settings.
 	/// </summary>
 	/// <param name="dir"> The direction to apply the impulse. </param>
 	/// <param name="dmg"> The damage that was dealt. </param>

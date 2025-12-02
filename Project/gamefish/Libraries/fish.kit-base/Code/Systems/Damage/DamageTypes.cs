@@ -1,9 +1,9 @@
 namespace GameFish;
 
 /// <summary>
-/// A collection of <see cref="DamageInfo"/> tag string constants.
+/// A collection of string constants for damage types.
 /// </summary>
-public static partial class DamageTags
+public static partial class DamageTypes
 {
 	/// <summary>
 	/// Squeezed between a rock and a hard place.
@@ -23,20 +23,30 @@ public static partial class DamageTags
 	/// General melee attack tag.
 	/// </summary>
 	public const string MELEE = "melee";
+
 	public const string PUNCH = "punch";
 	public const string PUNCHING = PUNCH;
+
 	public const string SLASH = "slash";
 	public const string SLASHING = SLASH;
+
 	public const string STAB = "stab";
 	public const string STABBING = STAB;
 
+	public const string BLUNT = "blunt";
+
 	public const string FIRE = "fire";
+	public const string FLAME = FIRE;
+	public const string FLAMING = FIRE;
 	public const string BURN = FIRE;
 	public const string BURNING = FIRE;
+
 	public const string ICE = "ice";
 	public const string FREEZE = ICE;
 	public const string FREEZING = ICE;
+
 	public const string ELECTRIC = "zap";
+	public const string ELECTRICITY = ELECTRIC;
 
 	/// <summary>
 	/// Like bleach or toxic water.

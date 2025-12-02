@@ -92,7 +92,7 @@ public partial struct DamageData
 		}
 
 		if ( data.Source.IsBlank() )
-			data.Source = DamageTags.BULLET;
+			data.Source = DamageTypes.BULLET;
 
 		return data;
 	}
@@ -128,7 +128,7 @@ public partial struct DamageData
 			data.Source = phys.ClassId;
 
 		if ( data.Source.IsBlank() )
-			data.Source = DamageTags.IMPACT;
+			data.Source = DamageTypes.IMPACT;
 
 		return data;
 	}
@@ -160,7 +160,7 @@ public partial struct DamageData
 		}
 
 		if ( data.Source.IsBlank() )
-			data.Source = DamageTags.EXPLOSIVE;
+			data.Source = DamageTypes.EXPLOSIVE;
 
 		return data;
 	}

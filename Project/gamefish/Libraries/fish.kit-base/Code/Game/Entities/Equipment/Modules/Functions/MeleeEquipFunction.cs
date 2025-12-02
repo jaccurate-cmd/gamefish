@@ -73,7 +73,7 @@ public partial class EquipMeleeFunction : EquipFunction
 			return;
 		}
 
-		var tags = new TagSet( [DamageTags.MELEE] );
+		var tags = new TagSet( [DamageTypes.MELEE] );
 
 		var dmgInfo = new DamageInfo( AttackDamage, Pawn.GameObject, GameObject )
 		{ Tags = tags };

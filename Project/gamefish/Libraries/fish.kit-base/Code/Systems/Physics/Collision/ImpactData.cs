@@ -71,8 +71,6 @@ public partial struct ImpactData : IValid
 		HitNormal = c.Contact.Normal;
 
 		Shape = c.Other.Shape;
-
-		EndPosition = null;
 	}
 
 	/// <param name="mover"> The object causing the collision. </param>
