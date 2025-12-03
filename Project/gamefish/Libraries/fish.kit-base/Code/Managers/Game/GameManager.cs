@@ -6,10 +6,12 @@ namespace GameFish;
 /// Handles your core gameplay logic.
 /// <br /> <br />
 /// <b> NOTE: </b> You are encouraged to inherit and override this component.
+/// <br /> <br />
+/// <b> NOTE: </b> Works well with the <see cref="Essential"/> component.
 /// </summary>
-[Title( "Game Manager" )]
+[Title( "Game Manager (default)" )]
 [Icon( "videogame_asset" )]
-public abstract partial class GameManager : Singleton<GameManager>, ISceneLoadingEvents
+public partial class GameManager : Singleton<GameManager>, ISceneLoadingEvents
 {
 	protected const int GAME_ORDER = DEFAULT_ORDER - 1000;
 
@@ -77,7 +79,7 @@ public abstract partial class GameManager : Singleton<GameManager>, ISceneLoadin
 	public virtual void OnSceneLoad( Scene scene )
 	{
 		if ( NavMeshOverride.HasValue )
-			OverrideNavMesh( isEnabled: true );
+			OverrideNavMesh( isEnabled: true, scene: scene );
 	}
 
 	public virtual void OverrideNavMesh( bool isEnabled, Scene scene = null )
