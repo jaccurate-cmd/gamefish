@@ -14,7 +14,10 @@ partial class GameManager
 	protected override void OnEnabled()
 	{
 		if ( !Networking.IsHost )
+		{
+			base.OnEnabled();
 			return;
+		}
 
 		// Prevent multiple instances.
 		if ( TryGetInstance( out var gm ) && gm != this )
@@ -45,15 +48,22 @@ partial class GameManager
 		if ( !Networking.IsHost )
 			return false;
 
+		// Scene-specific settings may block spawning the game manager.
+		if ( SceneSettings.TryGetInstance( out var s ) && !s.SpawnGameManager )
+		{
+			Print.WarnFrom( typeof( GameManager ), "Settings manager blocked spawning." );
+			return false;
+		}
+
 		if ( !prefab.IsValid() )
 		{
-			Print.Warn( $"Missing/invalid game manager prefab:[{prefab}]" );
+			Print.WarnFrom( typeof( GameManager ), $"Missing/invalid prefab:[{prefab}]" );
 			return false;
 		}
 
 		if ( !prefab.TrySpawn( out var gmObj ) || !gmObj.Components.TryGet( out gm ) )
 		{
-			Print.Warn( $"Couldn't find {typeof( GameManager )} on manager prefab:[{prefab}]. Destroying." );
+			Print.WarnFrom( typeof( GameManager ), $"Couldn't find type:[{typeof( GameManager )}] on manager prefab:[{prefab}]. Destroying." );
 			gmObj.Destroy();
 			return false;
 		}

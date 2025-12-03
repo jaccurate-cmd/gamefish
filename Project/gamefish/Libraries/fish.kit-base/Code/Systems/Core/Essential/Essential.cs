@@ -9,7 +9,7 @@ namespace GameFish;
 /// Inherit this class to add your own important things.
 /// </summary>
 [Icon( "power_settings_new" )]
-public partial class Essential : Singleton<Essential>
+public partial class Essential : Singleton<Essential>, ISceneLoadingEvents
 {
 	protected const int BOOT_ORDER = DEBUG_ORDER - 1000;
 
@@ -85,6 +85,18 @@ public partial class Essential : Singleton<Essential>
 		EnsureGameManager();
 	}
 
+	void ISceneLoadingEvents.AfterLoad( Scene scene )
+	{
+		if ( scene.IsValid() )
+			OnSceneLoad( scene );
+	}
+
+	public virtual void OnSceneLoad( Scene scene )
+	{
+		EnsureSession();
+		EnsureGameManager();
+	}
+
 	/// <summary>
 	/// Creates the <see cref="Session"/> prefab if one doesn't exist.
 	/// </summary>
@@ -119,22 +131,14 @@ public partial class Essential : Singleton<Essential>
 		if ( GameManager.TryGetInstance( out _ ) )
 			return;
 
-		// Scene settings might override the prefab.
 		var prefab = GameManagerPrefab;
 
-		var s = SceneSettings.Instance;
-
-		if ( s.IsValid() )
-		{
-			// Might also block spawning the game manager.
-			if ( !s.SpawnGameManager )
-				return;
-
+		// Scene settings might override the prefab.
+		if ( SceneSettings.TryGetInstance( out var s ) )
 			if ( s.GameManagerPrefabOverride.IsValid() )
 				prefab = s.GameManagerPrefabOverride;
-		}
 
 		if ( prefab.IsValid() )
-			GameManager.TryCreate( prefab, out var gm );
+			GameManager.TryCreate( prefab, out var _ );
 	}
 }
