@@ -178,6 +178,6 @@ partial class Entity
 			ignoreProxy: true
 		);
 
-		return true;
+		return Network?.Owner == cn;
 	}
 }
