@@ -10,16 +10,16 @@ public partial class ClientPawnCyclerModule : Module
 {
 	[Property]
 	[InputAction]
-	[Feature( INPUT )]
+	[Feature( DEBUG ), Group( INPUT ), Order( DEBUG_ORDER )]
 	public string TogglePawnButton { get; set; } = "Info";
 	public bool HasTogglePawnButton => !string.IsNullOrWhiteSpace( TogglePawnButton );
 
 	/// <summary>
 	/// These will be cycled through when the relevant button is pressed.
 	/// </summary>
-	[Feature( PAWN )]
 	[Property, WideMode]
 	[Title( "Toggle List" )]
+	[Feature( DEBUG ), Group( PAWN ), Order( DEBUG_ORDER )]
 	protected List<PrefabFile> PawnToggleList { get; set; }
 
 	[Sync( SyncFlags.FromHost )]

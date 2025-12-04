@@ -27,9 +27,9 @@
     "LaunchMode": "Normal",
     "SystemScene": "gamefish/examples/system/system.scene",
     "ControlModes": {
-      "Keyboard": false,
+      "Keyboard": true,
       "VR": false,
-      "Gamepad": false
+      "Gamepad": true
     },
     "DedicatedServerStartupScene": "gamefish/examples/scenes/example1.scene"
   }

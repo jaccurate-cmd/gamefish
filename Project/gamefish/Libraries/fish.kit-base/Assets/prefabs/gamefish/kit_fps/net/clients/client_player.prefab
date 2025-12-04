@@ -12,41 +12,21 @@
     "NetworkMode": 2,
     "NetworkInterpolation": true,
     "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
     "OwnerTransfer": 1,
     "Components": [
       {
         "__type": "GameFish.Client",
         "__guid": "af98a2ba-66d5-4a1e-b3b9-1dab13ece240",
         "__enabled": true,
-        "Connected": false,
-        "HasForcedNetworking": true,
-        "Identity": {
-          "IsValid": false,
-          "Created": 1754254454,
-          "Type": "Invalid",
-          "Client": null,
-          "Name": null,
-          "Id": "00000000-0000-0000-0000-000000000000",
-          "SteamId": {
-            "Value": 0,
-            "ValueUnsigned": 0
-          },
-          "Address": null,
-          "Connection": null
-        },
-        "IsPlayer": true,
-        "Modules": [
-          {
-            "_type": "component",
-            "component_id": "c0956275-0035-4e06-9a71-a8472f66972c",
-            "go": "8b7a14e6-28c2-43fa-a429-63049d6baa75",
-            "component_type": "ClientPawnCyclerModule"
-          }
-        ],
+        "ClassId": "client_player",
+        "ClassName": null,
+        "IsClass": false,
+        "IsNetworkingForced": true,
         "NetworkAutomatically": true,
         "NetworkId": "af98a2ba-66d5-4a1e-b3b9-1dab13ece240",
         "NetworkingMode": "Object",
-        "NetworkOrphanedMode": "Host",
+        "NetworkOrphanedMode": "ClearOwner",
         "NetworkOwner": null,
         "NetworkTransferMode": "Fixed",
         "OnComponentDestroy": null,
@@ -54,9 +34,7 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "Pawns": null,
-        "SetDebugPawn": null
+        "OnComponentUpdate": null
       }
     ],
     "Children": [
@@ -67,32 +45,7 @@
         "__PrefabInstancePatch": {
           "AddedObjects": [],
           "RemovedObjects": [],
-          "PropertyOverrides": [
-            {
-              "Target": {
-                "Type": "Component",
-                "IdValue": "e726da28-91f2-4a55-a7e8-7756731d44f9"
-              },
-              "Property": "Parent",
-              "Value": {
-                "_type": "component",
-                "component_id": "af98a2ba-66d5-4a1e-b3b9-1dab13ece240",
-                "go": "962d4124-9d83-425e-ae8a-1883b6f45c52",
-                "component_type": "Client"
-              }
-            },
-            {
-              "Target": {
-                "Type": "Component",
-                "IdValue": "e726da28-91f2-4a55-a7e8-7756731d44f9"
-              },
-              "Property": "PawnToggleList",
-              "Value": [
-                "prefabs/gamefish/kit_fps/pawns/player/spectator_fps.prefab",
-                "prefabs/gamefish/kit_fps/pawns/player/player_fps.prefab"
-              ]
-            }
-          ],
+          "PropertyOverrides": [],
           "MovedObjects": []
         },
         "__PrefabIdToInstanceId": {
