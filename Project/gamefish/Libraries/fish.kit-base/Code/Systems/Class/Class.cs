@@ -10,8 +10,11 @@ namespace GameFish;
 /// </summary>
 [Icon( "local_offer" )]
 [Group( Library.NAME )]
-public abstract partial class BaseClass : Component
+public partial class Class : Component
 {
+	/// <summary>
+	/// A number that is well before any unordered groups/tabs.
+	/// </summary>
 	protected const int DEFAULT_ORDER = -1000;
 
 	/// <summary>
@@ -19,20 +22,20 @@ public abstract partial class BaseClass : Component
 	/// Makes it possible to spawn this prefab in
 	/// commands etc. by specifying its string ID.
 	/// </summary>
+	[Property]
 	[Title( "Is Class" )]
-	[Property, Order( DEFAULT_ORDER )]
 	[ShowIf( nameof( IsPrefabRoot ), true )]
-	[Feature( ENTITY ), Group( ID )]
+	[Feature( ENTITY ), Group( ID ), Order( DEFAULT_ORDER )]
 	public virtual bool IsClass { get; set; }
 
 	/// <summary>
 	/// Uniquely identifies this entity. <br />
 	/// Makes it possible to spawn this prefab by specifying this.
 	/// </summary>
+	[Property]
 	[Title( "Class ID" )]
-	[Property, Order( DEFAULT_ORDER )]
 	[ShowIf( nameof( ShowClassSettings ), true )]
-	[Feature( ENTITY ), Group( ID )]
+	[Feature( ENTITY ), Group( ID ), Order( DEFAULT_ORDER )]
 	public string ClassId
 	{
 		get
@@ -50,19 +53,19 @@ public abstract partial class BaseClass : Component
 	/// <summary>
 	/// What to display as this entity prefab's name.
 	/// </summary>
+	[Property]
 	[Title( "Class Name" )]
-	[Property, Order( DEFAULT_ORDER )]
 	[ShowIf( nameof( ShowClassSettings ), true )]
-	[Feature( ENTITY ), Group( ID )]
+	[Feature( ENTITY ), Group( ID ), Order( DEFAULT_ORDER )]
 	public string ClassName { get; set; }
 
 	/// <summary>
 	/// Sets the class ID to the prefab's file name.
 	/// </summary>
-	[Title( "Reset" )]
-	[Button, Order( DEFAULT_ORDER )]
+	[Button]
+	[Title( "Reset ID" )]
 	[ShowIf( nameof( ShowClassSettings ), true )]
-	[Feature( ENTITY ), Group( ID )]
+	[Feature( ENTITY ), Group( ID ), Order( DEFAULT_ORDER )]
 	protected virtual void ResetClassID()
 		=> ClassId = GameObject.Name;
 

@@ -72,7 +72,7 @@ public static class PrefabLibrary
 	}
 
 	/// <summary>
-	/// Finds all prefabs with <typeparamref name="T"/>.
+	/// Finds all prefab/<typeparamref name="T"/> pairs.
 	/// This is probably slow so avoid using it too much.
 	/// </summary>
 	public static IEnumerable<(PrefabFile Prefab, T Component)> FindPrefabComponents<T>()
