@@ -132,6 +132,8 @@ public static partial class Strings
 
 	public const string AGENT = "👨‍💼 Agent";
 	public const string AGENTS = AGENT + "s";
+	public const string CLIENT = "👨‍💼 Client";
+	public const string CLIENTS = CLIENT + "s";
 	public const string PAWN = "🐴 Pawn";
 	public const string PAWNS = PAWN + "s";
 
