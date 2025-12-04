@@ -36,7 +36,7 @@ partial class Entity
 	[ConCmd( "ent_spawn" )]
 	public static void SpawnEntityCommand( string classId, float distance = 1000f )
 	{
-		if ( !Server.CheatsEnabled && !Server.CanCheat( Rpc.Caller ) )
+		if ( !Server.IsCheatingEnabled( Rpc.Caller ) )
 			return;
 
 		if ( !TryGetEntityPrefab( classId, out var prefabFile ) )

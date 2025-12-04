@@ -19,6 +19,9 @@ public static partial class Strings
 	public const string SESSION = "📋 Session";
 	public const string SESSIONS = SESSION + "s";
 
+	public const string CHEATS = "👨‍💻 Cheats";
+	public const string CHEATING = "👨‍💻 Cheating";
+
 	public const string ID = "🆔 Identity";
 	public const string IDS = "🆔 Identities";
 

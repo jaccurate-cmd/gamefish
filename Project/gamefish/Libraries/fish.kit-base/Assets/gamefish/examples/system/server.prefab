@@ -21,6 +21,7 @@
         "__enabled": true,
         "ClassId": "server",
         "ClassName": null,
+        "InspectorCheatsEnabled": true,
         "IsClass": false,
         "IsNetworkingActive": false,
         "IsNetworkingForced": true,
