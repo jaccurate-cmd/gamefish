@@ -11,24 +11,24 @@ namespace GameFish;
 [Icon( "dns" )]
 public partial class Server : Singleton<Server>, Component.INetworkListener
 {
+	protected const int SERVER_ORDER = DEBUG_ORDER - 1000;
 
-	/// <summary>
-	/// Shows if <see cref="Networking.IsActive"/> is <c>true</c>.
-	/// </summary>
+	protected const int AGENTS_ORDER = SERVER_ORDER - 10;
+	protected const int PAWNS_ORDER = SERVER_ORDER - 5;
+
 	[Property]
-	[Feature( SERVER ), Group( DEBUG ), Order( DEBUG_ORDER )]
-	public bool IsNetworkingActive => Networking.IsActive;
-
-	[Property, Title( "Client Prefab" )]
-	[Feature( SERVER ), Group( AGENT ), Order( -1 )]
+	[Title( "Client Prefab" )]
+	[Feature( SERVER ), Group( AGENTS ), Order( AGENTS_ORDER )]
 	public PrefabFile PlayerClientPrefab { get; set; }
 
-	[Feature( SERVER ), Group( PAWN )]
-	[Property, Title( "Player Prefab" )]
+	[Property]
+	[Title( "Player Prefab" )]
+	[Feature( SERVER ), Group( PAWNS ), Order( PAWNS_ORDER )]
 	public virtual PrefabFile PlayerPawnPrefab { get; set; }
 
-	[Feature( SERVER ), Group( PAWN )]
-	[Property, Title( "Spectator Prefab" )]
+	[Property]
+	[Title( "Spectator Prefab" )]
+	[Feature( SERVER ), Group( PAWNS ), Order( PAWNS_ORDER )]
 	public virtual PrefabFile SpectatorPawnPrefab { get; set; }
 
 	/// <summary>
@@ -37,7 +37,7 @@ public partial class Server : Singleton<Server>, Component.INetworkListener
 	public static long Time => DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
 	/// <summary>
-	/// Decides if a networked lobby should be automatically opened.
+	/// If enabled: a networked lobby should auto-open.
 	/// </summary>
 	public virtual bool AutoStart => true;
 

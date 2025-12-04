@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace GameFish;
 
 /// <summary>
-/// Handles your core gameplay logic.
+/// Handles your core menu and/or gameplay logic.
 /// <br /> <br />
 /// <b> NOTE: </b> You are encouraged to inherit and override this component.
 /// <br /> <br />

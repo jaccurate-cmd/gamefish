@@ -74,21 +74,6 @@ partial class Server
 	}
 
 	/// <summary>
-	/// Cleans up all disconnected player clients.
-	/// </summary>
-	protected virtual void ValidateClients()
-	{
-		foreach ( var cl in ValidClients )
-		{
-			if ( cl.IsPlayer && cl?.Network?.Owner?.IsActive is not true )
-				cl.DestroyGameObject();
-
-			if ( !cl.Pawn.IsValid() )
-				return;
-		}
-	}
-
-	/// <summary>
 	/// Finds an existing(or creates a new) <see cref="Client"/> object.
 	/// </summary>
 	protected virtual Client AssignClient( PrefabFile prefab, Connection cn = null )
