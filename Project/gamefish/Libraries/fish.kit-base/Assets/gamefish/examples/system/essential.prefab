@@ -24,6 +24,7 @@
         "GameManagerPrefab": "gamefish/examples/system/game/game_manager.prefab",
         "GameName": "Game Fish: Playground",
         "GameScene": "gamefish/examples/scenes/example1.scene",
+        "GameVersion": "0.1a",
         "IsClass": false,
         "IsNetworkingForced": true,
         "MainMenuScene": "gamefish/examples/scenes/menu.scene",

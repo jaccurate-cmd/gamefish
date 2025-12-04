@@ -38,7 +38,23 @@
         "OnComponentUpdate": null
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "915de80b-b676-4960-b4df-32cc6cb44023",
+        "__version": 1,
+        "__Prefab": "gamefish/examples/system/server.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "98397a76-d11e-4114-baef-e3ac6724476c": "915de80b-b676-4960-b4df-32cc6cb44023",
+          "27024cea-c219-4daf-a983-a29e97621f4f": "fe65f0ea-3184-4715-8aac-979cade7af19"
+        }
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,

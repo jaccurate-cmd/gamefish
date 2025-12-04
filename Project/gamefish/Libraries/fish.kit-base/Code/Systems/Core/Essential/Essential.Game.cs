@@ -34,4 +34,29 @@ partial class Essential
 	[Title( "Game Manager" )]
 	[Feature( GAME ), Group( PREFABS ), Order( GAME_PREFABS_ORDER )]
 	public virtual PrefabFile GameManagerPrefab { get; set; }
+
+	/// <summary>
+	/// Spawns the <see cref="GameManager"/> prefab if an instance doesn't exist.
+	/// </summary>
+	[Button( "Ensure Manager" )]
+	[ShowIf( nameof( InGame ), true )]
+	[Feature( GAME ), Group( PREFABS ), Order( GAME_PREFABS_ORDER )]
+	public virtual void EnsureGameManager()
+	{
+		if ( !this.InGame() || !Networking.IsHost )
+			return;
+
+		if ( GameManager.TryGetInstance( out _ ) )
+			return;
+
+		var prefab = GameManagerPrefab;
+
+		// Scene settings might override the prefab.
+		if ( SceneSettings.TryGetInstance( out var s ) )
+			if ( s.GameManagerPrefabOverride.IsValid() )
+				prefab = s.GameManagerPrefabOverride;
+
+		if ( prefab.IsValid() )
+			GameManager.TryCreate( prefab, out var _ );
+	}
 }

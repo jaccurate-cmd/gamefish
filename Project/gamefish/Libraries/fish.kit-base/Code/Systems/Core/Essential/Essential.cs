@@ -78,10 +78,10 @@ public partial class Essential : Singleton<Essential>, ISceneLoadingEvents
 	}
 
 	/// <summary>
-	/// Creates the <see cref="Session"/> prefab if one doesn't exist.
+	/// Spawns the <see cref="Session"/> prefab if an instance doesn't exist.
 	/// </summary>
 	[Order( SESSION_ORDER )]
-	[Button( "Create Session" )]
+	[Button( "Ensure Session" )]
 	[ShowIf( nameof( InGame ), true )]
 	[Feature( BOOT ), Group( SESSION )]
 	public virtual void EnsureSession()
@@ -94,31 +94,5 @@ public partial class Essential : Singleton<Essential>, ISceneLoadingEvents
 
 		if ( SessionPrefab.IsValid() )
 			Session.TryCreate( SessionPrefab, out _ );
-	}
-
-	/// <summary>
-	/// Creates the <see cref="Session"/> prefab if one doesn't exist.
-	/// </summary>
-	[Order( GAME_ORDER + 1 )]
-	[Button( "Create Manager" )]
-	[Feature( BOOT ), Group( GAME )]
-	[ShowIf( nameof( InGame ), true )]
-	public virtual void EnsureGameManager()
-	{
-		if ( !this.InGame() || !Networking.IsHost )
-			return;
-
-		if ( GameManager.TryGetInstance( out _ ) )
-			return;
-
-		var prefab = GameManagerPrefab;
-
-		// Scene settings might override the prefab.
-		if ( SceneSettings.TryGetInstance( out var s ) )
-			if ( s.GameManagerPrefabOverride.IsValid() )
-				prefab = s.GameManagerPrefabOverride;
-
-		if ( prefab.IsValid() )
-			GameManager.TryCreate( prefab, out var _ );
 	}
 }
