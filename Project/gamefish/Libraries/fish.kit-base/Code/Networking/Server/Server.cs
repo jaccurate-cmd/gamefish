@@ -11,7 +11,6 @@ namespace GameFish;
 [Icon( "dns" )]
 public partial class Server : Singleton<Server>, Component.INetworkListener
 {
-	protected override bool? IsNetworkedOverride => true;
 
 	/// <summary>
 	/// Shows if <see cref="Networking.IsActive"/> is <c>true</c>.
