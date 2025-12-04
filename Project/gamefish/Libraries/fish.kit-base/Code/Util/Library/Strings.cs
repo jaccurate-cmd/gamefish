@@ -19,6 +19,31 @@ public static partial class Strings
 	public const string SESSION = "📋 Session";
 	public const string SESSIONS = SESSION + "s";
 
+	public const string ID = "🆔 Identity";
+	public const string IDS = "🆔 Identities";
+
+	public const string PREFAB = "🔵 Prefab";
+	public const string PREFABS = "🔵 Prefabs";
+
+	public const string ENTITY = "📦 Entity";
+	public const string ENTITIES = "📦 Entities";
+
+	public const string INPUT = "🕹 Input";
+	public const string USE = "🖱 Use";
+
+	public const string NETWORK = "📶 Network";
+	public const string NETWORKING = "📶 Networking";
+
+	public const string MODULE = "🧩 Module";
+	public const string MODULES = MODULE + "s";
+
+	public const string CALLBACK = "⚡ Callback";
+	public const string CALLBACKS = CALLBACK + "s";
+
+	public const string ATTRIBUTES = "🔧 Attributes";
+	public const string FILTERS = "📋 Filters";
+	public const string LOGIC = "🧠 Logic";
+
 	public const string STATE = "🍰 State";
 	public const string STATES = STATE + "s";
 	public const string MODE = "🎛️ Mode";
@@ -100,28 +125,6 @@ public static partial class Strings
 	public const string TELEPORT = "🌌 Teleport";
 	public const string TELEPORTING = TELEPORT + "ing";
 	public const string TELEPORTATION = TELEPORT + "ation";
-
-	public const string ID = "🆔 Identity";
-	public const string IDS = "🆔 Identities";
-
-	public const string ENTITY = "📦 Entity";
-	public const string ENTITIES = "📦 Entities";
-
-	public const string INPUT = "🕹 Input";
-	public const string USE = "🖱 Use";
-
-	public const string NETWORK = "📶 Network";
-	public const string NETWORKING = "📶 Networking";
-
-	public const string MODULE = "🧩 Module";
-	public const string MODULES = MODULE + "s";
-
-	public const string CALLBACK = "⚡ Callback";
-	public const string CALLBACKS = CALLBACK + "s";
-
-	public const string ATTRIBUTES = "🔧 Attributes";
-	public const string FILTERS = "📋 Filters";
-	public const string LOGIC = "🧠 Logic";
 
 	public const string SPECTATOR = "👻 Spectator";
 	public const string SPECTATORS = SPECTATOR + "s";
