@@ -21,16 +21,6 @@
         "__enabled": true,
         "ClassId": "missile1",
         "ClassName": null,
-        "CollideWithTriggers": false,
-        "CollisionHit": {
-          "Enabled": true,
-          "Tags": "solid,pawn"
-        },
-        "CollisionIgnore": {
-          "Enabled": false,
-          "Tags": "trigger"
-        },
-        "CollisionRadius": 5,
         "DebugDamage": 25,
         "DefaultSpeed": 1000,
         "ExplosionDamage": {
@@ -132,7 +122,30 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "SelfDestructDelay": 10,
-        "Team": null,
+        "TraceSettings": {
+          "Shape": "Box",
+          "ShapeRotation": "0,0,0,1",
+          "Box": {
+            "Mins": "-19,-5,-5",
+            "Maxs": "19,5,5"
+          },
+          "Radius": 5.6499815,
+          "Height": 32,
+          "Capsule": {
+            "CenterA": "12,0,0",
+            "CenterB": "-12,0,0",
+            "Radius": 8
+          },
+          "TagsWith": {
+            "Enabled": true,
+            "Tags": "solid,pawn"
+          },
+          "TagsWithout": {
+            "Enabled": true,
+            "Tags": "trigger"
+          },
+          "TriggerType": "Ignore"
+        },
         "Velocity": "0,0,0"
       }
     ],
@@ -178,31 +191,6 @@
             },
             "RenderType": "On",
             "Tint": "1,0.22295,0.16744,1"
-          },
-          {
-            "__type": "Sandbox.BoxCollider",
-            "__guid": "e19548db-4d5a-46ed-bd46-617fb6e4dc50",
-            "__enabled": true,
-            "Center": "0,0,0",
-            "ColliderFlags": 0,
-            "Elasticity": null,
-            "Friction": null,
-            "IsTrigger": false,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "OnObjectTriggerEnter": null,
-            "OnObjectTriggerExit": null,
-            "OnTriggerEnter": null,
-            "OnTriggerExit": null,
-            "RollingResistance": null,
-            "Scale": "50,50,50",
-            "Static": false,
-            "Surface": null,
-            "SurfaceVelocity": "0,0,0"
           }
         ],
         "Children": []

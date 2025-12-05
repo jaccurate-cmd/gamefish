@@ -59,37 +59,14 @@ public partial class Projectile : DynamicEntity, Component.ICollisionListener, I
 	[Range( 0f, 10000f, clamped: false ), Step( 1 )]
 	public float DefaultSpeed { get; set; } = 1000f;
 
-	[Property]
+	[Property, WideMode, InlineEditor]
 	[Feature( PROJECTILE ), Group( PHYSICS )]
-	[Range( 0f, 256f, clamped: false ), Step( 1 )]
-	public float CollisionRadius { get; set; } = 32f;
-
-	/// <summary>
-	/// Should movement traces hit trigger colliders?
-	/// </summary>
-	[Property]
-	[Title( "Hit Triggers" )]
-	[Feature( PROJECTILE ), Group( PHYSICS )]
-	public bool CollideWithTriggers { get; set; }
-
-	/// <summary>
-	/// If enabled: the projectile will always hit objects with
-	/// these tags(even if they have a tag that is ignored).
-	/// </summary>
-	[Property]
-	[Title( "Tags (hit)" )]
-	[Feature( PROJECTILE ), Group( PHYSICS )]
-	public TagFilter CollisionHit { get; set; } = new( true, ["solid", TAG_PAWN] );
-
-	/// <summary>
-	/// If enabled: the projectile will ignore objects with
-	/// these tags(unless they have a tag meant to be hit).
-	/// </summary>
-	[Property]
-	[Title( "Tags (ignore)" )]
-	[Feature( PROJECTILE ), Group( PHYSICS )]
-	public TagFilter CollisionIgnore { get; set; } = new( false, ["trigger"] );
-
+	public TraceSettings TraceSettings { get; set; } = new(
+		shape: TraceShape.Box,
+		r: Rotation.Identity,
+		hit: [TAG_PAWN],
+		ignore: [TAG_TRIGGER]
+	);
 
 	/// <summary>
 	/// Is impact damage dealt with effects?
@@ -324,7 +301,12 @@ public partial class Projectile : DynamicEntity, Component.ICollisionListener, I
 	{
 		base.DrawGizmos();
 
-		this.DrawSphere( CollisionRadius, default, Color.Magenta, Color.Transparent );
+		if ( !GameObject.IsValid() )
+			return;
+
+		var c = Color.Magenta.Desaturate( 0.3f );
+
+		TraceSettings.DrawGizmos( WorldTransform, cLines: c, cSolid: c.WithAlphaMultiplied( 0.2f ) );
 	}
 
 	/// <returns> If this projectile should destroy itself. </returns>
@@ -351,23 +333,10 @@ public partial class Projectile : DynamicEntity, Component.ICollisionListener, I
 
 	protected virtual void Move( in float deltaTime )
 	{
-		var radius = CollisionRadius * WorldScale.x;
 		var startPos = WorldPosition;
-
 		var move = Velocity * deltaTime;
 
-		var trInfo = Scene.Trace.Sphere( radius, startPos, startPos + move )
-			.IgnoreGameObjectHierarchy( GameObject )
-			.WithoutTags( Team?.Tag );
-
-		if ( CollisionHit.Enabled )
-			trInfo = trInfo.WithAnyTags( CollisionHit.Tags );
-
-		if ( CollideWithTriggers )
-			trInfo = trInfo.HitTriggers();
-
-		var trAll = trInfo.RunAll();
-		// .OrderBy( tr => tr.Distance );
+		var trAll = TraceSettings.RunAll( GameObject, startPos, startPos + move );
 
 		foreach ( var tr in trAll )
 		{
@@ -385,16 +354,22 @@ public partial class Projectile : DynamicEntity, Component.ICollisionListener, I
 
 	protected virtual bool IsCollision( in SceneTraceResult tr )
 	{
-		if ( !tr.Hit || !tr.GameObject.IsValid() || !tr.Collider.IsValid() )
+		if ( !tr.Hit || !tr.GameObject.IsValid() )
 			return false;
 
 		var objTags = tr.GameObject.Tags;
 
+		if ( objTags is null )
+			return false;
+
+		if ( Team.IsValid() && Team.Tag.IsValidTag() && objTags.Has( Team.Tag ) )
+			return false;
+
 		// Ignore specific tags.
-		if ( CollisionIgnore.HasAny( objTags ) )
+		if ( TraceSettings.TagsWithout.HasAny( objTags ) )
 		{
 			// .. unless have a tag meant to be hit.
-			if ( !CollisionHit.HasAny( objTags ) )
+			if ( !TraceSettings.TagsWith.HasAny( objTags ) )
 				return false;
 		}
 
