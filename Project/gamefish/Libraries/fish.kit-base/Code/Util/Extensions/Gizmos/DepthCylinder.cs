@@ -3,16 +3,16 @@ namespace GameFish;
 partial class Library
 {
 	/// <summary>
-	/// Draws a slightly fancy sphere that better indicates depth.
+	/// Draws a slightly fancy cylinder that better indicates depth.
 	/// </summary>
 	/// <param name="g"></param>
-	/// <param name="r"> The radius of the sphere. </param>
+	/// <param name="r"> The radius of the cylinder. </param>
 	/// <param name="h"> The height of the cylinder. </param>
 	/// <param name="cLines"> The default lines color. </param>
 	/// <param name="cSolid"> The default solid color. </param>
 	/// <param name="sides"> How many faces on the side there are. </param>
 	/// <param name="tWorld"> The world transform to use. Defaults to the object's world transform. </param>
-	/// <returns> If the sphere could be drawn. </returns>
+	/// <returns> If the cylinder could be drawn. </returns>
 	public static bool DepthCylinder( this Gizmo.GizmoDraw g, in float r, in float h, in Color cLines, in Color cSolid, int sides = 32, Transform? tWorld = null )
 	{
 		if ( g is null || r == 0f || h == 0f )
