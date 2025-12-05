@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace GameFish;
 
 /// <summary>
@@ -6,28 +8,17 @@ namespace GameFish;
 [Icon( "rocket_launch" )]
 public partial class Projectile : DynamicEntity, Component.ICollisionListener, ITeam
 {
-	protected const int PROJECTILE_ORDER = DEFAULT_ORDER - 9001;
-
-
-	/// <summary>
-	/// Destroys the object if it's been going on for too long.
-	/// </summary>
-	[Property]
-	[Order( PROJECTILE_ORDER - 1 )]
-	[Title( "Self-Destruct Delay" )]
-	[Range( 0f, 20f, clamped: false )]
-	[Feature( PROJECTILE ), Group( TIMING )]
-	public float SelfDestructDelay { get; set; } = 10f;
+	protected const int PROJECTILE_ORDER = DEFAULT_ORDER - 2000;
+	protected const int PROJECTILE_DEBUG_ORDER = PROJECTILE_ORDER - 100;
 
 	/// <summary>
 	/// The team to ignore collisions with.
-	/// <br /> <br />
-	/// <b> NOTE: </b> Set automatically by the thrower, though you can assign a default.
 	/// </summary>
 	[Sync]
-	[Property]
-	[Order( PROJECTILE_ORDER )]
-	[Feature( PROJECTILE ), Group( TEAM )]
+	[Property, JsonIgnore]
+	[Order( PROJECTILE_DEBUG_ORDER )]
+	[ShowIf( nameof( InGame ), true )]
+	[Feature( PROJECTILE ), Group( DEBUG )]
 	public Team Team
 	{
 		get => _team;
@@ -39,6 +30,16 @@ public partial class Projectile : DynamicEntity, Component.ICollisionListener, I
 	}
 
 	protected Team _team;
+
+	/// <summary>
+	/// Destroys the object if it's been going on for too long.
+	/// </summary>
+	[Property]
+	[Order( PROJECTILE_ORDER - 1 )]
+	[Title( "Self-Destruct Delay" )]
+	[Range( 0f, 20f, clamped: false )]
+	[Feature( PROJECTILE ), Group( TIMING )]
+	public float SelfDestructDelay { get; set; } = 10f;
 
 	/// <summary>
 	/// Assigns this projectile's team.
@@ -64,7 +65,7 @@ public partial class Projectile : DynamicEntity, Component.ICollisionListener, I
 	public float CollisionRadius { get; set; } = 32f;
 
 	/// <summary>
-	/// Should triggers be considered for what can be hit?
+	/// Should movement traces hit trigger colliders?
 	/// </summary>
 	[Property]
 	[Title( "Hit Triggers" )]
