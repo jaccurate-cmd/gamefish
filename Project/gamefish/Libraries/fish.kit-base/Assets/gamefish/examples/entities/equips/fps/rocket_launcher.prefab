@@ -147,7 +147,12 @@
             "__enabled": true,
             "AimPrediction": false,
             "AimSpreadCone": 0,
-            "Ammo": null,
+            "Ammo": {
+              "_type": "component",
+              "component_id": "3e276860-7711-4765-b05f-d0278f558086",
+              "go": "e3792737-3299-4fa9-8f4a-4f7d31b8d5df",
+              "component_type": "AmmoEquipModule"
+            },
             "AmmoCost": 1,
             "ClassId": "rocket_launcher",
             "ClassName": null,
@@ -180,7 +185,7 @@
             "OnComponentStart": null,
             "OnComponentUpdate": null,
             "ProjectileOffset": {
-              "Position": "16,0,0",
+              "Position": "16,-6,-4",
               "Rotation": "0,0,0,1"
             },
             "ProjectilePrefab": "gamefish/examples/entities/projectiles/missile1.prefab",
