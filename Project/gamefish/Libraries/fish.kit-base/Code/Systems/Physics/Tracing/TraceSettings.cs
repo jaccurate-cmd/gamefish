@@ -38,13 +38,27 @@ public partial struct TraceSettings
 	[ShowIf( nameof( Shape ), TraceShape.Capsule )]
 	public Capsule Capsule { get; set; } = new( Vector3.Forward * 12f, Vector3.Backward * 12f, 8f );
 
+	/// <summary>
+	/// If enabled: only consider objects with ANY of these tags.
+	/// </summary>
+	[Title( "Tags (hit)" )]
+	public TagFilter TagsHit { get; set; } = new( false, ["solid", TAG_PAWN] );
 
-	[Title( "Tags (with)" )]
-	public TagFilter TagsWith { get; set; } = new( false, ["solid", TAG_PAWN] );
+	/// <summary>
+	/// If enabled: ignore objects with ANY of these tags.
+	/// </summary>
+	[Title( "Tags (ignore)" )]
+	public TagFilter TagsIgnore { get; set; } = new( false, [TAG_TRIGGER] );
 
-	[Title( "Tags (without)" )]
-	public TagFilter TagsWithout { get; set; } = new( false, [TAG_TRIGGER] );
+	/// <summary>
+	/// If enabled: only trace against objects that have ALL of these tags.
+	/// </summary>
+	[Title( "Tags (require)" )]
+	public TagFilter TagsRequire { get; set; } = new( false, [] );
 
+	/// <summary>
+	/// How should this trace treat triggers/solids?
+	/// </summary>
 	[Title( "Triggers" )]
 	public TraceTriggerHitType TriggerType { get; set; }
 
@@ -55,8 +69,8 @@ public partial struct TraceSettings
 		Shape = shape;
 		ShapeRotation = r;
 
-		TagsWith = new( hit );
-		TagsWithout = new( ignore );
+		TagsHit = new( hit );
+		TagsIgnore = new( ignore );
 	}
 
 	/// <summary>
@@ -105,11 +119,14 @@ public partial struct TraceSettings
 		tr = tr.Rotated( r );
 
 		// Tagging
-		if ( TagsWith.Enabled )
-			tr = tr.WithAnyTags( TagsWith.Tags );
+		if ( TagsHit.Enabled )
+			tr = tr.WithAnyTags( TagsHit.Tags );
 
-		if ( TagsWithout.Enabled )
-			tr = tr.WithAnyTags( TagsWithout.Tags );
+		if ( TagsRequire.Enabled )
+			tr = tr.WithAllTags( TagsRequire.Tags );
+
+		if ( TagsIgnore.Enabled )
+			tr = tr.WithAnyTags( TagsIgnore.Tags );
 
 		// Trigger Hitting
 		if ( TriggerType is TraceTriggerHitType.Include )

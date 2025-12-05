@@ -366,10 +366,10 @@ public partial class Projectile : DynamicEntity, Component.ICollisionListener, I
 			return false;
 
 		// Ignore specific tags.
-		if ( TraceSettings.TagsWithout.HasAny( objTags ) )
+		if ( TraceSettings.TagsIgnore.HasAny( objTags ) )
 		{
 			// .. unless have a tag meant to be hit.
-			if ( !TraceSettings.TagsWith.HasAny( objTags ) )
+			if ( !TraceSettings.TagsHit.HasAny( objTags ) )
 				return false;
 		}
 
