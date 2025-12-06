@@ -18,7 +18,7 @@ partial class Pawn
 	[Title( "Is Player" )]
 	[Property, ReadOnly, JsonIgnore]
 	[Feature( PAWN ), Group( DEBUG ), Order( DEBUG_ORDER )]
-	public bool InspectorIsPlayer => IsPlayer;
+	protected bool InspectorIsPlayer => IsPlayer;
 
 	/// <summary>
 	/// The agent controlling this pawn. Could be a player or an NPC.
@@ -26,7 +26,7 @@ partial class Pawn
 	[Title( "Owner" )]
 	[Property, JsonIgnore]
 	[Feature( PAWN ), Group( DEBUG ), Order( DEBUG_ORDER )]
-	public Agent InspectorOwner
+	protected Agent InspectorOwner
 	{
 		get => Owner;
 		set => Owner = value;

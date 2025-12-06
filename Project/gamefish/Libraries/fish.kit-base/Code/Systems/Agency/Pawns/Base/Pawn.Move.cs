@@ -23,7 +23,12 @@ partial class Pawn
 
 	/// <returns> The intended movement speed for this pawn. </returns>
 	public virtual float GetWishSpeed()
-		=> IsAlive && Controller.IsValid() ? Controller.GetWishSpeed() : 0f;
+	{
+		if ( !IsAlive || !Controller.IsValid() )
+			return 0f;
+
+		return Controller.GetWishSpeed();
+	}
 
 	/// <returns> The pawn's currently intended movement velocity. </returns>
 	public virtual Vector3 GetWishVelocity()
@@ -41,7 +46,7 @@ partial class Pawn
 	/// <summary>
 	/// Directly tells this pawn to perform its movement logic.
 	/// </summary>
-	protected virtual void Move( in float deltaTime, in bool isFixedUpdate )
+	protected override void Move( in float deltaTime, in bool isFixedUpdate )
 	{
 		if ( !Controller.IsValid() )
 			return;

@@ -6,7 +6,7 @@ namespace GameFish;
 /// It gets thrown. It hurts enemies.
 /// </summary>
 [Icon( "rocket_launch" )]
-public partial class Projectile : DynamicEntity, Component.ICollisionListener, ITeam
+public partial class Projectile : MovingEntity, Component.ICollisionListener, ITeam
 {
 	protected const int PROJECTILE_ORDER = DEFAULT_ORDER - 2000;
 	protected const int PROJECTILE_DEBUG_ORDER = PROJECTILE_ORDER - 100;
@@ -169,7 +169,7 @@ public partial class Projectile : DynamicEntity, Component.ICollisionListener, I
 		var deltaTime = Time.Delta;
 
 		UpdateVelocity( deltaTime );
-		Move( deltaTime );
+		Move( deltaTime, isFixedUpdate: true );
 	}
 
 	protected override void DrawGizmos()

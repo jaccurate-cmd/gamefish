@@ -52,7 +52,7 @@ partial class Projectile
 	[ToggleGroup( nameof( IsHoming ) )]
 	public FloatRange HomingSpeed { get; set; } = new( 0f, 1000f );
 
-	protected virtual void Move( in float deltaTime )
+	protected override void Move( in float deltaTime, in bool isFixedUpdate )
 	{
 		var startPos = WorldPosition;
 		var move = Velocity * deltaTime;
