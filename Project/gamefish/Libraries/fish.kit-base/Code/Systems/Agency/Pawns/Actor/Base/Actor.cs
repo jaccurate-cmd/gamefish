@@ -58,7 +58,7 @@ public abstract partial class Actor : Pawn
 		if ( IsThinking )
 			Think( in deltaTime, isFixedUpdate: false );
 
-		DoMovement( in deltaTime, isFixedUpdate: false );
+		Move( in deltaTime, isFixedUpdate: false );
 	}
 
 	protected abstract void Think( in float deltaTime, in bool isFixedUpdate );
@@ -83,7 +83,10 @@ public abstract partial class Actor : Pawn
 
 	protected override void Move( in float deltaTime, in bool isFixedUpdate )
 	{
-		if ( Controller.IsValid() )
-			Controller.TryMove( in deltaTime, in isFixedUpdate, GetWishVelocity() );
+		if ( !Controller.IsValid() )
+			return;
+
+		Controller.Simulate( in deltaTime, in isFixedUpdate );
+		Controller.TryMove( in deltaTime, in isFixedUpdate, GetWishVelocity() );
 	}
 }

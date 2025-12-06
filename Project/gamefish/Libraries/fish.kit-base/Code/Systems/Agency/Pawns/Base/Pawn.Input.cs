@@ -11,8 +11,9 @@ partial class Pawn : ISimulate
 
 	public virtual void FrameSimulate( in float deltaTime )
 	{
-		DoInput( in deltaTime );
-		DoMovement( in deltaTime, isFixedUpdate: false );
+		UpdateInput( in deltaTime );
+
+		Move( in deltaTime, isFixedUpdate: false );
 
 		// Update view after parent transforms change.
 		UpdateView( in deltaTime );
@@ -26,7 +27,7 @@ partial class Pawn : ISimulate
 	/// Processes inputs.
 	/// You should run this before steps like movement.
 	/// </summary>
-	protected virtual void DoInput( in float deltaTime )
+	protected virtual void UpdateInput( in float deltaTime )
 	{
 		DoAiming( in deltaTime );
 	}

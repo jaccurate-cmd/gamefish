@@ -75,9 +75,11 @@ partial class SpectatorPawn
 			wishVel += Vector3.Down * speed;
 
 		var move = EyeRotation * (wishVel * deltaTime);
+
 		Velocity += move;
 
 		var dest = EyePosition + (Velocity * deltaTime);
+
 		EyePosition = dest;
 		WorldPosition = dest;
 

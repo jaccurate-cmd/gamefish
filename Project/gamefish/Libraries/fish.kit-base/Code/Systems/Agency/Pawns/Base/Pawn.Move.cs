@@ -39,23 +39,14 @@ partial class Pawn
 	}
 
 	/// <summary>
-	/// Sets up and executes this pawn's movement(if it has any).
-	/// </summary>
-	protected virtual void DoMovement( in float deltaTime, in bool isFixedUpdate )
-	{
-		if ( Controller.IsValid() )
-			Controller.Simulate( in deltaTime, in isFixedUpdate );
-
-		Move( in deltaTime, in isFixedUpdate );
-	}
-
-	/// <summary>
 	/// Directly tells this pawn to perform its movement logic.
 	/// </summary>
 	protected virtual void Move( in float deltaTime, in bool isFixedUpdate )
 	{
 		if ( !Controller.IsValid() )
 			return;
+
+		Controller.Simulate( in deltaTime, in isFixedUpdate );
 
 		// Player input by default.
 		var inputDir = InputMoveDirection;

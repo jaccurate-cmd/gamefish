@@ -111,19 +111,18 @@ public partial class SpectatorPawn : Pawn
 		base.FrameSimulate( deltaTime );
 	}
 
-	protected override void DoMovement( in float deltaTime, in bool isFixedUpdate )
+	protected override void Move( in float deltaTime, in bool isFixedUpdate )
 	{
-		if ( Controller.IsValid() )
+		if ( !Controller.IsValid() || !Spectating.IsValid() )
 		{
-			base.DoMovement( deltaTime, isFixedUpdate );
+			DoFlying( in deltaTime );
 			return;
 		}
 
-		if ( !Spectating.IsValid() )
-			DoFlying( in deltaTime );
+		base.Move( in deltaTime, in isFixedUpdate );
 	}
 
-	protected override void DoInput( in float deltaTime )
+	protected override void UpdateInput( in float deltaTime )
 	{
 		if ( !IsPlayer )
 			return;
