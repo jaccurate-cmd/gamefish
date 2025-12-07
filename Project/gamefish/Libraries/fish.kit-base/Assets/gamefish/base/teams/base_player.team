@@ -5,7 +5,7 @@
   "DefaultRelationship": "Neutral",
   "Relationships": [
     {
-      "Team": "data/gamefish/teams/base_enemy.team",
+      "Team": "gamefish/base/teams/base_enemy.team",
       "Relationship": "Enemy"
     }
   ],

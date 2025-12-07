@@ -2870,7 +2870,7 @@
               "IdValue": "26d08fde-1687-46ac-ae0e-02eed92368eb"
             },
             "Property": "Tags",
-            "Value": "player"
+            "Value": "player,team_base_enemy"
           },
           {
             "Target": {
@@ -2878,7 +2878,7 @@
               "IdValue": "00a167f2-9393-469a-879d-63a09e408188"
             },
             "Property": "Team",
-            "Value": null
+            "Value": "gamefish/base/teams/base_enemy.team"
           }
         ],
         "MovedObjects": []
