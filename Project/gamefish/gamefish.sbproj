@@ -31,6 +31,21 @@
       "VR": false,
       "Gamepad": true
     },
-    "DedicatedServerStartupScene": "gamefish/examples/scenes/example1.scene"
+    "DedicatedServerStartupScene": "gamefish/examples/scenes/example1.scene",
+    "Compiler": {
+      "RootNamespace": "Sandbox",
+      "DefineConstants": "SANDBOX;ADDON;DEBUG",
+      "NoWarn": "1701;1702;1591;IDE0130",
+      "WarningsAsErrors": "",
+      "TreatWarningsAsErrors": false,
+      "Nullables": false,
+      "ReleaseMode": "Debug",
+      "AssemblyReferences": [],
+      "ReplacementDirectives": {
+        ".Server.cs": "SERVER"
+      },
+      "IgnoreFolders": [],
+      "DistinctAssemblyReferences": []
+    }
   }
 }
