@@ -227,7 +227,7 @@ public partial class PawnEquipment : Module
 			return false;
 
 		ActiveEquip = null;
-		return false;
+		return true;
 	}
 
 	public virtual bool TryDeploy( Equipment equip )
