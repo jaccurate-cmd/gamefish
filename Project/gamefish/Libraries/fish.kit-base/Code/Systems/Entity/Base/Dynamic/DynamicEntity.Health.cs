@@ -43,8 +43,6 @@ partial class DynamicEntity : IHealth
 	/// <returns> If the damage was sent(with probable success). </returns>
 	public virtual bool TryDamage( in DamageData data )
 	{
-		this.Log( data );
-
 		if ( !CanDamage( in data ) )
 			return false;
 
