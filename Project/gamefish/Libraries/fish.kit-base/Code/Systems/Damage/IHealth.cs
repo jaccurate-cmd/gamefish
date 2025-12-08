@@ -8,13 +8,14 @@ public interface IHealth : Component.IDamageable
 	/// <summary>
 	/// Indicates if this damage is allowed.
 	/// </summary>
-	public bool CanDamage( in DamageData dmgInfo );
+	public bool CanDamage( in DamageData data );
 
-	public bool TryDamage( in DamageData dmgInfo );
+	/// <summary>
+	/// Checks if the damage is allowed before trying to network it.
+	/// </summary>
+	/// <returns> If the damage was sent(with probable success). </returns>
+	public bool TrySendDamage( in DamageData data );
 
-	public void SetHealth( in float hp );
-	public void ModifyHealth( in float hp );
-
-	void Component.IDamageable.OnDamage( in DamageInfo dmgInfo )
-		=> TryDamage( new( dmgInfo ) );
+	void Component.IDamageable.OnDamage( in DamageInfo info )
+		=> TrySendDamage( new DamageData( info ) );
 }

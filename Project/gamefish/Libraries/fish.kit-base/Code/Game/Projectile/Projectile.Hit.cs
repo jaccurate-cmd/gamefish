@@ -189,7 +189,7 @@ partial class Projectile
 
 			var data = new DamageData( dmg, impulse, Attacker, Source, ImpactDamage.Types );
 
-			enemy.TryDamage( data );
+			enemy.TrySendDamage( data );
 		}
 	}
 

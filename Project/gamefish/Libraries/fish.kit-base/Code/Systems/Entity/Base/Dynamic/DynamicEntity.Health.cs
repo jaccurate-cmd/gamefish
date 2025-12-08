@@ -34,14 +34,10 @@ partial class DynamicEntity : IHealth
 	[Feature( HEALTH ), Group( DEBUG )]
 	[ShowIf( nameof( IsDestructible ), true )]
 	protected void DebugTakeDamage()
-		=> TryDamage( new() { Damage = DebugDamage } );
+		=> TrySendDamage( new() { Damage = DebugDamage } );
 
 
-	/// <summary>
-	/// Checks if the damage is allowed before trying to network it.
-	/// </summary>
-	/// <returns> If the damage was sent(with probable success). </returns>
-	public virtual bool TryDamage( in DamageData data )
+	public virtual bool TrySendDamage( in DamageData data )
 	{
 		if ( !CanDamage( in data ) )
 			return false;
