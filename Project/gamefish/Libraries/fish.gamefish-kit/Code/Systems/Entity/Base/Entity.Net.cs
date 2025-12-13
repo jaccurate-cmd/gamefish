@@ -170,7 +170,7 @@ partial class Entity
 
 		// this.Log( $"assigning ownership to Connection:[{cn}]" );
 
-		GameObject.NetworkSetup(
+		var netSuccess = GameObject.NetworkSetup(
 			cn: cn,
 			orphanMode: NetworkOrphanedMode,
 			ownerTransfer: NetworkTransferMode,
@@ -178,6 +178,17 @@ partial class Entity
 			ignoreProxy: true
 		);
 
+		if ( netSuccess )
+			OnSetNetworkOwner( cn );
+
 		return Network?.Owner == cn;
+	}
+
+	/// <summary>
+	/// Called when <see cref="TrySetNetworkOwner"/> succeeds.
+	/// </summary>
+	/// <param name="cn"> The new owner(if any). </param>
+	protected virtual void OnSetNetworkOwner( Connection cn )
+	{
 	}
 }
