@@ -1,6 +1,6 @@
 namespace GameFish;
 
-public partial struct CitizenOutfit
+partial struct CitizenOutfit
 {
 	public struct Element : IValid
 	{
@@ -11,6 +11,7 @@ public partial struct CitizenOutfit
 		[KeyProperty]
 		public Clothing Clothing { get; set; }
 
+		[DefaultValue( 0.5f )]
 		[KeyProperty, Range( 0f, 1f )]
 		public float? Tint { get; set; }
 
@@ -42,19 +43,5 @@ public partial struct CitizenOutfit
 				Bone = Bone,
 				Transform = HasOffset ? Transform : null
 			};
-	}
-
-	[WideMode]
-	public List<Element> Clothing { get; set; } = [];
-
-	public bool? Human { get; set; } = true;
-	public float? Height { get; set; } = 0.5f;
-
-	public CitizenOutfit() { }
-
-	public void Add( ClothingContainer.ClothingEntry entry )
-	{
-		Clothing ??= [];
-		Clothing.Add( new( entry ) );
 	}
 }
