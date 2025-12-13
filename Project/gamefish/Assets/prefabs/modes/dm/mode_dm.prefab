@@ -3,7 +3,7 @@
     "__guid": "4cd23632-7fb9-47f8-92c6-f1dc55fc634e",
     "__version": 1,
     "Flags": 0,
-    "Name": "mode_sandbox",
+    "Name": "mode_dm",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -16,7 +16,7 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "GameFish.Playground.SandboxMode",
+        "__type": "GameFish.Playground.DeathmatchMode",
         "__guid": "952a98fd-6052-457f-8b50-b1bc95237eda",
         "__enabled": true,
         "ClassId": "state_sandbox",
@@ -35,8 +35,8 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "PlayerPawnPrefab": "prefabs/modes/sandbox/player/player.prefab",
-        "SpectatorPawnPrefab": "prefabs/modes/sandbox/player/spectator.prefab"
+        "PlayerPawnPrefab": "prefabs/modes/dm/player/player.prefab",
+        "SpectatorPawnPrefab": "prefabs/modes/dm/player/spectator.prefab"
       }
     ],
     "Children": [],
