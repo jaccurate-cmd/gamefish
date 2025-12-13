@@ -20,8 +20,8 @@ partial class GameManager
 	/// Automatically select a state if we don't have one? <br />
 	/// Will choose depending on the context. <br />
 	/// <br />
-	/// <b> TIP: </b> Make a custom <see cref="GameState"/> component
-	/// and put it on the root of a prefab, then drag it below.
+	/// <b> TIP: </b> Make a custom <see cref="GameState"/> or <see cref="Gamemode"/>
+	/// component and put it on the root of a prefab, then drag it below.
 	/// </summary>
 	[Property]
 	[Title( "Auto Select" )]
@@ -133,8 +133,6 @@ partial class GameManager
 		if ( !newState.TryEnter() )
 			return false;
 
-		var prevState = State;
-
 		State = newState;
 
 		return true;
@@ -145,28 +143,21 @@ partial class GameManager
 		if ( !Networking.IsHost )
 			return false;
 
-		if ( !prefab.IsValid() || !prefab.TrySpawn( out var objState ) )
+		if ( !TryAddModule<GameState>( prefab, out var state ) )
 		{
 			this.Warn( $"Tried to enter invalid state prefab:[{prefab}]" );
-			return false;
-		}
-
-		if ( !objState.Components.TryGet<GameState>( out var state ) )
-		{
-			this.Warn( $"Tried to enter state prefab:[{prefab}] with no {typeof( GameState )}!" );
-			objState.Destroy();
 			return false;
 		}
 
 		if ( !TrySetState( state ) )
 		{
 			this.Warn( $"Failed to enter spawned state:[{state}] from prefab:[{prefab}]" );
-			objState.Destroy();
+
+			if ( state.IsValid() )
+				state.GameObject.Destroy();
+
 			return false;
 		}
-
-		objState.SetParent( GameObject, keepWorldPosition: false );
-		objState.LocalTransform = global::Transform.Zero;
 
 		return true;
 	}

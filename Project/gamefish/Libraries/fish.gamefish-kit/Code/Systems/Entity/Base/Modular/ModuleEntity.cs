@@ -196,30 +196,64 @@ public partial class ModuleEntity : Entity, Component.INetworkSpawn
 	}
 
 	/// <summary>
-	/// Creates and attaches a module from a prefab.
+	/// Creates and attaches a <typeparamref name="TMod"/> from a prefab.
 	/// </summary>
-	public virtual IEnumerable<Module> AddModule( PrefabFile prefab )
+	public virtual bool TryAddModule<TMod>( PrefabFile prefab, out TMod m )
+		where TMod : Module
 	{
+		m = null;
+
 		if ( !this.IsValid() )
-			return [];
+			return false;
 
 		if ( !prefab.IsValid() || !prefab.TrySpawn( WorldTransform, out var go ) )
 		{
 			this.Warn( $"Tried to spawn invalid module prefab:[{prefab}]!" );
-			return [];
+			return false;
 		}
 
-		var modules = go.Components?.GetAll<Module>( FindMode.EverythingInSelfAndDescendants ) ?? [];
+		m = go.Components?.Get<TMod>( FindMode.EverythingInSelfAndDescendants );
 
-		if ( !modules.Any() )
+		if ( !m.IsValid() )
+		{
+			this.Warn( $"No {typeof( TMod )} found on prefab:[{prefab}]! Destroying." );
+			go.Destroy();
+			return false;
+		}
+
+		go.SetParent( GameObject );
+
+		return true;
+	}
+
+	/// <summary>
+	/// Creates and attaches modules from a prefab.
+	/// </summary>
+	public virtual bool TryAddModules( PrefabFile prefab, out IEnumerable<Module> m )
+	{
+		m = [];
+
+		if ( !this.IsValid() )
+			return false;
+
+		if ( !prefab.IsValid() || !prefab.TrySpawn( WorldTransform, out var go ) )
+		{
+			this.Warn( $"Tried to spawn invalid module prefab:[{prefab}]!" );
+			return false;
+		}
+
+		m = go.Components?.GetAll<Module>( FindMode.EverythingInSelfAndDescendants ) ?? [];
+
+		if ( !m.Any() )
 		{
 			this.Warn( $"No modules found on prefab:[{prefab}]! Destroying." );
 			go.Destroy();
-			return [];
+			return false;
 		}
 
-		go.SetParent( GameObject, keepWorldPosition: false );
+		go.LocalPosition = Vector3.Zero;
+		go.SetParent( GameObject );
 
-		return modules;
+		return true;
 	}
 }
