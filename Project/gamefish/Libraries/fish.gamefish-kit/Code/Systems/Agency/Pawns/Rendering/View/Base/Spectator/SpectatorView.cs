@@ -6,15 +6,15 @@ namespace GameFish;
 /// </summary>
 public partial class SpectatorView : PawnView
 {
-	public SpectatorPawn SpectatorPawn => ParentPawn as SpectatorPawn;
-	public Pawn SpectatorTarget => SpectatorPawn?.Spectating;
+	public Spectator Spectator => ParentPawn as Spectator;
+	public Pawn SpectatorTarget => Spectator?.Spectating;
 
 	/// <summary>
 	/// Is our pawn a spectator that is spectating someone?
 	/// </summary>
 	public bool IsSpectating => SpectatorTarget.IsValid();
 
-	public override Pawn TargetPawn => SpectatorPawn is SpectatorPawn spec && spec.IsValid()
+	public override Pawn TargetPawn => Spectator is Spectator spec && spec.IsValid()
 		? spec.Spectating.IsValid() ? spec.Spectating : spec
 		: null;
 

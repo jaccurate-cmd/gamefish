@@ -10,7 +10,7 @@ partial class GameState
 	[Property]
 	[Title( "Spectator" )]
 	[Feature( PAWNS ), Group( PREFABS ), Order( PAWNS_PREFABS_ORDER )]
-	public virtual PrefabFile SpectatorPawnPrefab { get; set; }
+	public virtual PrefabFile SpectatorPrefab { get; set; }
 
 	/// <summary>
 	/// The prefab to spawn for a living player to use.
@@ -46,20 +46,20 @@ partial class GameState
 	/// <param name="force"> Respawn them even if they're a spectator? </param>
 	/// <param name="oldCleanup"> If they had a previous pawn should we always destroy it? </param>
 	/// <returns> If they are a spectator now. </returns>
-	public virtual bool TryAssignSpectator( Client cl, out SpectatorPawn pawn, bool force = false, bool oldCleanup = true )
+	public virtual bool TryAssignSpectator( Client cl, out Spectator pawn, bool force = false, bool oldCleanup = true )
 	{
 		pawn = null;
 
 		if ( !Networking.IsHost || !cl.IsValid() )
 			return false;
 
-		if ( !force && (cl.Pawn as SpectatorPawn).IsValid() )
+		if ( !force && (cl.Pawn as Spectator).IsValid() )
 			return true;
 
-		if ( !SpectatorPawnPrefab.IsValid() )
+		if ( !SpectatorPrefab.IsValid() )
 			return false;
 
-		return TrySetPawn( cl, SpectatorPawnPrefab, out pawn, oldCleanup: oldCleanup );
+		return TrySetPawn( cl, SpectatorPrefab, out pawn, oldCleanup: oldCleanup );
 	}
 
 	/// <summary>
@@ -77,7 +77,7 @@ partial class GameState
 		if ( !Networking.IsHost || !cl.IsValid() )
 			return false;
 
-		if ( !force && cl.Pawn.IsValid() && cl.Pawn is not SpectatorPawn )
+		if ( !force && cl.Pawn.IsValid() && cl.Pawn is not Spectator )
 			return true;
 
 		if ( !PlayerPawnPrefab.IsValid() )

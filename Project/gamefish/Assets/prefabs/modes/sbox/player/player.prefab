@@ -3,7 +3,7 @@
     "__guid": "26d08fde-1687-46ac-ae0e-02eed92368eb",
     "__version": 1,
     "Flags": 0,
-    "Name": "player_fps",
+    "Name": "player",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -16,7 +16,7 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "GameFish.PlayerPawn",
+        "__type": "GameFish.Player",
         "__guid": "00a167f2-9393-469a-879d-63a09e408188",
         "__enabled": true,
         "AllowSpectators": true,

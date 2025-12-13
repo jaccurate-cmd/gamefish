@@ -1,6 +1,6 @@
 namespace GameFish;
 
-partial class SpectatorPawn
+partial class Spectator
 {
 	public const string AIMING = "Aiming";
 	public const int AIMING_ORDER = 1000;

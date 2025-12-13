@@ -36,8 +36,9 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "PawnToggleList": [
-          "prefabs/pawns/player/spectator.prefab",
-          "prefabs/pawns/player/player_fps.prefab"
+          "prefabs/player/spectator.prefab",
+          "prefabs/modes/sbox/player/player.prefab",
+          "prefabs/modes/dm/player/player.prefab"
         ],
         "TogglePawnButton": "Debug 1"
       }

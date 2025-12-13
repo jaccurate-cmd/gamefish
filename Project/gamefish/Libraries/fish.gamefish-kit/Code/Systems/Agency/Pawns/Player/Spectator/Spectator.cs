@@ -1,6 +1,8 @@
 namespace GameFish;
 
-public partial class SpectatorPawn : Pawn
+[Icon( "control_camera" )]
+[EditorHandle( Icon = "👻" )]
+public partial class Spectator : Player
 {
 	/// <summary>
 	/// The target that this is actively spectating.

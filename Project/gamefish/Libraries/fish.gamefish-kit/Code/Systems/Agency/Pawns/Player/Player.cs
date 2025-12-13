@@ -1,10 +1,13 @@
 namespace GameFish;
 
+public partial class PlayerPawn : Player;
+
 /// <summary>
 /// A pawn that can only be owned by a player.
 /// </summary>
+[Icon( "mood" )]
 [EditorHandle( Icon = "😎" )]
-public partial class PlayerPawn : Pawn
+public partial class Player : Pawn
 {
 	protected override void OnEnabled()
 	{

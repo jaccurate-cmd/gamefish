@@ -36,7 +36,7 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "PlayerPawnPrefab": "prefabs/modes/sbox/player/player.prefab",
-        "SpectatorPawnPrefab": "prefabs/modes/sbox/player/spectator.prefab"
+        "SpectatorPrefab": "prefabs/player/spectator.prefab"
       }
     ],
     "Children": [],

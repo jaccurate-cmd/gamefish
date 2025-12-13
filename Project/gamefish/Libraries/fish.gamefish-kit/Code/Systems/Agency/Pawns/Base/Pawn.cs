@@ -26,7 +26,7 @@ public abstract partial class Pawn : MovingEntity
 	/// </summary>
 	public override Vector3 Center => WorldPosition.LerpTo( EyePosition, 0.5f );
 
-	public virtual bool IsPlayer => Owner?.IsPlayer is true;
+	public virtual bool IsPlayer => Owner.IsValid() && Owner.IsPlayer;
 
 	[Sync( SyncFlags.FromHost )]
 	public Agent Owner
@@ -146,14 +146,11 @@ public abstract partial class Pawn : MovingEntity
 		if ( !agent.IsValid() )
 			return false;
 
-		// If it's a client then check for connection.
+		// If it's a client then check if they're connected.
 		if ( agent is Client cl )
 		{
 			if ( !cl.IsValid() || !cl.Connected )
 				return false;
-
-			if ( Network.Owner is null || Network.Owner == cl.Connection )
-				return true;
 
 			return true;
 		}

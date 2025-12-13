@@ -1,6 +1,6 @@
 namespace GameFish;
 
-partial class SpectatorPawn
+partial class Spectator
 {
 	/// <summary>
 	/// Always destroy spectator pawns upon losing them.
