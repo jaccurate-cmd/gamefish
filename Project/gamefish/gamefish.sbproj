@@ -23,9 +23,9 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/example1.scene",
+    "StartupScene": "scenes/game/menu.scene",
     "LaunchMode": "Normal",
-    "SystemScene": "scenes/system/system.scene",
+    "SystemScene": "scenes/system.scene",
     "ControlModes": {
       "Keyboard": true,
       "VR": false,
@@ -45,6 +45,8 @@
       },
       "IgnoreFolders": [],
       "DistinctAssemblyReferences": []
-    }
+    },
+    "MapStartupScene": "scenes/game/maps.scene",
+    "DedicatedServerStartupScene": "scenes/game/game.scene"
   }
 }

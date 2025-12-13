@@ -61,7 +61,7 @@
             "__enabled": true,
             "ClassId": "server",
             "ClassName": null,
-            "DefaultPawnPrefab": "prefabs/pawns/player/player_fps.prefab",
+            "DefaultPawnPrefab": "prefabs/player/spectator.prefab",
             "IsClass": false,
             "IsNetworkingActive": false,
             "IsNetworkingForced": true,

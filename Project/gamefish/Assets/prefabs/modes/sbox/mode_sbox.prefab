@@ -1,9 +1,9 @@
 {
   "RootObject": {
-    "__guid": "8e49c22c-1015-4190-b039-e96dda3c2d95",
+    "__guid": "4cd23632-7fb9-47f8-92c6-f1dc55fc634e",
     "__version": 1,
     "Flags": 0,
-    "Name": "essential",
+    "Name": "mode_sbox",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -16,20 +16,15 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "GameFish.Essential",
-        "__guid": "8f0c134c-cead-4698-840e-c52953eae48c",
+        "__type": "GameFish.Playground.SandboxMode",
+        "__guid": "952a98fd-6052-457f-8b50-b1bc95237eda",
         "__enabled": true,
-        "ClassId": "essential",
-        "ClassName": null,
-        "GameManagerPrefab": "prefabs/system/game/gm.prefab",
-        "GameName": "Game Fish: Playground",
-        "GameScene": "scenes/game/game.scene",
-        "GameVersion": "0.1a",
-        "IsClass": false,
+        "ClassId": "state_sandbox",
+        "ClassName": "Sandbox Mode",
+        "IsClass": true,
         "IsNetworkingForced": true,
-        "MainMenuScene": "scenes/game/menu.scene",
         "NetworkAutomatically": true,
-        "NetworkId": "8f0c134c-cead-4698-840e-c52953eae48c",
+        "NetworkId": "952a98fd-6052-457f-8b50-b1bc95237eda",
         "NetworkingMode": "Object",
         "NetworkOrphanedMode": "Host",
         "NetworkOwner": null,
@@ -40,8 +35,8 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "SessionPrefab": "prefabs/system/session.prefab",
-        "TestingScene": "scenes/testing/example1.scene"
+        "PlayerPawnPrefab": "prefabs/modes/sbox/player/player.prefab",
+        "SpectatorPawnPrefab": "prefabs/modes/sbox/player/spectator.prefab"
       }
     ],
     "Children": [],
