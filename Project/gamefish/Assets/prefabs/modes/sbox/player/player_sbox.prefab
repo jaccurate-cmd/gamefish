@@ -3,7 +3,7 @@
     "__guid": "26d08fde-1687-46ac-ae0e-02eed92368eb",
     "__version": 1,
     "Flags": 0,
-    "Name": "player",
+    "Name": "player_sbox",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -830,12 +830,8 @@
             "IsNetworkingForced": true,
             "Loadout": [
               {
-                "Prefab": "prefabs/entities/equips/fps/magnum.prefab",
+                "Prefab": "prefabs/equips/fps/magnum.prefab",
                 "Slot": "Primary"
-              },
-              {
-                "Prefab": "prefabs/entities/equips/fps/rocket_launcher.prefab",
-                "Slot": "Secondary"
               }
             ],
             "NetworkAutomatically": true,

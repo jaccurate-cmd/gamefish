@@ -16,7 +16,7 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "GameFish.Playground.DeathmatchMode",
+        "__type": "Playground.DeathmatchMode",
         "__guid": "952a98fd-6052-457f-8b50-b1bc95237eda",
         "__enabled": true,
         "ClassId": "state_sandbox",
@@ -35,7 +35,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "PlayerPawnPrefab": "prefabs/modes/dm/player/player.prefab",
+        "PlayerPawnPrefab": "prefabs/modes/dm/player/player_dm.prefab",
         "SpectatorPrefab": "prefabs/player/spectator.prefab"
       }
     ],

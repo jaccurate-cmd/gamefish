@@ -1,6 +1,6 @@
 using GameFish;
 
-namespace GameFish.Playground;
+namespace Playground;
 
 [Icon( "sentiment_very_dissatisfied" )]
 public partial class DeathmatchMode : Gamemode

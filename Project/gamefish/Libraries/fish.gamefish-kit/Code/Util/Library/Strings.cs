@@ -21,6 +21,10 @@ public static partial class Strings
 	public const string CHEATS = "👨‍💻 Cheats";
 	public const string CHEATING = "👨‍💻 Cheating";
 
+	public const string EDIT = "🖊 Edit";
+	public const string EDITOR = "🖊 Editor";
+	public const string EDITING = "🖊 Editing";
+
 	public const string GAME = "🎮 Game";
 	public const string GAMES = "🎮 Games";
 
@@ -198,6 +202,7 @@ public static partial class Strings
 	public const string DRAG = "🐌 Drag";
 
 	public const string TRACE = "⚡ Trace";
+	public const string TRACES = "⚡ Traces";
 	public const string TRACING = "⚡ Tracing";
 	public const string COLLISION = "⚽ Collision";
 	public const string COLLISIONS = "⚽ Collisions";
@@ -274,6 +279,7 @@ public static partial class Strings
 	public const string EQUIPMENT = "🛠 Equipment";
 	public const string WEAPON = "🔫 Weapon";
 	public const string WEAPONS = "🔫 Weapons";
+	public const string TOOLGUN = "🧙 Toolgun";
 	public const string INVENTORY = "🎒 Inventory";
 
 	public const string AIM = "👓 Aim";
