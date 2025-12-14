@@ -86,10 +86,10 @@ public partial struct TraceSettings
 
 	public TraceSettings() { }
 
-	public TraceSettings( in TraceShape shape, in Rotation r, TagSet hit = null, TagSet ignore = null, TagSet require = null )
+	public TraceSettings( in TraceShape shape, in Rotation? r = null, TagSet hit = null, TagSet ignore = null, TagSet require = null )
 	{
 		Shape = shape;
-		ShapeRotation = r;
+		ShapeRotation = r ?? Rotation.Identity;
 
 		TagsHit = new( hit );
 		TagsIgnore = new( ignore );
