@@ -39,8 +39,11 @@ public partial class GrabberHand : ModuleEntity
 	{
 		base.OnUpdate();
 
+		if ( IsProxy )
+			return;
+
 		// Lazy but effective.
-		if ( !IsProxy && !Input.Down( "Attack1" ) )
+		if ( !Mouse.Active || !Input.Down( "Attack1" ) )
 			DestroyGameObject();
 	}
 }

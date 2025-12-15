@@ -129,6 +129,9 @@ public partial class Spectator : Player
 		if ( !IsPlayer )
 			return;
 
+		if ( Mouse.Active )
+			return;
+
 		if ( Spectating.IsValid() )
 		{
 			if ( AllowStopSpectating && Input.Pressed( StopSpectatingAction ) )
