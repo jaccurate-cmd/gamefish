@@ -1,7 +1,7 @@
 namespace Playground;
 
 [Icon( "build" )]
-public abstract class EditorTool : PlaygroundModule
+public abstract partial class EditorTool : PlaygroundModule
 {
 	protected const int EDITOR_ORDER = DEFAULT_ORDER - 1000;
 
