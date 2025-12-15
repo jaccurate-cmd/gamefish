@@ -5,6 +5,9 @@ public abstract class EditorTool : PlaygroundModule
 {
 	protected const int EDITOR_ORDER = DEFAULT_ORDER - 1000;
 
+	protected const int INPUT_ORDER = EDITOR_ORDER + 50;
+	protected const int SETTINGS_ORDER = EDITOR_ORDER + 100;
+
 	public override bool IsParent( ModuleEntity comp )
 		=> comp is Editor;
 
@@ -26,8 +29,12 @@ public abstract class EditorTool : PlaygroundModule
 	public string ToolDescription { get; set; } = "Does stuff.";
 
 	[Property, WideMode]
-	[Feature( EDITOR ), Group( INPUT ), Order( EDITOR_ORDER )]
+	[Feature( EDITOR ), Group( INPUT ), Order( INPUT_ORDER )]
 	public List<ToolFunction> FunctionHints { get; set; }
+
+	[Property]
+	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
+	public TraceFilter Filter { get; set; }
 
 	public virtual bool IsAllowed( Connection cn )
 		=> !IsAdminOnly || cn?.IsHost is true;

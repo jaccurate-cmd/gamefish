@@ -2,11 +2,9 @@ namespace Playground;
 
 public sealed partial class LeafblowerTool : EditorTool
 {
-	private const int PHYSICS_ORDER = EDITOR_ORDER + 100;
-
 	[Property]
 	[Title( "Force" )]
-	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
+	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public float Force { get; set; } = 400f;
 
 	public override void FixedSimulate( in float deltaTime )

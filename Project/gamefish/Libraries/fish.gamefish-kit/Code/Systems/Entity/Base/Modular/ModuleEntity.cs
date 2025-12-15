@@ -130,9 +130,9 @@ public partial class ModuleEntity : Entity, Component.INetworkSpawn
 	}
 
 	/// <summary>
-	/// Removes a module.
+	/// Removes a module from this entity.
 	/// </summary>
-	/// <param name="m"> The module. </param>
+	/// <param name="m"> The module to be removed. </param>
 	/// <param name="allowRefresh"> Should <see cref="OnModulesRefreshed"/> be called? </param>
 	public void RemoveModule( Module m, bool allowRefresh = true )
 	{
