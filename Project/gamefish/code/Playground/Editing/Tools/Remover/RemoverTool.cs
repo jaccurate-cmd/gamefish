@@ -56,6 +56,10 @@ public partial class RemoverTool : EditorTool
 		if ( !pawn.IsValid() || !pawn.Owner.IsValid() )
 			return true;
 
+		// Can't remove spectators using a tool.
+		if ( pawn is Spectator )
+			return false;
+
 		// Only hosts can remove player pawns.
 		// TODO: Admin system for organizing this.
 		if ( pawn.Owner.IsPlayer && pawn.Owner.Connected )
@@ -73,6 +77,24 @@ public partial class RemoverTool : EditorTool
 		if ( !CanRemove( cl, obj ) )
 			return;
 
-		obj.Destroy();
+		// Put players into spectator mode.
+		if ( Pawn.TryGet( obj, out var pawn ) && pawn.Owner is Client clTarget )
+		{
+			if ( pawn is Spectator )
+				return;
+
+			if ( clTarget.IsValid() && clTarget.Connected )
+			{
+				// Tell the state to force them to spectate.
+				if ( GameState.TryGetCurrent( out var state ) )
+					state.TryAssignSpectator( clTarget, out _, force: true, oldCleanup: true );
+
+				// If that failed then prevent destruction.
+				return;
+			}
+		}
+
+		if ( obj.IsValid() )
+			obj.Destroy();
 	}
 }
