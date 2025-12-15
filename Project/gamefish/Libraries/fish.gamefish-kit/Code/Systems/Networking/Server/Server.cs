@@ -25,7 +25,7 @@ public partial class Server : Singleton<Server>, Component.INetworkListener
 	public PrefabFile PlayerClientPrefab { get; set; }
 
 	/// <summary>
-	/// The fallback prefab with a <see cref="Pawn"/> component on it.
+	/// The fallback prefab with a <see cref="Pawn"/> component.
 	/// <br /> <br />
 	/// <b> NOTE: </b> This is typically used only as a last resort such
 	/// as if there is no active game manager/state available.

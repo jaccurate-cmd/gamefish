@@ -33,7 +33,7 @@ public partial class ModuleEntity : Entity, Component.INetworkSpawn
 	}
 
 	/// <summary>
-	/// Quickly checks the cache to see if we have this module.
+	/// Quickly checks the cache to see if we have any module of this type.
 	/// </summary>
 	/// <typeparam name="TMod"> The specific module. </typeparam>
 	/// <returns> If the module exists. </returns>

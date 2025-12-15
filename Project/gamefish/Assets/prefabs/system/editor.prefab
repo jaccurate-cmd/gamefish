@@ -83,6 +83,7 @@
                 "Mode": "Pressed"
               }
             ],
+            "IsAdminOnly": false,
             "IsClass": false,
             "IsNetworkingForced": true,
             "NetworkAutomatically": true,

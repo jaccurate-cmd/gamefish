@@ -18,8 +18,10 @@ public static partial class Strings
 	public const string SERVER = "💻 Server";
 	public const string SERVERS = "💻 Servers";
 
-	public const string CHEATS = "👨‍💻 Cheats";
-	public const string CHEATING = "👨‍💻 Cheating";
+	public const string SECURITY = "👨‍💻 Security";
+
+	public const string CHEATS = "🤓 Cheats";
+	public const string CHEATING = "🤓 Cheating";
 
 	public const string EDIT = "🖊 Edit";
 	public const string EDITOR = "🖊 Editor";

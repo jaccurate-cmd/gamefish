@@ -10,6 +10,13 @@ public abstract class EditorTool : PlaygroundModule
 
 	public Editor Editor => Parent as Editor;
 
+	/// <summary>
+	/// Restricts this tool the the host and/or authorized users only.
+	/// </summary>
+	[Property]
+	[Feature( EDITOR ), Group( SECURITY ), Order( EDITOR_ORDER )]
+	public bool IsAdminOnly { get; set; } = false;
+
 	[Property]
 	[Feature( EDITOR ), Group( DISPLAY ), Order( EDITOR_ORDER )]
 	public string ToolName { get; set; } = "Tool";
@@ -21,6 +28,9 @@ public abstract class EditorTool : PlaygroundModule
 	[Property, WideMode]
 	[Feature( EDITOR ), Group( INPUT ), Order( EDITOR_ORDER )]
 	public List<ToolFunction> FunctionHints { get; set; }
+
+	public virtual bool IsAllowed( Connection cn )
+		=> !IsAdminOnly || cn?.IsHost is true;
 
 	public virtual void OnEnter() { }
 	public virtual void OnExit() { }

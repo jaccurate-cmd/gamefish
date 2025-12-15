@@ -11,8 +11,9 @@ partial class Server
 	/// Shows if <see cref="Networking.IsActive"/> is <c>true</c>.
 	/// </summary>
 	[Property]
+	[Title( "Is Active" )]
 	[Feature( DEBUG ), Group( NETWORKING ), Order( DEBUG_ORDER )]
-	public bool IsNetworkingActive => Networking.IsActive;
+	protected bool IsNetworkingActive => Networking.IsActive;
 
 	[Title( "Clients" )]
 	[Property, ReadOnly, JsonIgnore]
@@ -30,6 +31,7 @@ partial class Server
 	/// Cleans up all disconnected player clients.
 	/// </summary>
 	[Button]
+	[ShowIf( nameof( InGame ), true )]
 	[Feature( DEBUG ), Group( CLIENTS ), Order( DEBUG_CLIENTS_ORDER - 1 )]
 	public virtual void ValidateClients()
 	{
