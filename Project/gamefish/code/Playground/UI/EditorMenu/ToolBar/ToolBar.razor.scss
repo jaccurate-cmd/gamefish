@@ -1,0 +1,25 @@
+@import "../../global.scss";
+
+ToolBar {
+	gap: 6;
+
+	.tool-button {
+		cursor: pointer;
+
+		align-items: center;
+		justify-content: center;
+
+		padding-left: 7;
+		padding-right: 7;
+
+		color: white;
+		font-size: 20px;
+
+		background-color: hsla(0, 0%, 12%, 0.8);
+		
+		&:hover {
+			color: black;
+			background-color: hsla(0, 0%, 100%, 0.8);
+		}
+	}
+}

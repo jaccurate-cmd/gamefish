@@ -1,0 +1,30 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using GameFish;
+
+@inherits Panel
+
+@namespace Playground.Razor
+
+@{
+	var editorTools = Tools;
+
+	if (editorTools is null || !editorTools.Any())
+	{
+		return;
+	}
+}
+
+<root>
+
+	@foreach (var tool in editorTools)
+	{
+		if (!tool.IsValid())
+			continue;
+
+		<Button class="tool-button" @onclick=@(() => Select(tool)) tooltip="@tool.ToolDescription">
+			@tool.ToolName
+		</Button>
+	}
+
+</root>
