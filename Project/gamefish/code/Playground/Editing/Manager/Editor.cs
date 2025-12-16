@@ -14,10 +14,12 @@ public partial class Editor : Singleton<Editor>
 	protected const int TOOL_ORDER = EDITOR_ORDER + 1;
 	protected const int TRACING_ORDER = EDITOR_ORDER + 100;
 
+	/*
 	[Property, InlineEditor]
 	[Title( "Draw Entity Boxes" )]
 	[Feature( EDITOR ), Group( DEBUG )]
 	public bool DrawEntityBounds { get; set; }
+	*/
 
 	protected override void OnUpdate()
 	{

@@ -27,6 +27,7 @@ public partial class Client : Agent
 			// Auto-cache the first instance with our connection.
 			return _local = Server.FindClient( Connection.Local );
 		}
+
 		protected set => _local = value;
 	}
 

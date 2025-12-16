@@ -165,6 +165,17 @@
                     "component_type": "CameraComponent"
                   },
                   "ZIndex": 100
+                },
+                {
+                  "__type": "Playground.Razor.UI",
+                  "__guid": "6806b084-bf19-4f9c-89fc-bb40828d6ef9",
+                  "__enabled": true,
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null
                 }
               ],
               "Children": []

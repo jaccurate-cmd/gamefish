@@ -1,0 +1,35 @@
+@import "../global.scss";
+
+UI {
+	position: absolute;
+
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+	align-items: center;
+	justify-content: center;
+
+	color: $font-color;
+
+	font-size: 32px;
+	font-weight: 600;
+	font-family: $font;
+	text-shadow: 2px 2px 0 black;
+
+	// Aliasing
+	// font-smooth: never;
+	// image-rendering: pixelated;
+
+	.menu {
+		z-index: 100;
+	}
+
+	.hud {
+		z-index: 20;
+
+		align-items: center;
+		justify-content: center;
+	}
+}
