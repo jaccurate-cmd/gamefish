@@ -187,6 +187,12 @@
                 "Description": null,
                 "Action": "Attack1",
                 "Mode": "Held"
+              },
+              {
+                "Name": "Freeze",
+                "Description": null,
+                "Action": "Attack2",
+                "Mode": "Pressed"
               }
             ],
             "HandPrefab": "prefabs/modes/sbox/tools/grabber/grabber_hand.prefab",
@@ -206,7 +212,7 @@
             "OnComponentStart": null,
             "OnComponentUpdate": null,
             "ScrollSensitivity": 30,
-            "ToolDescription": "Moves physics objects.",
+            "ToolDescription": "Moves and (un)freezes objects.",
             "ToolName": "Grabber"
           }
         ],

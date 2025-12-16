@@ -67,11 +67,11 @@ public partial class ThirdPersonViewMode : ViewMode
 		{
 			var scroll = Input.MouseWheel.y * ScrollSensitivity;
 			DesiredDistance = (DesiredDistance - scroll).Clamp( DistanceRange );
-
-			CurrentDistance = ScrollSpeed > 0f
-				? CurrentDistance.LerpTo( DesiredDistance, ScrollSpeed * deltaTime )
-				: DesiredDistance;
 		}
+
+		CurrentDistance = ScrollSpeed > 0f
+			? CurrentDistance.LerpTo( DesiredDistance, ScrollSpeed * deltaTime )
+			: DesiredDistance;
 
 		if ( View.Collision )
 		{
