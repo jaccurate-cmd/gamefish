@@ -16,31 +16,44 @@ public partial class BoxTool : EditorTool
 	[Feature( EDITOR ), Group( PREFABS ), Order( PREFABS_ORDER )]
 	public float BoxSize { get; set; } = 50f;
 
-	[Property]
-	[Range( 0f, 100f )]
-	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
-	public virtual float ScrollSensitivity { get; set; } = 4f;
 
-	/// <summary>
-	/// The current target height of the box.
-	/// </summary>
 	[Property]
 	[Range( 0f, 100f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
-	public float PlaceHeight { get; set; } = 32f;
+	public virtual float ScrollSensitivity { get; set; } = 10f;
+
+
+	[Property]
+	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
+	public bool UseHeight { get; set; } = true;
+
+	[Property]
+	[Range( 0f, 100f )]
+	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
+	public float Height { get; set; } = 32f;
 
 	[Property]
 	[Range( 0f, 100f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public float HeightLimit { get; set; } = 1024f;
 
+	[Property]
+	[Range( 0f, 100f )]
+	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
+	public float Distance { get; set; } = 256f;
+
+	[Property]
+	[Range( 0f, 100f )]
+	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
+	public FloatRange DistanceRange { get; set; } = new( 16f, 1024f );
+
+
+
 	/// <summary>
 	/// If defined: the starting point for the shape.
 	/// </summary>
 	public Vector3? StartPoint { get; set; }
 
-	public static bool PressedPoint => Input.Pressed( "Attack1" );
-	public static bool PressedCancel => Input.Pressed( "Attack2" );
 
 	public override void OnExit()
 	{
@@ -51,39 +64,82 @@ public partial class BoxTool : EditorTool
 
 	public override void FrameSimulate( in float deltaTime )
 	{
+		if ( !Mouse.Active )
+			return;
+
+		UpdateScroll( in deltaTime );
+		UpdateUse( in deltaTime );
+
 		UpdatePlace( in deltaTime );
 		UpdateCancel( in deltaTime );
 	}
 
+	protected virtual void StopShaping()
+	{
+		StartPoint = null;
+	}
+
 	protected virtual void UpdateCancel( in float deltaTime )
 	{
-		if ( PressedCancel )
+		if ( PressedSecondary )
 			StopShaping();
+	}
+
+	protected virtual void UpdateUse( in float deltaTime )
+	{
+		if ( PressedUse )
+			UseHeight = !UseHeight;
+	}
+
+	protected virtual void UpdateScroll( in float deltaTime )
+	{
+		var yScroll = Input.MouseWheel.y;
+
+		if ( yScroll == 0f )
+			return;
+
+		var isPrecise = HoldingShift;
+
+		if ( !isPrecise )
+			yScroll *= ScrollSensitivity;
+
+		if ( UseHeight )
+		{
+			Height = (Height + yScroll).Clamp( -HeightLimit, HeightLimit );
+
+			if ( !isPrecise )
+				Height = Height.Round();
+		}
+		else
+		{
+			Distance = (Distance + yScroll).Clamp( DistanceRange );
+		}
 	}
 
 	protected virtual void UpdatePlace( in float deltaTime )
 	{
-		if ( !Mouse.Active || !TryTrace( out var tr ) )
+		if ( !TryTrace( out var tr ) )
 			return;
 
-		// Height Adjustment
-		var yScroll = Input.MouseWheel.y;
+		// Point Height
+		Vector3 point = tr.EndPosition;
 
-		if ( yScroll != 0f )
+		if ( UseHeight )
 		{
-			var scrollHeight = yScroll * ScrollSensitivity;
-			PlaceHeight = (PlaceHeight + scrollHeight).Clamp( -HeightLimit, HeightLimit );
+			point = tr.EndPosition;
+
+			if ( StartPoint is Vector3 firstPoint )
+				point.z = firstPoint.z + Height;
+		}
+		else
+		{
+			var dist = tr.Distance.Min( Distance );
+			point = tr.StartPosition + (tr.Direction * dist);
 		}
 
-		// Point Height
-		var point = tr.EndPosition;
-
-		if ( StartPoint is Vector3 firstPoint )
-			point.z = firstPoint.z + PlaceHeight;
-
 		// Point Placement
-			if ( PressedPoint )
-				TryPlacePoint( point );
+		if ( PressedPrimary )
+			TryPlacePoint( point );
 
 		// Shape Helper Rendering
 		var c1 = Color.White.WithAlpha( 0.4f );
@@ -96,7 +152,7 @@ public partial class BoxTool : EditorTool
 			var bounds = BBox.FromPoints( [start, point] )
 				.Grow( -0.1f ); // lessen z-fighting
 
-			if ( bounds.Volume > 1f )
+			if ( bounds.Volume >= 2f )
 			{
 				this.DrawArrow(
 					from: start, to: point,
@@ -107,11 +163,6 @@ public partial class BoxTool : EditorTool
 				this.DrawBox( bounds, c1, c2, global::Transform.Zero );
 			}
 		}
-	}
-
-	protected virtual void StopShaping()
-	{
-		StartPoint = null;
 	}
 
 	protected virtual bool TryPlacePoint( in Vector3 point )
@@ -138,7 +189,7 @@ public partial class BoxTool : EditorTool
 	{
 		var bounds = BBox.FromPoints( [a, b] );
 
-		if ( bounds.Volume < 1f )
+		if ( bounds.Volume < 2f )
 		{
 			objBox = null;
 			return false;

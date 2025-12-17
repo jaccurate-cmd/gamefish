@@ -241,15 +241,33 @@
             "BoxSize": 50,
             "ClassId": null,
             "ClassName": null,
+            "Distance": 256,
+            "DistanceRange": {
+              "Min": 16,
+              "Max": 1024
+            },
             "Filter": null,
             "FunctionHints": [
               {
-                "Name": "Point",
+                "Name": "Add Point",
                 "Description": null,
                 "Action": "Attack1",
                 "Mode": "Pressed"
+              },
+              {
+                "Name": "Cancel",
+                "Description": null,
+                "Action": "Attack2",
+                "Mode": "Pressed"
+              },
+              {
+                "Name": "Toggle Height",
+                "Description": null,
+                "Action": "Use",
+                "Mode": "Pressed"
               }
             ],
+            "Height": 32,
             "HeightLimit": 1024,
             "IsAdminOnly": false,
             "IsClass": false,
@@ -266,10 +284,10 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
-            "PlaceHeight": 32,
-            "ScrollSensitivity": 4,
+            "ScrollSensitivity": 8,
             "ToolDescription": "Creates boxes.",
-            "ToolName": "Box"
+            "ToolName": "Box",
+            "UseHeight": true
           }
         ],
         "Children": []
