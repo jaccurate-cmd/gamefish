@@ -68,7 +68,7 @@
             "ClassId": null,
             "ClassName": null,
             "Filter": null,
-            "Force": 400,
+            "Force": 3000,
             "FunctionHints": [
               {
                 "Name": "Blow",
