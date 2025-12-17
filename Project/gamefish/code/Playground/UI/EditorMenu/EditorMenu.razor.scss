@@ -19,15 +19,35 @@ EditorMenu {
 
 	flex-direction: column;
 
-	.top {
+	.menu {
 		pointer-events: all;
+		background-color: rgba(30, 30, 30, 0.9);
+	}
 
+	.bar-top {
 		width: 100%;
+
 		padding: 5;
+		padding-left: 15;
 
 		align-self: flex-start;
 
-		background-color: rgba(30, 30, 30, 0.8);
+		align-content: center;
+
+		label {
+			align-items: center;
+			justify-content: center;
+		}
+
+		.game-title {
+			font-weight: 600;
+			text-align: center;
+		}
+	}
+
+	.bar-right {
+		height: 100%;
+		align-self: flex-end;
 	}
 
 	.inner {

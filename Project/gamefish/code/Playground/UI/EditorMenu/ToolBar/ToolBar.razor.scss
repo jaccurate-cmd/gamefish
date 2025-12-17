@@ -1,19 +1,35 @@
 @import "../../global.scss";
 
 ToolBar {
-	gap: 6;
+	height: 100%;
+	width: 250px;
+	
+	padding: 5;
+	gap: 3;
+
+	align-self: flex-end;
+	flex-direction: column;
+
+	background-color: rgba(30, 30, 30, 0.2);
+
+	.tools-title {
+		align-self: center;
+
+		font-size: 30px;
+		font-weight: 600;
+	}
 
 	.tool-button {
 		cursor: pointer;
 
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 
 		padding-left: 7;
 		padding-right: 7;
 
 		color: white;
-		font-size: 20px;
+		font-size: 24px;
 
 		background-color: hsla(0, 0%, 12%, 0.8);
 

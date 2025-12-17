@@ -265,6 +265,12 @@
                 "Description": null,
                 "Action": "Use",
                 "Mode": "Pressed"
+              },
+              {
+                "Name": "Precision",
+                "Description": null,
+                "Action": "Run",
+                "Mode": "Held"
               }
             ],
             "Height": 32,
