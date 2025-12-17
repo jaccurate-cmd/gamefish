@@ -11,6 +11,8 @@ public abstract partial class EditorTool : PlaygroundModule
 	protected const int PREFABS_ORDER = EDITOR_ORDER + 50;
 	protected const int SETTINGS_ORDER = EDITOR_ORDER + 100;
 
+	public const string DEFAULT_EMOJI = "❔";
+
 	public override bool IsParent( ModuleEntity comp )
 		=> comp is Editor;
 
@@ -28,7 +30,7 @@ public abstract partial class EditorTool : PlaygroundModule
 
 	[Property]
 	[Feature( EDITOR ), Group( DISPLAY ), Order( EDITOR_ORDER )]
-	public string ToolEmoji { get; set; } = "◻";
+	public string ToolEmoji { get; set; } = "❔";
 
 	[Property]
 	[Feature( EDITOR ), Group( DISPLAY ), Order( EDITOR_ORDER )]

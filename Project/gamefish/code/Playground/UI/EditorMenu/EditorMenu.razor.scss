@@ -24,35 +24,44 @@ EditorMenu {
 		background-color: rgba(30, 30, 30, 0.9);
 	}
 
-	.bar-top {
+	.top {
 		width: 100%;
-
-		padding: 5;
-		padding-left: 15;
 
 		align-self: flex-start;
-
 		align-content: center;
 
-		.game-title {
-			font-weight: 600;
-			text-align: center;
-
-			align-items: center;
-			justify-content: center;
-		}
 		background-color: rgba(30, 30, 30, 0.95);
+
+		.bar {
+			padding: 5;
+			padding-left: 15;
+
+			.game-title {
+				font-weight: 600;
+				text-align: center;
+
+				align-items: center;
+				justify-content: center;
+			}
+		}
 	}
 
-	.bar-right {
-		height: 100%;
-		align-self: flex-end;
-	}
-
-	.inner {
-		pointer-events: none;
-
+	.middle {
 		width: 100%;
 		height: 100%;
+
+		margin-bottom: -2px; // bugfix hack, fuck you
+
+		flex-direction: row;
+
+		.center {
+			width: 100%;
+			flex-direction: column;
+		}
+
+		.bar-right {
+			height: 100%;
+			align-self: flex-end;
+		}
 	}
 }

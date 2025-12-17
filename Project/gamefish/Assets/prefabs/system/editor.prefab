@@ -264,7 +264,7 @@
                 "Mode": "Pressed"
               },
               {
-                "Name": "Toggle Height",
+                "Name": "Mode",
                 "Description": null,
                 "Action": "Use",
                 "Mode": "Pressed"

@@ -26,9 +26,9 @@
 
 		var selClass = tool == ActiveTool ? "selected" : "";
 
-		var icon = !tool.ToolEmoji.IsBlank()
-			? tool.ToolEmoji
-			: "◻";
+		var icon = tool.ToolEmoji.IsBlank()
+			? EditorTool.DEFAULT_EMOJI
+			: tool.ToolEmoji;
 
 		<div class="tool-button @selClass" tooltip="@tool.ToolDescription" @onclick=@(() => Select(tool))>
 
