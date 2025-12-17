@@ -34,15 +34,14 @@ EditorMenu {
 
 		align-content: center;
 
-		label {
-			align-items: center;
-			justify-content: center;
-		}
-
 		.game-title {
 			font-weight: 600;
 			text-align: center;
+
+			align-items: center;
+			justify-content: center;
 		}
+		background-color: rgba(30, 30, 30, 0.95);
 	}
 
 	.bar-right {

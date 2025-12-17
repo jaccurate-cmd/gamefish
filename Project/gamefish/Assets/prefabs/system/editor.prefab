@@ -99,6 +99,7 @@
             "OnComponentStart": null,
             "OnComponentUpdate": null,
             "ToolDescription": "It sucks. It blows.",
+            "ToolEmoji": "\uD83C\uDF2C",
             "ToolName": "Leafblower"
           }
         ],
@@ -152,6 +153,7 @@
             "OnComponentStart": null,
             "OnComponentUpdate": null,
             "ToolDescription": "Destroys non-essential stuff.",
+            "ToolEmoji": "✂",
             "ToolName": "Remover"
           }
         ],
@@ -212,6 +214,7 @@
             "OnComponentUpdate": null,
             "ScrollSensitivity": 30,
             "ToolDescription": "Moves and (un)freezes objects.",
+            "ToolEmoji": "\uD83E\uDDD9‍",
             "ToolName": "Grabber"
           }
         ],
@@ -292,6 +295,7 @@
             "OnComponentUpdate": null,
             "ScrollSensitivity": 8,
             "ToolDescription": "Creates boxes.",
+            "ToolEmoji": "\uD83D\uDCE6",
             "ToolName": "Box",
             "UseHeight": true
           }

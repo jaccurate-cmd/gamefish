@@ -26,11 +26,17 @@
 
 		var selClass = tool == ActiveTool ? "selected" : "";
 
-		<Button class="tool-button @selClass" tooltip="@tool.ToolDescription" @onclick=@(() => Select(tool))>
+		var icon = !tool.ToolEmoji.IsBlank()
+			? tool.ToolEmoji
+			: "◻";
+
+		<div class="tool-button @selClass" tooltip="@tool.ToolDescription" @onclick=@(() => Select(tool))>
+
+			<label class="tool-icon"> @icon </label>
 
 			@tool.ToolName
 
-		</Button>
+		</div>
 	}
 
 </root>

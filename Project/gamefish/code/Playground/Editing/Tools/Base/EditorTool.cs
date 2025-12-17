@@ -28,6 +28,10 @@ public abstract partial class EditorTool : PlaygroundModule
 
 	[Property]
 	[Feature( EDITOR ), Group( DISPLAY ), Order( EDITOR_ORDER )]
+	public string ToolEmoji { get; set; } = "◻";
+
+	[Property]
+	[Feature( EDITOR ), Group( DISPLAY ), Order( EDITOR_ORDER )]
 	public string ToolName { get; set; } = "Tool";
 
 	[Property, TextArea]
