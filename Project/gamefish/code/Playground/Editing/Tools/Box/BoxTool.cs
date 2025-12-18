@@ -28,22 +28,22 @@ public partial class BoxTool : EditorTool
 	public bool UseHeight { get; set; } = true;
 
 	[Property]
-	[Range( 0f, 100f )]
+	[Range( 0f, 2048f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public float Height { get; set; } = 32f;
 
 	[Property]
-	[Range( 0f, 100f )]
+	[Range( 0f, 2048f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public float HeightLimit { get; set; } = 1024f;
 
 	[Property]
-	[Range( 0f, 100f )]
+	[Range( 0f, 4096f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public float Distance { get; set; } = 256f;
 
 	[Property]
-	[Range( 0f, 100f )]
+	[Range( 0f, 4096f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public FloatRange DistanceRange { get; set; } = new( 16f, 1024f );
 

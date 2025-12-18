@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace Playground;
 
 public partial class GrabberTool : EditorTool

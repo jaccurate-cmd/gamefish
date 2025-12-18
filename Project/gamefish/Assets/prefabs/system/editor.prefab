@@ -266,7 +266,7 @@
         "__version": 1,
         "Flags": 0,
         "Name": "Creation",
-        "Position": "31.50146,41.987,-19.7664",
+        "Position": "0,0,0",
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
         "Tags": "",
@@ -283,7 +283,7 @@
             "__version": 1,
             "Flags": 0,
             "Name": "Box",
-            "Position": "-31.50146,-41.987,19.7664",
+            "Position": "0,0,0",
             "Rotation": "0,0,0,1",
             "Scale": "1,1,1",
             "Tags": "",
@@ -355,8 +355,73 @@
                 "ToolDescription": "Spawns resizable boxes.",
                 "ToolEmoji": "\uD83D\uDCE6",
                 "ToolName": "Box",
-                "ToolType": "Creation",
+                "ToolType": "Construction",
                 "UseHeight": true
+              }
+            ],
+            "Children": []
+          },
+          {
+            "__guid": "0694e9d7-6864-437a-8aec-efc9322b8b78",
+            "__version": 1,
+            "Flags": 0,
+            "Name": "Board",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkInterpolation": true,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Playground.BoardTool",
+                "__guid": "a6ba7d7b-8951-45cd-97d9-30364ccf1a37",
+                "__enabled": true,
+                "BoardHeight": 5,
+                "BoardPrefab": "prefabs/modes/sbox/tools/box/box_50.prefab",
+                "BoardWidth": 16,
+                "BoxSize": 50,
+                "ClassId": null,
+                "ClassName": null,
+                "DistanceLimit": 1024,
+                "Filter": null,
+                "FunctionHints": [
+                  {
+                    "Name": "Add Point",
+                    "Description": null,
+                    "Action": "Attack1",
+                    "Mode": "Pressed"
+                  },
+                  {
+                    "Name": "Cancel",
+                    "Description": null,
+                    "Action": "Attack2",
+                    "Mode": "Pressed"
+                  }
+                ],
+                "IsAdminOnly": false,
+                "IsClass": false,
+                "IsNetworkingForced": true,
+                "NetworkAutomatically": true,
+                "NetworkId": "a6ba7d7b-8951-45cd-97d9-30364ccf1a37",
+                "NetworkingMode": "Object",
+                "NetworkOrphanedMode": "Host",
+                "NetworkOwner": null,
+                "NetworkTransferMode": "Fixed",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "ToolDescription": "For your boarding needs.",
+                "ToolEmoji": "\uD83D\uDD28",
+                "ToolName": "Board",
+                "ToolType": "Construction"
               }
             ],
             "Children": []

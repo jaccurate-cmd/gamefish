@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Playground;
 
 /// <summary>
@@ -24,12 +22,12 @@ public enum ToolType
 	Utility,
 
 	/// <summary>
-	/// For adding new stuff.
+	/// For adding/building new stuff.
 	/// </summary>
 	[Order( 10 )]
-	[Icon( "👶" )]
-	[Group( "Creation" )]
-	Creation,
+	[Icon( "👷" )]
+	[Group( "Building" )]
+	Construction,
 
 	/// <summary>
 	/// Physics interaction.
