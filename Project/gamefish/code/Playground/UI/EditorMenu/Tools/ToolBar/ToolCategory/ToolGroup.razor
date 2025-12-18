@@ -27,24 +27,30 @@
 		return;
 	}
 
-	@foreach (var tool in groupTools)
-	{
-		if (!tool.IsValid())
-			continue;
+	<div class="tool-list">
 
-		var selClass = tool == ActiveTool ? "selected" : "";
+		@foreach (var tool in groupTools)
+		{
+			if (!tool.IsValid())
+			{
+				continue;
+			}
 
-		var icon = tool.ToolEmoji.IsBlank()
-		? EditorTool.DEFAULT_EMOJI
-		: tool.ToolEmoji;
+			var selClass = tool == ActiveTool ? "selected" : "";
 
-		<div class="tool-button @selClass" tooltip="@tool.ToolDescription" @onclick=@(() => Select(tool))>
+			var icon = tool.ToolEmoji.IsBlank()
+			? EditorTool.DEFAULT_EMOJI
+			: tool.ToolEmoji;
 
-			<label class="tool-icon"> @icon </label>
+			<div class="tool-button @selClass" tooltip="@tool.ToolDescription" @onclick=@(() => Select(tool))>
 
-			@tool.ToolName
+				<label class="tool-icon"> @icon </label>
 
-		</div>
-	}
+				@tool.ToolName
+
+			</div>
+		}
+
+	</div>
 
 </root>

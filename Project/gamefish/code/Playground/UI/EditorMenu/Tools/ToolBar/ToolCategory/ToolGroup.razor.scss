@@ -1,11 +1,11 @@
 @import "../../../../global.scss";
 
 ToolGroup {
+	width: 100%;
 	height: auto;
-	width: 250px;
 
-	gap: 4;
-	padding: 2;
+	gap: 4px;
+	padding: 3;
 
 	align-self: flex-start;
 	flex-direction: column;
@@ -27,12 +27,17 @@ ToolGroup {
 		background-color: rgb(49, 103, 165);
 	}
 
+	.tool-list {
+		width: 100%;
+		gap: 2px;
+
+		flex-direction: column;
+	}
+
 	.tool-button {
 		cursor: pointer;
 
 		height: 30;
-
-		gap: 1px;
 
 		align-items: center;
 		justify-content: flex-start;
@@ -40,15 +45,19 @@ ToolGroup {
 		padding-left: 7;
 		padding-right: 7;
 
-		color: hsl(0, 0%, 80%);
+		color: hsl(0, 0%, 75%);
 
 		font-size: 22px;
-		font-weight: 400;
+		font-weight: 480;
 		text-align: center;
 
-		background-color: hsla(0, 0%, 12%, 0.8);
+		background-color: hsla(0, 0%, 10%, 0.8);
 
-		&:hover,
+		&:hover {
+			color: white;
+			background-color: hsla(0, 0%, 25%, 1);
+		}
+
 		&.selected {
 			color: black;
 			background-color: hsla(0, 0%, 100%, 0.8);
