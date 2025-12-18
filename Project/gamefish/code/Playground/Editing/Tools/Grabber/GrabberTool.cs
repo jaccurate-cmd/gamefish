@@ -226,6 +226,15 @@ public partial class GrabberTool : EditorTool
 
 		var obj = tr.GameObject;
 
+		// TEMP: Can't ever grab unowned pawns.
+		if ( Pawn.TryGet( obj, out var pawn ) )
+		{
+			if ( pawn.IsProxy )
+				return false;
+
+			obj = pawn.GameObject;
+		}
+
 		if ( obj.IsProxy && obj.Network.OwnerTransfer is OwnerTransfer.Takeover )
 			if ( !obj.Network.TakeOwnership() )
 				return false;
@@ -268,11 +277,15 @@ public partial class GrabberTool : EditorTool
 		if ( !tr.Hit || !tr.GameObject.IsValid() )
 			return false;
 
-		// Don't accidentally grab the map.
-		if ( tr.GameObject.GetComponent<MapCollider>( includeDisabled: true ).IsValid() )
+		if ( tr.Collider.IsValid() && tr.Collider.Static )
 			return false;
 
-		if ( tr.Collider.IsValid() && tr.Collider.Static )
+		// TEMP: Can't grab frozen treats.
+		if ( tr.Body.IsValid() && !tr.Body.MotionEnabled )
+			return false;
+
+		// Don't ever accidentally grab the map.
+		if ( tr.GameObject.GetComponent<MapCollider>( includeDisabled: true ).IsValid() )
 			return false;
 
 		return true;
