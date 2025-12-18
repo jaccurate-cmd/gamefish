@@ -57,6 +57,6 @@ public partial class ClientSpectatorToggle : Module
 			s.TryAssignSpectator( Client, out _, force: true, oldCleanup: true );
 
 		if ( tPrev.HasValue && Pawn.IsValid() )
-			Pawn.TryTeleport( tPrev.Value );
+			Pawn.RpcHostTeleport( tPrev.Value );
 	}
 }

@@ -62,6 +62,9 @@ partial class Pawn
 
 	public override bool TryTeleport( in Transform tDest )
 	{
+		if ( IsProxy )
+			return false;
+
 		WorldPosition = tDest.Position;
 
 		// Don't rotate the object itself.
