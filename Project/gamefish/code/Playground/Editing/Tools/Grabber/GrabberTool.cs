@@ -224,6 +224,10 @@ public partial class GrabberTool : EditorTool
 		if ( !CanTarget( Client.Local, in tr ) )
 			return false;
 
+		// TEMP: Can't grab frozen treats.
+		if ( tr.Body.IsValid() && !tr.Body.MotionEnabled )
+			return false;
+
 		var obj = tr.GameObject;
 
 		// TEMP: Can't ever grab unowned pawns.
@@ -278,10 +282,6 @@ public partial class GrabberTool : EditorTool
 			return false;
 
 		if ( tr.Collider.IsValid() && tr.Collider.Static )
-			return false;
-
-		// TEMP: Can't grab frozen treats.
-		if ( tr.Body.IsValid() && !tr.Body.MotionEnabled )
 			return false;
 
 		// Don't ever accidentally grab the map.
