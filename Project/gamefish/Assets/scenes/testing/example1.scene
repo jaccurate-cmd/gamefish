@@ -2802,6 +2802,559 @@
       "OwnerTransfer": 1,
       "Components": [],
       "Children": []
+    },
+    {
+      "__guid": "4449089c-3ec7-4d4e-96eb-5b9bcf88e2b5",
+      "__version": 1,
+      "Flags": 0,
+      "Name": "Car",
+      "Position": "-384,0,48",
+      "Rotation": "0,0,-0.7071069,-0.7071066",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [],
+      "Children": [
+        {
+          "__guid": "9cde06a5-f773-4a50-874b-366e6295a3aa",
+          "__version": 1,
+          "Flags": 0,
+          "Name": "car_body",
+          "Position": "0,0,0",
+          "Rotation": "0,0,0,1",
+          "Scale": "0.5,0.5,0.5",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkInterpolation": true,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.Rigidbody",
+              "__guid": "8a2616c9-96b2-46ae-adc5-0ba7fcc06f06",
+              "__enabled": true,
+              "AngularDamping": 0,
+              "EnableImpactDamage": false,
+              "Gravity": true,
+              "GravityScale": 1,
+              "ImpactDamage": 0,
+              "LinearDamping": 0,
+              "Locking": {
+                "X": false,
+                "Y": false,
+                "Z": false,
+                "Pitch": false,
+                "Yaw": false,
+                "Roll": false
+              },
+              "MassCenterOverride": "0,0,0",
+              "MassOverride": 0,
+              "MinImpactDamageSpeed": 500,
+              "MotionEnabled": true,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OverrideMassCenter": false,
+              "RigidbodyFlags": 0,
+              "StartAsleep": false
+            },
+            {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "0a858acd-adc9-44a9-8012-d6805d7cb800",
+              "__enabled": true,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/vidya/ae86car/ae86body.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            },
+            {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "f6d3164a-795d-4256-96d0-af1fa13022e5",
+              "__enabled": true,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/vidya/ae86car/ae86body.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": false,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          ],
+          "Children": [
+            {
+              "__guid": "42e415ae-8e01-4f93-abbb-2a5805693f84",
+              "__version": 1,
+              "Flags": 0,
+              "Name": "Front Left Axle",
+              "Position": "192,63.99989,-40.00001",
+              "Rotation": "0.5,0.5,0.5,0.5",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkInterpolation": true,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [
+                {
+                  "__type": "Sandbox.WheelJoint",
+                  "__guid": "198b1574-4f2b-406a-a8c2-2a12b9f79173",
+                  "__enabled": true,
+                  "Attachment": "Auto",
+                  "Body": {
+                    "_type": "gameobject",
+                    "go": "5e86401e-dfbe-47d6-93be-65a9395517e3"
+                  },
+                  "BreakForce": 0,
+                  "BreakTorque": 0,
+                  "EnableCollision": false,
+                  "EnableSpinMotor": false,
+                  "EnableSteering": false,
+                  "EnableSteeringLimit": true,
+                  "EnableSuspension": true,
+                  "EnableSuspensionLimit": false,
+                  "LocalFrame1": {
+                    "Position": "0,0,0",
+                    "Scale": "1,1,1",
+                    "Rotation": "0,0,0,1"
+                  },
+                  "LocalFrame2": {
+                    "Position": "0,0,0",
+                    "Scale": "1,1,1",
+                    "Rotation": "0,0,0,1"
+                  },
+                  "MaxSpinTorque": 999,
+                  "MaxSteeringTorque": 999,
+                  "OnBreak": null,
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "SpinMotorSpeed": 500,
+                  "StartBroken": false,
+                  "SteeringDampingRatio": 1,
+                  "SteeringHertz": 10,
+                  "SteeringLimits": "-1,1",
+                  "SuspensionDampingRatio": 1,
+                  "SuspensionHertz": 10,
+                  "SuspensionLimits": "32,0",
+                  "TargetSteeringAngle": 0
+                }
+              ],
+              "Children": []
+            },
+            {
+              "__guid": "845a9552-3636-46d8-8330-8b4b85bc998c",
+              "__version": 1,
+              "Flags": 0,
+              "Name": "Front Right Axle",
+              "Position": "191.9999,-72.00009,-32",
+              "Rotation": "0.7071068,0,0,0.7071068",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkInterpolation": true,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [
+                {
+                  "__type": "Sandbox.WheelJoint",
+                  "__guid": "6ac4a9ef-ab26-41f6-b8b4-908994af4ff4",
+                  "__enabled": true,
+                  "Attachment": "Auto",
+                  "Body": {
+                    "_type": "gameobject",
+                    "go": "42bab897-bddb-4159-970b-428dadcdcc7d"
+                  },
+                  "BreakForce": 0,
+                  "BreakTorque": 0,
+                  "EnableCollision": false,
+                  "EnableSpinMotor": false,
+                  "EnableSteering": false,
+                  "EnableSteeringLimit": true,
+                  "EnableSuspension": true,
+                  "EnableSuspensionLimit": false,
+                  "LocalFrame1": {
+                    "Position": "0,0,0",
+                    "Scale": "1,1,1",
+                    "Rotation": "0,0,0,1"
+                  },
+                  "LocalFrame2": {
+                    "Position": "0,0,0",
+                    "Scale": "1,1,1",
+                    "Rotation": "0,0,0,1"
+                  },
+                  "MaxSpinTorque": 999,
+                  "MaxSteeringTorque": 999,
+                  "OnBreak": null,
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "SpinMotorSpeed": 500,
+                  "StartBroken": false,
+                  "SteeringDampingRatio": 1,
+                  "SteeringHertz": 10,
+                  "SteeringLimits": "-1,1",
+                  "SuspensionDampingRatio": 1,
+                  "SuspensionHertz": 10,
+                  "SuspensionLimits": "32,0",
+                  "TargetSteeringAngle": 0
+                }
+              ],
+              "Children": []
+            },
+            {
+              "__guid": "224a7eb8-4f10-4254-ae9d-0b7258f45985",
+              "__version": 1,
+              "Flags": 0,
+              "Name": "Back Left Axle",
+              "Position": "-111.9999,80.00005,-32",
+              "Rotation": "0.7071068,-0.0000001788139,-0.0000001788139,0.7071068",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkInterpolation": true,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [
+                {
+                  "__type": "Sandbox.WheelJoint",
+                  "__guid": "01c38b43-bdf5-4247-b500-b6340f2798f6",
+                  "__enabled": true,
+                  "Attachment": "Auto",
+                  "Body": {
+                    "_type": "gameobject",
+                    "go": "4c218e35-2b25-448c-b00d-526a6d0608be"
+                  },
+                  "BreakForce": 0,
+                  "BreakTorque": 0,
+                  "EnableCollision": false,
+                  "EnableSpinMotor": false,
+                  "EnableSteering": false,
+                  "EnableSteeringLimit": true,
+                  "EnableSuspension": true,
+                  "EnableSuspensionLimit": false,
+                  "LocalFrame1": {
+                    "Position": "0,0,0",
+                    "Scale": "1,1,1",
+                    "Rotation": "0,0,0,1"
+                  },
+                  "LocalFrame2": {
+                    "Position": "0,0,0",
+                    "Scale": "1,1,1",
+                    "Rotation": "0,0,0,1"
+                  },
+                  "MaxSpinTorque": 999,
+                  "MaxSteeringTorque": 999,
+                  "OnBreak": null,
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "SpinMotorSpeed": 500,
+                  "StartBroken": false,
+                  "SteeringDampingRatio": 1,
+                  "SteeringHertz": 10,
+                  "SteeringLimits": "-1,1",
+                  "SuspensionDampingRatio": 1,
+                  "SuspensionHertz": 10,
+                  "SuspensionLimits": "32,0",
+                  "TargetSteeringAngle": 0
+                }
+              ],
+              "Children": []
+            },
+            {
+              "__guid": "ca06171c-d3f1-4183-9307-e50be6d3bfc4",
+              "__version": 1,
+              "Flags": 0,
+              "Name": "Back Right Axle",
+              "Position": "-112.0001,-79.99995,-32",
+              "Rotation": "0.7071068,0.00000002980233,0.00000002980233,0.7071068",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkInterpolation": true,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [
+                {
+                  "__type": "Sandbox.WheelJoint",
+                  "__guid": "f2075a7a-67b4-49ca-85fa-e20e1c8ad4c9",
+                  "__enabled": true,
+                  "Attachment": "Auto",
+                  "Body": {
+                    "_type": "gameobject",
+                    "go": "bd36c6d9-4fd1-48c0-853d-288d68c1dab6"
+                  },
+                  "BreakForce": 0,
+                  "BreakTorque": 0,
+                  "EnableCollision": false,
+                  "EnableSpinMotor": false,
+                  "EnableSteering": false,
+                  "EnableSteeringLimit": true,
+                  "EnableSuspension": true,
+                  "EnableSuspensionLimit": false,
+                  "LocalFrame1": {
+                    "Position": "0,0,0",
+                    "Scale": "1,1,1",
+                    "Rotation": "0,0,0,1"
+                  },
+                  "LocalFrame2": {
+                    "Position": "0,0,0",
+                    "Scale": "1,1,1",
+                    "Rotation": "0,0,0,1"
+                  },
+                  "MaxSpinTorque": 999,
+                  "MaxSteeringTorque": 999,
+                  "OnBreak": null,
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "SpinMotorSpeed": 500,
+                  "StartBroken": false,
+                  "SteeringDampingRatio": 1,
+                  "SteeringHertz": 10,
+                  "SteeringLimits": "-1,1",
+                  "SuspensionDampingRatio": 1,
+                  "SuspensionHertz": 10,
+                  "SuspensionLimits": "32,0",
+                  "TargetSteeringAngle": 0
+                }
+              ],
+              "Children": []
+            }
+          ]
+        },
+        {
+          "__guid": "5e86401e-dfbe-47d6-93be-65a9395517e3",
+          "__version": 1,
+          "__Prefab": "prefabs/editing/tools/vehicle/wheel_default.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Name",
+                "Value": "Front Left Wheel"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Position",
+                "Value": "96.00002,35.99995,-19.99997"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Rotation",
+                "Value": "-0.0000000000000009420571,-0.00000001053673,-0.00000008940699,1"
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "ce3e6000-c043-4f80-b619-8e2bc06507b3": "5e86401e-dfbe-47d6-93be-65a9395517e3",
+            "f0009f33-4a6e-4dc3-ba18-1423baaf3c89": "ee5964e9-368f-4948-b9dc-43a4efb97fe1",
+            "d0e1b32c-9ad4-4cae-87e0-8e970b0138dc": "f03e398a-3a23-4a8e-ae1f-feb5262c2d67",
+            "5e4e05af-ca27-4f80-8fc8-d616f918c98f": "fd149a9a-c2e1-4ddf-91e8-ea106cb45ac9",
+            "339fcd38-080a-4452-9d6e-1795155bae18": "48f3a332-7423-44ca-b50f-fb0c07902d89"
+          }
+        },
+        {
+          "__guid": "42bab897-bddb-4159-970b-428dadcdcc7d",
+          "__version": 1,
+          "__Prefab": "prefabs/editing/tools/vehicle/wheel_default.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Name",
+                "Value": "Front Right Wheel"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Position",
+                "Value": "95.99985,-49.42644,-20.00002"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Rotation",
+                "Value": "-0.00000001053673,-0.000000000000001776357,0.9999999,0.0000002384186"
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "ce3e6000-c043-4f80-b619-8e2bc06507b3": "42bab897-bddb-4159-970b-428dadcdcc7d",
+            "f0009f33-4a6e-4dc3-ba18-1423baaf3c89": "cbfadff0-fd5e-4dd5-9fd8-c7b97fbe5b18",
+            "d0e1b32c-9ad4-4cae-87e0-8e970b0138dc": "3f430025-6f33-4eac-809b-1238201f0d79",
+            "5e4e05af-ca27-4f80-8fc8-d616f918c98f": "efae20dd-ba81-451e-8ba6-82e89403acec",
+            "339fcd38-080a-4452-9d6e-1795155bae18": "cefcd7c4-33e8-43e7-b9d7-33f6b03cfe12"
+          }
+        },
+        {
+          "__guid": "4c218e35-2b25-448c-b00d-526a6d0608be",
+          "__version": 1,
+          "__Prefab": "prefabs/editing/tools/vehicle/wheel_default.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Name",
+                "Value": "Back Left Wheel"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Position",
+                "Value": "-55.99992,36.00003,-19.99997"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Rotation",
+                "Value": "-0.0000000000000008881784,-0.00000001053673,-0.00000005960464,0.9999999"
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "ce3e6000-c043-4f80-b619-8e2bc06507b3": "4c218e35-2b25-448c-b00d-526a6d0608be",
+            "f0009f33-4a6e-4dc3-ba18-1423baaf3c89": "792716fa-f923-41e7-83ec-03ecf353f3d5",
+            "d0e1b32c-9ad4-4cae-87e0-8e970b0138dc": "861bd252-7658-4710-9363-ea3a90468a7f",
+            "5e4e05af-ca27-4f80-8fc8-d616f918c98f": "ec1421d6-9686-4a00-8515-39dd409eecc7",
+            "339fcd38-080a-4452-9d6e-1795155bae18": "07576c56-1405-40cb-a11f-eb183400d21e"
+          }
+        },
+        {
+          "__guid": "bd36c6d9-4fd1-48c0-853d-288d68c1dab6",
+          "__version": 1,
+          "__Prefab": "prefabs/editing/tools/vehicle/wheel_default.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Name",
+                "Value": "Back Right Wheel"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Position",
+                "Value": "-56.00009,-49.42636,-20.00002"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
+                },
+                "Property": "Rotation",
+                "Value": "-0.00000001053673,-0.000000000000001776357,0.9999999,0.0000002384186"
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "ce3e6000-c043-4f80-b619-8e2bc06507b3": "bd36c6d9-4fd1-48c0-853d-288d68c1dab6",
+            "f0009f33-4a6e-4dc3-ba18-1423baaf3c89": "a7e4b25e-a637-4551-93a1-9920be872b72",
+            "d0e1b32c-9ad4-4cae-87e0-8e970b0138dc": "eacd6039-2b6e-40a5-a61a-c95c7df6ac0e",
+            "5e4e05af-ca27-4f80-8fc8-d616f918c98f": "b64aa91b-730a-46a9-be0d-fef090f9cc97",
+            "339fcd38-080a-4452-9d6e-1795155bae18": "065030ac-0d76-4d1f-8495-cafca6aa1619"
+          }
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -2832,6 +3385,8 @@
   "ResourceVersion": 3,
   "Title": "Example Scene",
   "Description": "It's for showing off and testing stuff.",
-  "__references": [],
+  "__references": [
+    "vidyacontent.model-ae86body#85735"
+  ],
   "__version": 3
 }
