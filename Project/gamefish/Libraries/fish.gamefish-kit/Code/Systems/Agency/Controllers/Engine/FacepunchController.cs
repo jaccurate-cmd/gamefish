@@ -34,8 +34,14 @@ public partial class FacepunchController : BaseController
 	{
 		base.OnUpdate();
 
-		if ( PlayerController.IsValid() )
-			PlayerController.UseInputControls = Pawn.IsValid() && Pawn.AllowInput();
+		if ( !PlayerController.IsValid() )
+			return;
+
+		var allowMoving = Pawn.IsValid() && Pawn.AllowInput()
+			&& Client.TryGetLocalMove( out _ );
+
+		PlayerController.UseInputControls = allowMoving;
+		PlayerController.UseCameraControls = false;
 	}
 
 	public override void SetLocalEyePosition( Vector3 pos ) { }
@@ -64,6 +70,9 @@ public partial class FacepunchController : BaseController
 
 
 	// The engine's controller handles this stuff.
+	public override bool TryMove( in float deltaTime, in bool isFixedUpdate, in Vector3 wishVel = default )
+		=> false;
+
 	protected override void Move( in float deltaTime ) { }
 	protected override void PreMove( in float deltaTime ) { }
 	protected override void PostMove( in float deltaTime ) { }

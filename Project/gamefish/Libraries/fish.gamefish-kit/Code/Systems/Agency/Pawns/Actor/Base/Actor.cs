@@ -11,8 +11,6 @@ public abstract partial class Actor : Pawn
 
 	public override bool IsPlayer { get; } = false;
 
-	protected override Vector3 InputMoveDirection => default;
-
 	/// <summary>
 	/// Is this NPC meant to be thinking?
 	/// It probably shouldn't if it's dead.

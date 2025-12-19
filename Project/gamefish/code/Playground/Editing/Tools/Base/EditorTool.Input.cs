@@ -2,7 +2,6 @@ namespace Playground;
 
 partial class EditorTool
 {
-
 	public static bool HoldingAlt => Input.Keyboard.Down( "Left Alt" );
 	public static bool HoldingShift => Input.Keyboard.Down( "Shift" );
 	public static bool HoldingControl => Input.Keyboard.Down( "Control" );

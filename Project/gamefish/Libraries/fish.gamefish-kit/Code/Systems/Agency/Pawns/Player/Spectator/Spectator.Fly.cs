@@ -66,7 +66,9 @@ partial class Spectator
 			? FlyingRunSpeed
 			: FlyingSpeed;
 
-		var wishVel = Input.AnalogMove * speed;
+		var wishVel = Client.TryGetLocalMove( out var moveDir )
+			? moveDir * speed
+			: Vector3.Zero;
 
 		if ( AllowAscend && Input.Down( AscendAction ) )
 			wishVel += Vector3.Up * speed;

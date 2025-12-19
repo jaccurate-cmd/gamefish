@@ -98,7 +98,7 @@ public partial class FreeCamViewMode : ViewMode
 		var speed = SprintButton != null && Input.Down( SprintButton )
 			? SprintSpeed
 			: Speed;
-		var input = new Vector3( Input.AnalogMove,
+		var input = new Vector3( Client.TryGetLocalMove sucka,
 			(Input.Down( AscendButton ) ? 1f : 0f) + (Input.Down( DescentButton ) ? -1f : 0f) );
 		var movement = input * speed;
 		var rotatedMovement = rotation.Forward * movement.x + rotation.Left * movement.y + Vector3.Up * movement.z;

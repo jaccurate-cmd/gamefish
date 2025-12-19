@@ -16,11 +16,6 @@ partial class Pawn
 
 	protected BaseController _controller;
 
-	/// <summary>
-	/// The pawn's input direction(as if on an analogue stick).
-	/// </summary>
-	protected virtual Vector3 InputMoveDirection => Input.AnalogMove.ClampLength( 1f );
-
 	/// <returns> The intended movement speed for this pawn. </returns>
 	public virtual float GetWishSpeed()
 	{
@@ -53,9 +48,11 @@ partial class Pawn
 
 		Controller.Simulate( in deltaTime, in isFixedUpdate );
 
-		// Player input by default.
-		var inputDir = InputMoveDirection;
-		var wishVel = Controller.GetWishVelocity( inputDir );
+		// Player-only input by default.
+		Vector3 wishVel = Vector3.Zero;
+
+		if ( Owner is Client cl && cl.TryGetMove( out var moveDir ) )
+			wishVel = Controller.GetWishVelocity( moveDir );
 
 		Controller.TryMove( in deltaTime, in isFixedUpdate, in wishVel );
 	}
