@@ -8,17 +8,17 @@ public partial interface IFocus
 	/// <summary>
 	/// If true: prevents looking around. <br />
 	/// </summary>
-	public virtual bool HasAimingFocus => false;
+	public bool HasAimingFocus { get; }
 
 	/// <summary>
 	/// If true: prevents analogue(such as WASD) movement. <br />
 	/// </summary>
-	public virtual bool HasMovingFocus => false;
+	public bool HasMovingFocus { get; }
 
 	/// <summary>
 	/// If true: prevents jumping, crouching, shooting etc. <br />
 	/// </summary>
-	public virtual bool HasActionFocus => false;
+	public bool HasActionFocus { get; }
 
 	/// <summary>
 	/// All focus interfaces in the main, actively played game scene.

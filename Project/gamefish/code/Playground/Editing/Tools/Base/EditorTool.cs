@@ -46,24 +46,6 @@ public abstract partial class EditorTool : PlaygroundModule
 	[Feature( EDITOR ), Group( DISPLAY ), Order( EDITOR_ORDER )]
 	public string ToolDescription { get; set; } = "Does stuff.";
 
-	[Title( "Hints" )]
-	[Property, WideMode]
-	[Feature( EDITOR ), Group( INPUT ), Order( INPUT_ORDER )]
-	public List<ToolFunction> FunctionHints { get; set; }
-
-	[Property]
-	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
-	public TraceFilter Filter { get; set; }
-
-	public static bool HoldingAlt => Input.Keyboard.Down( "Left Alt" );
-	public static bool HoldingShift => Input.Keyboard.Down( "Shift" );
-	public static bool HoldingControl => Input.Keyboard.Down( "Control" );
-
-	public static bool PressedUse => Input.Pressed( "Use" );
-
-	public static bool PressedPrimary => Input.Pressed( "Attack1" );
-	public static bool PressedSecondary => Input.Pressed( "Attack2" );
-
 	/// <summary>
 	/// Quickly checks permision and gives you a client reference.
 	/// </summary>
@@ -84,7 +66,4 @@ public abstract partial class EditorTool : PlaygroundModule
 	public virtual void FixedSimulate( in float deltaTime )
 	{
 	}
-
-	public virtual bool TryTrace( out SceneTraceResult tr )
-		=> Editor.TryTrace( Scene, out tr );
 }
