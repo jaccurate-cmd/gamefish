@@ -19,8 +19,34 @@ public partial class ThrusterTool : EditorTool
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public virtual ThrusterSettings ThrusterSettings { get; set; }
 
+	public Rigidbody Target { get; set; }
+
+	public Vector3 HitPosition { get; set; }
+	public Vector3 HitNormal { get; set; }
+
+	public override void OnExit()
+	{
+		base.OnExit();
+
+		Target = null;
+	}
+
+	public override void OnLeftClick()
+	{
+		base.OnLeftClick();
+
+		if ( !Target.IsValid() )
+			return;
+
+		if ( TryAttachThruster( Target, HitPosition, HitNormal ) )
+			if ( PlaceThrusterSound.IsValid() )
+				Sound.Play( PlaceThrusterSound, HitPosition );
+	}
+
 	public override void FrameSimulate( in float deltaTime )
 	{
+		Target = null;
+
 		if ( !IsClientAllowed( Client.Local ) )
 			return;
 
@@ -39,20 +65,14 @@ public partial class ThrusterTool : EditorTool
 		if ( !tr.GameObject.Components.TryGet<Rigidbody>( out var rb, findMode ) )
 			return;
 
-		var hitPos = tr.HitPosition;
-		var hitNormal = tr.Normal;
+		Target = rb;
+
+		HitPosition = tr.HitPosition;
+		HitNormal = tr.Normal;
 
 		// Placement Preview
-		if ( CanTarget( Client.Local, rb, in hitPos, in hitNormal ) )
-			DrawThrusterGizmo( hitPos, hitNormal );
-
-		// Attach Thruster
-		if ( PressedPrimary )
-		{
-			if ( TryAttachThruster( rb, in hitPos, in hitNormal ) )
-				if ( PlaceThrusterSound.IsValid() )
-					Sound.Play( PlaceThrusterSound, hitPos );
-		}
+		if ( CanTarget( Client.Local, rb, HitPosition, HitNormal ) )
+			DrawThrusterGizmo( HitPosition, HitNormal );
 	}
 
 	protected virtual void DrawThrusterGizmo( in Vector3 hitPos, in Vector3 hitNormal )
