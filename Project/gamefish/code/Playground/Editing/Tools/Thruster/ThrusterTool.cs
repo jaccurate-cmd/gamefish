@@ -1,0 +1,114 @@
+using Microsoft.VisualBasic;
+
+namespace Playground;
+
+public partial class ThrusterTool : EditorTool
+{
+	[Property]
+	[Title( "Thruster" )]
+	[Feature( EDITOR ), Group( PREFABS ), Order( PREFABS_ORDER )]
+	public PrefabFile ThrusterPrefab { get; set; }
+
+	[Property]
+	[Title( "Place Thruster" )]
+	[Feature( EDITOR ), Group( SOUNDS ), Order( SOUNDS_ORDER )]
+	public virtual SoundEvent PlaceThrusterSound { get; set; }
+
+	/// <summary>
+	/// The key you press to activate the thruster you're placing.
+	/// </summary>
+	[Property, InlineEditor]
+	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
+	public virtual ThrusterSettings ThrusterSettings { get; set; }
+
+	public override void FrameSimulate( in float deltaTime )
+	{
+		if ( !IsClientAllowed( Client.Local ) )
+			return;
+
+		if ( !TryTrace( out var tr ) )
+			return;
+
+		if ( !tr.Hit || !tr.GameObject.IsValid() )
+			return;
+
+		const FindMode findMode = FindMode.EnabledInSelf | FindMode.InAncestors;
+
+		if ( !tr.GameObject.Components.TryGet<Rigidbody>( out var rb, findMode ) )
+			return;
+
+		var hitPos = tr.HitPosition;
+		var hitNormal = tr.Normal;
+
+		if ( CanTarget( Client.Local, rb, in hitPos, in hitNormal ) )
+			DrawThrusterGizmo( hitPos, hitNormal );
+
+		if ( !PressedPrimary )
+			return;
+
+		if ( TryAttachThruster( rb, in hitPos, in hitNormal ) )
+			if ( PlaceThrusterSound.IsValid() )
+				Sound.Play( PlaceThrusterSound, hitPos );
+	}
+
+	protected virtual void DrawThrusterGizmo( in Vector3 hitPos, in Vector3 hitNormal )
+	{
+		var c = Color.Orange.WithAlpha( 0.3f );
+
+		this.DrawArrow(
+			from: hitPos + (hitNormal * 64f),
+			to: hitPos,
+			c: c, len: 8f, w: 3f,
+			tWorld: global::Transform.Zero
+		);
+	}
+
+	protected virtual bool TryAttachThruster( Rigidbody rb, in Vector3 hitPos, in Vector3 hitNormal )
+	{
+		if ( !IsClientAllowed( Client.Local ) )
+			return false;
+
+		if ( !CanTarget( Client.Local, rb, in hitPos, in hitNormal ) )
+			return false;
+
+		var rAim = Rotation.LookAt( -hitNormal );
+		var tWorld = new Transform( hitPos, rAim );
+
+		if ( !ThrusterPrefab.TrySpawn( tWorld, out var thrusterObj ) )
+			return false;
+
+		thrusterObj.NetworkInterpolation = false;
+
+		if ( !thrusterObj.Components.TryGet<Thruster>( out var thruster ) )
+		{
+			this.Warn( $"No {typeof( Thruster )} on obj:[{thrusterObj}]!" );
+			thrusterObj.Destroy();
+			return false;
+		}
+
+		thruster.Settings = ThrusterSettings;
+		thruster.Offset = rb.WorldTransform.ToLocal( tWorld );
+
+		thruster.TrySetNetworkOwner( Connection.Local, allowProxy: true );
+
+		if ( !thruster.TryAttachTo( rb, thruster.Offset ) )
+		{
+			this.Warn( $"Couldn't attach thruster:[{thruster}] to rb:{rb}!" );
+			thrusterObj.Destroy();
+			return false;
+		}
+
+		return true;
+	}
+
+	public virtual bool CanTarget( Client cl, Rigidbody rb, in Vector3 hitPos, in Vector3 hitNormal )
+	{
+		if ( !rb.IsValid() )
+			return false;
+
+		if ( Pawn.TryGet( rb.GameObject, out _ ) )
+			return false;
+
+		return ITransform.IsValid( in hitPos ) && ITransform.IsValid( in hitNormal );
+	}
+}

@@ -6,8 +6,9 @@ public abstract partial class EditorTool : PlaygroundModule
 	protected const int EDITOR_ORDER = DEFAULT_ORDER - 1000;
 
 	protected const int INPUT_ORDER = EDITOR_ORDER + 25;
-	protected const int PREFABS_ORDER = EDITOR_ORDER + 50;
-	protected const int SETTINGS_ORDER = EDITOR_ORDER + 100;
+	protected const int SOUNDS_ORDER = EDITOR_ORDER + 50;
+	protected const int PREFABS_ORDER = EDITOR_ORDER + 100;
+	protected const int SETTINGS_ORDER = EDITOR_ORDER + 150;
 
 	public const string DEFAULT_EMOJI = "⚪";
 
