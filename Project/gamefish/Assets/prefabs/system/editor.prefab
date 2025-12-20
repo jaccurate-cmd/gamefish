@@ -307,7 +307,7 @@
                 "PlaceThrusterSound": null,
                 "ThrusterPrefab": "prefabs/editing/tools/physics/thruster.prefab",
                 "ThrusterSettings": {
-                  "Force": 300,
+                  "Force": 1000,
                   "KeyForward": "KP_8",
                   "KeyBackward": "KP_2"
                 },
