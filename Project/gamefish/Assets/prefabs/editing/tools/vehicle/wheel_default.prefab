@@ -94,12 +94,55 @@
           {
             "__type": "Sandbox.ModelCollider",
             "__guid": "339fcd38-080a-4452-9d6e-1795155bae18",
-            "__enabled": true,
+            "__enabled": false,
             "ColliderFlags": 0,
             "Elasticity": null,
             "Friction": null,
             "IsTrigger": false,
             "Model": "models/citizen_props/wheel01.vmdl",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OnObjectTriggerEnter": null,
+            "OnObjectTriggerExit": null,
+            "OnTriggerEnter": null,
+            "OnTriggerExit": null,
+            "RollingResistance": null,
+            "Static": false,
+            "Surface": null,
+            "SurfaceVelocity": "0,0,0"
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "2611741f-26f6-4008-9602-59e476a19d66",
+        "__version": 1,
+        "Flags": 0,
+        "Name": "Collider",
+        "Position": "0,0,0",
+        "Rotation": "0.7071067,0,0,0.7071068",
+        "Scale": "0.6600941,0.6639124,0.5711251",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.ModelCollider",
+            "__guid": "abee01bf-2a16-4179-9e7b-108d43bf902f",
+            "__enabled": true,
+            "ColliderFlags": 0,
+            "Elasticity": null,
+            "Friction": null,
+            "IsTrigger": false,
+            "Model": "models/vidya/wheel_white_64.vmdl",
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
@@ -206,6 +249,8 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [],
+  "__references": [
+    "vidya.model-wheel64#52739"
+  ],
   "__version": 2
 }
