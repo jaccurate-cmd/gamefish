@@ -40,10 +40,13 @@ public partial class BoardTool : EditorTool
 	public float BoardHeight { get; set; } = 5f;
 
 
-	/// <summary>
-	/// If defined: the starting point for the shape.
-	/// </summary>
-	public Vector3? StartPoint { get; set; }
+	public bool PlacingBoard { get; protected set; }
+
+	public Vector3? TargetPoint { get; protected set; }
+	public Vector3 StartPoint { get; protected set; }
+
+	public BBox BoardBounds { get; protected set; }
+	public Transform BoardTransform { get; protected set; }
 
 
 	public override void OnExit()
@@ -64,9 +67,26 @@ public partial class BoardTool : EditorTool
 		UpdateCancel( in deltaTime );
 	}
 
+	public override void OnLeftClick()
+	{
+		base.OnLeftClick();
+
+		if ( PlacingBoard )
+		{
+			if ( TryCreateBoard( BoardTransform, out _ ) )
+				StopShaping();
+		}
+		else if ( TargetPoint.HasValue )
+		{
+			StartPoint = TargetPoint.Value;
+			PlacingBoard = true;
+		}
+	}
+
 	protected virtual void StopShaping()
 	{
-		StartPoint = null;
+		TargetPoint = null;
+		PlacingBoard = false;
 	}
 
 	protected virtual void UpdateCancel( in float deltaTime )
@@ -90,13 +110,15 @@ public partial class BoardTool : EditorTool
 
 	protected virtual void UpdatePlace( in float deltaTime )
 	{
+		TargetPoint = null;
+
 		if ( !IsClientAllowed( Client.Local ) )
 			return;
 
 		if ( !TryTrace( out var tr ) )
 			return;
 
-		var hasHit = tr.Distance <= Distance;
+		var traceHit = tr.Distance <= Distance;
 		var pointDist = tr.Distance.Min( Distance );
 		var point = tr.StartPosition + (tr.Direction * pointDist);
 
@@ -104,7 +126,7 @@ public partial class BoardTool : EditorTool
 		var c1 = validColor.WithAlpha( 0.4f );
 		var c2 = validColor.WithAlpha( 0.1f );
 
-		if ( hasHit )
+		if ( traceHit )
 		{
 			point += tr.Normal * ((BoardHeight / 2f) + 0.1f);
 		}
@@ -114,13 +136,15 @@ public partial class BoardTool : EditorTool
 			c2 = c2.WithAlphaMultiplied( 0.3f );
 		}
 
+		TargetPoint = point;
+
 		this.DrawSphere( 2f, point, Color.Transparent, c1, global::Transform.Zero );
 
-		if ( StartPoint is Vector3 start )
+		if ( PlacingBoard )
 		{
-			var dist = start.Distance( point );
-			var dir = start.Direction( point );
-			var center = start.LerpTo( point, 0.5f );
+			var dist = StartPoint.Distance( point );
+			var dir = StartPoint.Direction( point );
+			var center = StartPoint.LerpTo( point, 0.5f );
 
 			var length = dist;
 			var scale = new Vector3( length, BoardWidth, BoardHeight );
@@ -129,9 +153,12 @@ public partial class BoardTool : EditorTool
 			var bounds = BBox.FromPositionAndSize( Vector3.Zero, Vector3.One );
 			var tBox = new Transform( center, rDir, scale );
 
+			BoardBounds = bounds;
+			BoardTransform = tBox.WithScale( tBox.Scale / BoxSize );
+
 			var isError = dist < BoardWidth;
 
-			if ( isError && !hasHit )
+			if ( isError && !traceHit )
 			{
 				var errorColor = Color.Red.Desaturate( 0.4f );
 				var c1Error = errorColor.WithAlpha( 0.4f );
@@ -142,19 +169,6 @@ public partial class BoardTool : EditorTool
 			}
 
 			this.DrawBox( bounds, c1, c2, tBox );
-
-			if ( PressedPrimary )
-			{
-				var tBoard = tBox.WithScale( tBox.Scale / BoxSize );
-
-				if ( TryCreateBoard( tBoard, out _ ) )
-					StartPoint = null;
-			}
-		}
-		else
-		{
-			if ( hasHit && PressedPrimary )
-				StartPoint = point;
 		}
 	}
 

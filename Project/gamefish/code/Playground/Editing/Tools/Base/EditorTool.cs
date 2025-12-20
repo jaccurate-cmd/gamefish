@@ -69,4 +69,19 @@ public abstract partial class EditorTool : PlaygroundModule
 	public virtual void FixedSimulate( in float deltaTime )
 	{
 	}
+
+	public virtual void OnLeftClick()
+	{
+		// this.Log( "Left clicked." );
+	}
+
+	public virtual void OnRightClick()
+	{
+		// this.Log( "Right clicked." );
+	}
+
+	public virtual void OnMiddleClick()
+	{
+		// this.Log( "Middle clicked." );
+	}
 }

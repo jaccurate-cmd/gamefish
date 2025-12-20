@@ -1,8 +1,11 @@
 @import "../global.scss";
 
 EditorMenu {
-	position: absolute;
+	pointer-events: none;
+
 	z-index: 500;
+
+	position: absolute;
 
 	top: 0;
 	left: 0;
@@ -62,6 +65,8 @@ EditorMenu {
 		}
 
 		.bar-right {
+			pointer-events: all;
+
 			height: 100%;
 			flex-shrink: 0;
 			align-self: flex-end;
