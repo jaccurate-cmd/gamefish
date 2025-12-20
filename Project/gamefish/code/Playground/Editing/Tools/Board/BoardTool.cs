@@ -40,7 +40,7 @@ public partial class BoardTool : EditorTool
 	public float BoardHeight { get; set; } = 5f;
 
 
-	public bool PlacingBoard { get; protected set; }
+	public bool IsPlacingBoard { get; protected set; }
 
 	public Vector3? TargetPoint { get; protected set; }
 	public Vector3 StartPoint { get; protected set; }
@@ -64,14 +64,13 @@ public partial class BoardTool : EditorTool
 		UpdateScroll( in deltaTime );
 
 		UpdatePlace( in deltaTime );
-		UpdateCancel( in deltaTime );
 	}
 
 	public override void OnLeftClick()
 	{
 		base.OnLeftClick();
 
-		if ( PlacingBoard )
+		if ( IsPlacingBoard )
 		{
 			if ( TryCreateBoard( BoardTransform, out _ ) )
 				StopShaping();
@@ -79,20 +78,31 @@ public partial class BoardTool : EditorTool
 		else if ( TargetPoint.HasValue )
 		{
 			StartPoint = TargetPoint.Value;
-			PlacingBoard = true;
+			IsPlacingBoard = true;
 		}
+	}
+
+	public override void OnMouseWheel( in Vector2 dir )
+	{
+		base.OnMouseWheel( dir );
+
+		var scroll = dir.y != 0f ? -dir.y : dir.x;
+		scroll *= ScrollSensitivity;
+
+		Distance = (Distance + scroll).Clamp( DistanceRange );
+	}
+
+	public override void OnRightClick()
+	{
+		base.OnRightClick();
+
+		StopShaping();
 	}
 
 	protected virtual void StopShaping()
 	{
 		TargetPoint = null;
-		PlacingBoard = false;
-	}
-
-	protected virtual void UpdateCancel( in float deltaTime )
-	{
-		if ( PressedSecondary )
-			StopShaping();
+		IsPlacingBoard = false;
 	}
 
 	protected virtual void UpdateScroll( in float deltaTime )
@@ -101,11 +111,6 @@ public partial class BoardTool : EditorTool
 
 		if ( yScroll == 0f )
 			return;
-
-		if ( !HoldingShift )
-			yScroll *= ScrollSensitivity;
-
-		Distance = (Distance + yScroll).Clamp( DistanceRange );
 	}
 
 	protected virtual void UpdatePlace( in float deltaTime )
@@ -140,7 +145,7 @@ public partial class BoardTool : EditorTool
 
 		this.DrawSphere( 2f, point, Color.Transparent, c1, global::Transform.Zero );
 
-		if ( PlacingBoard )
+		if ( IsPlacingBoard )
 		{
 			var dist = StartPoint.Distance( point );
 			var dir = StartPoint.Direction( point );
