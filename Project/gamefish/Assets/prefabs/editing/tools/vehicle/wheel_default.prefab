@@ -215,8 +215,8 @@
             "SteeringDampingRatio": 1,
             "SteeringHertz": 10,
             "SteeringLimits": "0,0",
-            "SuspensionDampingRatio": 5,
-            "SuspensionHertz": 1,
+            "SuspensionDampingRatio": 3,
+            "SuspensionHertz": 2,
             "SuspensionLimits": "-25,0",
             "TargetSteeringAngle": 0
           }
