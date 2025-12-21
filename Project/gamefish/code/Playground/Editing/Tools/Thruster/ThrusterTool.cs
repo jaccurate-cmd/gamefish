@@ -31,16 +31,13 @@ public partial class ThrusterTool : EditorTool
 		Target = null;
 	}
 
-	public override void OnLeftClick()
+	public override bool TryLeftClick()
 	{
-		base.OnLeftClick();
-
-		if ( !Target.IsValid() )
-			return;
-
 		if ( TryAttachThruster( Target, HitPosition, HitNormal ) )
 			if ( AttachingSound.IsValid() )
 				Sound.Play( AttachingSound, HitPosition );
+
+		return true;
 	}
 
 	public override void FrameSimulate( in float deltaTime )
@@ -89,8 +86,11 @@ public partial class ThrusterTool : EditorTool
 
 	protected virtual bool TryAttachThruster( Rigidbody rb, in Vector3 hitPos, in Vector3 hitNormal )
 	{
-		if ( !IsClientAllowed( Client.Local ) )
+		if ( !rb.IsValid() )
 			return false;
+
+			if ( !IsClientAllowed( Client.Local ) )
+				return false;
 
 		if ( !CanTarget( Client.Local, rb, in hitPos, in hitNormal ) )
 			return false;

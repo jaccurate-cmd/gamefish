@@ -7,9 +7,13 @@ partial class ToolBar
 {
 	protected static Editor Editor => Editor.Instance;
 
-	protected static EditorTool ActiveTool => Editor?.Tool;
+	protected static bool ShowCursor => Editor?.ShowCursor is true;
 
+	protected static EditorTool ActiveTool => Editor?.Tool;
 	protected static IEnumerable<EditorTool> AllTools => Editor?.GetModules<EditorTool>();
+
+	public override bool WantsMouseInput()
+		=> ShowCursor;
 
 	protected static IOrderedEnumerable<ToolType> GetToolGroups()
 	{

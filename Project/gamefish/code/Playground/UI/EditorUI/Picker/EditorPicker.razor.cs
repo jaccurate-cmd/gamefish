@@ -4,11 +4,14 @@ using Sandbox.UI;
 
 namespace Playground.Razor;
 
-partial class WorldPicker
+partial class EditorPicker
 {
 	protected static Editor Editor => Editor.Instance;
 
-	protected static EditorTool ActiveTool => Editor?.Tool;
+	public static bool ShowCursor => Editor?.ShowCursor is true;
+
+	public override bool WantsMouseInput()
+		=> ShowCursor;
 
 	public override bool WantsDrag => true;
 	protected override bool WantsDragScrolling => false;
@@ -17,58 +20,58 @@ partial class WorldPicker
 	{
 		base.OnClick( e );
 
-		if ( ActiveTool.IsValid() )
-			ActiveTool.OnLeftClick();
+		if ( Editor.IsValid() )
+			Editor.OnLeftClick();
 	}
 
 	protected override void OnRightClick( MousePanelEvent e )
 	{
 		base.OnRightClick( e );
 
-		if ( ActiveTool.IsValid() )
-			ActiveTool.OnRightClick();
+		if ( Editor.IsValid() )
+			Editor.OnRightClick();
 	}
 
 	protected override void OnMiddleClick( MousePanelEvent e )
 	{
 		base.OnMiddleClick( e );
 
-		if ( ActiveTool.IsValid() )
-			ActiveTool.OnMiddleClick();
+		if ( Editor.IsValid() )
+			Editor.OnMiddleClick();
 	}
 
 	protected override void OnMouseUp( MousePanelEvent e )
 	{
 		base.OnMouseUp( e );
 
-		if ( ActiveTool.IsValid() )
-			ActiveTool.OnMouseUp( e.MouseButton );
+		if ( Editor.IsValid() )
+			Editor.OnMouseUp( e.MouseButton );
 	}
 
 	public override void OnMouseWheel( Vector2 value )
 	{
 		base.OnMouseWheel( value );
 
-		if ( ActiveTool.IsValid() )
-			ActiveTool.OnMouseWheel( in value );
+		if ( Editor.IsValid() )
+			Editor.OnMouseWheel( in value );
 	}
 
 	protected override void OnDrag( DragEvent e )
 	{
 		base.OnDrag( e );
 
-		if ( ActiveTool.IsValid() )
-			ActiveTool.OnMouseDrag( e.MouseDelta );
+		if ( Editor.IsValid() )
+			Editor.OnMouseDrag( e.MouseDelta );
 	}
 
 	protected override void OnDragEnd( DragEvent e )
 	{
 		base.OnDragEnd( e );
 
-		if ( ActiveTool.IsValid() )
-			ActiveTool.OnMouseDragEnd();
+		if ( Editor.IsValid() )
+			Editor.OnMouseDragEnd();
 	}
 
 	protected override int BuildHash()
-		=> HashCode.Combine( Editor );
+		=> HashCode.Combine( Editor, ShowCursor );
 }

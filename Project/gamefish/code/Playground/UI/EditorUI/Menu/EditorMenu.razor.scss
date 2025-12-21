@@ -24,11 +24,14 @@ EditorMenu {
 	}
 
 	.menu {
-		pointer-events: all;
 		background-color: rgba(30, 30, 30, 0.9);
 	}
 
 	.top {
+		position: relative;
+
+		top: 0;
+
 		width: 100%;
 		height: auto;
 
@@ -52,25 +55,30 @@ EditorMenu {
 	}
 
 	.middle {
+		position: relative;
 		width: 100%;
+
 		flex-grow: 1;
-
-		// margin-bottom: -2px; // bugfix hack, fuck you
-
 		flex-direction: row;
+
+		.left {
+			height: 100%;
+			flex-shrink: 0;
+
+			align-self: flex-start;
+			justify-content: flex-start;
+		}
 
 		.center {
 			flex-grow: 1;
-			flex-shrink: 1;
-			flex-direction: column;
 		}
 
-		.bar-right {
-			pointer-events: all;
-
+		.right {
 			height: 100%;
 			flex-shrink: 0;
+
 			align-self: flex-end;
+			justify-content: flex-end;
 		}
 	}
 }

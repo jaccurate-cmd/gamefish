@@ -87,4 +87,15 @@ partial class Client
 			? Input.Keyboard.Down( code )
 			: Input.Down( code, complainOnMissing: warnMissing );
 	}
+
+	/// <returns> If this action/key is allowed and being released. </returns>
+	public virtual bool IsButtonReleased( in string code, in bool isKeyboard )
+	{
+		if ( IFocus.Action )
+			return false;
+
+		return isKeyboard
+			? Input.Keyboard.Released( code )
+			: Input.Released( code );
+	}
 }

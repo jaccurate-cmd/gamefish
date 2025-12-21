@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace Playground;
 
 public partial class BoardTool : EditorTool
@@ -53,7 +55,7 @@ public partial class BoardTool : EditorTool
 	{
 		base.OnExit();
 
-		StopShaping();
+		TryStopShaping();
 	}
 
 	public override void FrameSimulate( in float deltaTime )
@@ -66,43 +68,44 @@ public partial class BoardTool : EditorTool
 		UpdatePlace( in deltaTime );
 	}
 
-	public override void OnLeftClick()
+	public override bool TryLeftClick()
 	{
-		base.OnLeftClick();
-
 		if ( IsPlacingBoard )
 		{
 			if ( TryCreateBoard( BoardTransform, out _ ) )
-				StopShaping();
+				TryStopShaping();
 		}
 		else if ( TargetPoint.HasValue )
 		{
 			StartPoint = TargetPoint.Value;
 			IsPlacingBoard = true;
 		}
+
+		return true;
 	}
 
-	public override void OnMouseWheel( in Vector2 dir )
+	public override bool TryMouseWheel( in Vector2 dir )
 	{
-		base.OnMouseWheel( dir );
-
 		var scroll = dir.y != 0f ? -dir.y : dir.x;
 		scroll *= ScrollSensitivity;
 
 		Distance = (Distance + scroll).Clamp( DistanceRange );
+
+		return true;
 	}
 
-	public override void OnRightClick()
-	{
-		base.OnRightClick();
+	public override bool TryRightClick()
+		=> TryStopShaping();
 
-		StopShaping();
-	}
-
-	protected virtual void StopShaping()
+	protected virtual bool TryStopShaping()
 	{
+		if ( !IsPlacingBoard )
+			return false;
+
 		TargetPoint = null;
 		IsPlacingBoard = false;
+
+		return true;
 	}
 
 	protected virtual void UpdateScroll( in float deltaTime )

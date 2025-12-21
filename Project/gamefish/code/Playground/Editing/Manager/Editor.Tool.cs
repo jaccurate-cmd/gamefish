@@ -46,9 +46,6 @@ partial class Editor
 
 	protected virtual void SimulateTool( in float deltaTime, bool isFixedUpdate )
 	{
-		if ( !IsOpen )
-			return;
-
 		if ( !Tool.IsValid() )
 			return;
 
@@ -56,5 +53,65 @@ partial class Editor
 			Tool.FixedSimulate( deltaTime );
 		else
 			Tool.FrameSimulate( deltaTime );
+	}
+
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual void OnLeftClick()
+	{
+		// this.Log( "Left clicked." );
+
+		if ( Tool.IsValid() && Tool.TryLeftClick() )
+			return;
+	}
+
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual void OnRightClick()
+	{
+		// this.Log( "Right clicked." );
+
+		if ( Tool.IsValid() && Tool.TryRightClick() )
+			return;
+	}
+
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual void OnMiddleClick()
+	{
+		// this.Log( "Middle clicked." );
+
+		if ( Tool.IsValid() && Tool.TryMiddleClick() )
+			return;
+	}
+
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual void OnMouseWheel( in Vector2 dir )
+	{
+		// this.Log( $"Mouse wheel:[{dir}]" );
+
+		if ( Tool.IsValid() && Tool.TryMouseWheel( in dir ) )
+			return;
+	}
+
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual void OnMouseDrag( in Vector2 delta )
+	{
+		// this.Log( "Mouse dragged." );
+
+		if ( Tool.IsValid() )
+			Tool.TryMouseDrag( in delta );
+	}
+
+	public virtual void OnMouseUp( in MouseButtons mb )
+	{
+		// this.Log( $"Mouse up:[{mb}]" );
+
+		if ( Tool.IsValid() )
+			Tool.OnMouseUp( in mb );
+	}
+
+	public virtual void OnMouseDragEnd()
+	{
+		// this.Log( "Mouse drag ended." );
+		if ( Tool.IsValid() )
+			Tool.OnMouseDragEnd();
 	}
 }

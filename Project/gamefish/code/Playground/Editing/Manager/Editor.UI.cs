@@ -8,7 +8,21 @@ partial class Editor
 	[InputAction]
 	[Title( "Show Menu" )]
 	[Feature( EDITOR ), Group( INPUT )]
-	public string ShowMenuAction { get; set; } = "Editor";
+	public string ToggleMenuAction { get; set; } = "Editor";
+
+	public bool IsMenuDown => !ToggleMenuAction.IsBlank() && Input.Down( ToggleMenuAction );
+	public bool IsMenuPressed => !ToggleMenuAction.IsBlank() && Input.Pressed( ToggleMenuAction );
+	public bool IsMenuReleased => !ToggleMenuAction.IsBlank() && Input.Released( ToggleMenuAction );
+
+	[Property]
+	[InputAction]
+	[Title( "Show Menu" )]
+	[Feature( EDITOR ), Group( INPUT )]
+	public string ToggleCursorAction { get; set; } = "Cursor";
+
+	public bool IsCursorDown => !ToggleCursorAction.IsBlank() && Input.Down( ToggleCursorAction );
+	public bool IsCursorPressed => !ToggleCursorAction.IsBlank() && Input.Pressed( ToggleCursorAction );
+	public bool IsCursorReleased => !ToggleCursorAction.IsBlank() && Input.Released( ToggleCursorAction );
 
 	/// <summary>
 	/// Should the menu be open?
@@ -19,27 +33,68 @@ partial class Editor
 		set
 		{
 			_isOpen = value;
-			OnSetIsOpen( _isOpen );
+			OnSetOpen( _isOpen );
 		}
 	}
 
 	protected bool _isOpen;
 
-	public virtual TimeSince? LastOpened { get; set; }
-
-	protected void UpdateMenu()
+	/// <summary>
+	/// Should the menu be open?
+	/// </summary>
+	public virtual bool ShowCursor
 	{
-		if ( ShowMenuAction.IsBlank() )
-			return;
-
-		if ( Input.Pressed( ShowMenuAction ) )
-			OnPressedOpen();
-
-		if ( Input.Released( ShowMenuAction ) )
-			OnReleasedOpen();
+		get => _showCursor;
+		set
+		{
+			_showCursor = value;
+			OnSetShowCursor( _showCursor );
+		}
 	}
 
-	protected virtual void OnPressedOpen()
+	protected bool _showCursor;
+
+	public virtual TimeSince? LastOpened { get; set; }
+
+	protected virtual void UpdateUI()
+	{
+		UpdateCursor();
+		UpdateMenu();
+	}
+
+	protected virtual void UpdateCursor()
+	{
+		if ( IsOpen )
+		{
+			if ( IsCursorPressed )
+				ShowCursor = !ShowCursor;
+		}
+		else
+		{
+			ShowCursor = IsCursorDown;
+		}
+
+		// if ( IsMenuDown || IsCursorDown )
+		// Mouse.Visibility = MouseVisibility.Visible;
+	}
+
+	protected virtual void OnSetShowCursor( in bool isVisible )
+	{
+		Mouse.Visibility = isVisible
+			? MouseVisibility.Visible
+			: MouseVisibility.Auto;
+	}
+
+	protected virtual void UpdateMenu()
+	{
+		if ( IsMenuPressed )
+			OnPressedMenu();
+
+		if ( IsMenuReleased )
+			OnReleasedMenu();
+	}
+
+	protected virtual void OnPressedMenu()
 	{
 		IsOpen = !IsOpen;
 
@@ -47,7 +102,7 @@ partial class Editor
 			LastOpened = 0f;
 	}
 
-	protected virtual void OnReleasedOpen()
+	protected virtual void OnReleasedMenu()
 	{
 		// Auto-close if held long enough.
 		if ( LastOpened.HasValue )
@@ -55,9 +110,9 @@ partial class Editor
 				IsOpen = false;
 	}
 
-	protected virtual void OnSetIsOpen( in bool isOpen )
+	protected virtual void OnSetOpen( in bool isOpen )
 	{
-		Mouse.Visibility = _isOpen ? MouseVisibility.Visible : MouseVisibility.Auto;
+		ShowCursor = isOpen;
 	}
 
 	public static SceneTraceResult Trace( Scene sc, in Vector3 start, in Vector3 dir, in float? dist = null )

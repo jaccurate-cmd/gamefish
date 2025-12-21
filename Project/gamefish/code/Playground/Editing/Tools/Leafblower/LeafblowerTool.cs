@@ -10,9 +10,9 @@ public sealed partial class LeafblowerTool : EditorTool
 
 	public override void FixedSimulate( in float deltaTime )
 	{
-		if ( Input.Down( "Attack1" ) )
+		if ( HoldingPrimary )
 			Wind( deltaTime, Force );
-		else if ( Input.Down( "Attack2" ) )
+		else if ( HoldingSecondary )
 			Wind( deltaTime, -Force );
 	}
 

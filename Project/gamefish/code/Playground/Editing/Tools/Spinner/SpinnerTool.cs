@@ -31,16 +31,13 @@ public partial class SpinnerTool : EditorTool
 		Target = null;
 	}
 
-	public override void OnLeftClick()
+	public override bool TryLeftClick()
 	{
-		base.OnLeftClick();
-
-		if ( !Target.IsValid() )
-			return;
-
 		if ( TryAttachSpinner( Target, HitPosition, HitNormal ) )
 			if ( AttachingSound.IsValid() )
 				Sound.Play( AttachingSound, HitPosition );
+
+		return true;
 	}
 
 	public override void FrameSimulate( in float deltaTime )
@@ -89,6 +86,9 @@ public partial class SpinnerTool : EditorTool
 
 	protected virtual bool TryAttachSpinner( Rigidbody rb, in Vector3 hitPos, in Vector3 hitNormal )
 	{
+		if ( !rb.IsValid() )
+			return false;
+
 		if ( !IsClientAllowed( Client.Local ) )
 			return false;
 

@@ -1,6 +1,8 @@
 @import "../../../global.scss";
 
 ToolBar {
+	pointer-events: all;
+
 	height: 100%;
 	width: 300px;
 

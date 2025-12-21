@@ -9,7 +9,9 @@ partial class EditorHints
 
 	protected static bool HasEditor => Editor.IsValid();
 	protected static bool IsEditorOpen => Editor?.IsOpen is true;
-	protected static string EditorMenuAction => Editor?.ShowMenuAction;
+
+	protected static string EditorMenuAction => Editor?.ToggleMenuAction;
+	protected static string EditorCursorAction => Editor?.ToggleCursorAction;
 
 	protected static Client Client => Client.Local;
 	protected static bool IsSpectator => Client?.Pawn is Spectator;

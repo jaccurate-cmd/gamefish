@@ -29,7 +29,7 @@ public partial class Editor : Singleton<Editor>
 		if ( TryGetInstance( out var e ) && e != this )
 			return;
 
-		UpdateMenu();
+		UpdateUI();
 
 		SimulateTool( Time.Delta, isFixedUpdate: false );
 	}

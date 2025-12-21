@@ -23,7 +23,7 @@ public partial class GrabberTool : EditorTool
 	{
 		base.OnUpdate();
 
-		if ( !IsSelected || !IsMenuOpen )
+		if ( !IsSelected )
 			TryDropHeld();
 
 		DrawGrabberGizmos();
@@ -51,32 +51,22 @@ public partial class GrabberTool : EditorTool
 		UpdateGrab( in deltaTime );
 	}
 
-	public override void OnLeftClick()
+	public override bool TryLeftClick()
 	{
-		base.OnLeftClick();
-
 		TryGrabTarget();
+		return true;
 	}
 
-	public override void OnRightClick()
+	public override bool TryRightClick()
 	{
-		base.OnRightClick();
-
 		TryFreeze();
+		return true;
 	}
 
-	public override void OnMouseUp( in MouseButtons mb )
+	public override bool TryMouseDrag( in Vector2 delta )
 	{
-		base.OnMouseUp( mb );
-
-		TryDropHeld();
-	}
-
-	public override void OnMouseDrag( in Vector2 delta )
-	{
-		base.OnMouseDrag( in delta );
-
 		TryGrabTarget();
+		return true;
 	}
 
 	public override void OnMouseDragEnd()
@@ -86,18 +76,22 @@ public partial class GrabberTool : EditorTool
 		TryDropHeld();
 	}
 
-	public override void OnMouseWheel( in Vector2 dir )
+	public override void OnMouseUp( in MouseButtons mb )
 	{
-		base.OnMouseWheel( dir );
+		base.OnMouseUp( mb );
 
+		TryDropHeld();
+	}
+
+	public override bool TryMouseWheel( in Vector2 dir )
+	{
 		if ( !Hand.IsValid() )
-			return;
-
-		if ( dir == Vector2.Zero )
-			return;
+			return false;
 
 		var scrollDist = -dir.y * ScrollSensitivity;
 		GrabDistance = (GrabDistance + scrollDist).Positive();
+
+		return true;
 	}
 
 	protected virtual void DrawGrabberGizmos()
@@ -155,10 +149,16 @@ public partial class GrabberTool : EditorTool
 
 	protected virtual void UpdateGrab( in float deltaTime )
 	{
+		if ( HoldingPrimary )
+			TryGrabTarget();
+
+		if ( ReleasedPrimary )
+			TryDropHeld();
+
 		if ( !IsGrabbing )
 			return;
 
-		if ( !Mouse.Active || !TryTrace( out var tr ) )
+		if ( !TryTrace( out var tr ) )
 			return;
 
 		Hand.WorldPosition = tr.StartPosition + tr.Direction * GrabDistance;
@@ -166,9 +166,6 @@ public partial class GrabberTool : EditorTool
 
 	protected virtual bool TryDropHeld()
 	{
-		if ( IsSelected && IsMenuOpen )
-			Mouse.Visibility = MouseVisibility.Visible;
-
 		if ( !Hand.IsValid() )
 			return false;
 

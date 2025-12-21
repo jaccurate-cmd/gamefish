@@ -16,7 +16,14 @@ partial class EditorTool
 	public static bool HoldingPrimary => IsDown( "Attack1", isKeyboard: false );
 	public static bool HoldingSecondary => IsDown( "Attack2", isKeyboard: false );
 
-	public virtual bool PreventAiming => IsMenuOpen;
+	public static bool ReleasedUse => IsReleased( "Use", isKeyboard: false );
+	public static bool ReleasedReload => IsReleased( "Reload", isKeyboard: false );
+	public static bool ReleasedPrimary => IsReleased( "Attack1", isKeyboard: false );
+	public static bool ReleasedSecondary => IsReleased( "Attack2", isKeyboard: false );
+
+	public virtual bool PreventAiming => ShowCursor is true;
+	public virtual bool PreventAction => ShowCursor is true;
+
 	public virtual bool PreventMoving => false;
 
 	[Title( "Hints" )]
@@ -47,5 +54,14 @@ partial class EditorTool
 			return false;
 
 		return Client.IsButtonDown( code, isKeyboard );
+	}
+
+	/// <returns> If this action/key is allowed and being pressed. </returns>
+	protected static bool IsReleased( string code, bool isKeyboard )
+	{
+		if ( !Client.IsValid() || code.IsBlank() )
+			return false;
+
+		return Client.IsButtonReleased( code, isKeyboard );
 	}
 }

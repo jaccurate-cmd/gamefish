@@ -3,7 +3,6 @@ namespace Playground;
 public struct ToolFunction
 {
 	private const int DISPLAY_ORDER = 0;
-	private const int ACTION_ORDER = 1;
 
 	[KeyProperty]
 	[Group( DISPLAY ), Order( DISPLAY_ORDER )]

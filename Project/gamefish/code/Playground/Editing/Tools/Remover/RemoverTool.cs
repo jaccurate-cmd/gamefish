@@ -2,11 +2,11 @@ namespace Playground;
 
 public partial class RemoverTool : EditorTool
 {
-	public override void OnLeftClick()
+	public override bool TryLeftClick()
 	{
-		base.OnLeftClick();
-
 		TryRemoveTarget();
+
+		return true;
 	}
 
 	protected virtual bool TryRemoveTarget()

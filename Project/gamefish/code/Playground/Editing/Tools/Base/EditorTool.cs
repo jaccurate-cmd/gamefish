@@ -20,6 +20,8 @@ public abstract partial class EditorTool : PlaygroundModule
 	public static Client Client => Client.Local;
 
 	public bool IsMenuOpen => Editor.IsValid() && Editor.IsOpen;
+	public bool ShowCursor => Editor.IsValid() && Editor.ShowCursor;
+
 	public bool IsSelected => Editor.IsValid() && Editor.Tool == this;
 
 	/// <summary>
@@ -70,19 +72,28 @@ public abstract partial class EditorTool : PlaygroundModule
 	{
 	}
 
-	public virtual void OnLeftClick()
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual bool TryLeftClick()
 	{
 		// this.Log( "Left clicked." );
+
+		return false;
 	}
 
-	public virtual void OnRightClick()
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual bool TryRightClick()
 	{
 		// this.Log( "Right clicked." );
+
+		return false;
 	}
 
-	public virtual void OnMiddleClick()
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual bool TryMiddleClick()
 	{
 		// this.Log( "Middle clicked." );
+
+		return false;
 	}
 
 	public virtual void OnMouseUp( in MouseButtons mb )
@@ -90,14 +101,20 @@ public abstract partial class EditorTool : PlaygroundModule
 		// this.Log( $"Mouse up:[{mb}]" );
 	}
 
-	public virtual void OnMouseWheel( in Vector2 dir )
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual bool TryMouseWheel( in Vector2 dir )
 	{
 		// this.Log( $"Mouse wheel:[{dir}]" );
+
+		return false;
 	}
 
-	public virtual void OnMouseDrag( in Vector2 delta )
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual bool TryMouseDrag( in Vector2 delta )
 	{
 		// this.Log( "Mouse dragged." );
+
+		return false;
 	}
 
 	public virtual void OnMouseDragEnd()
