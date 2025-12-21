@@ -35,7 +35,8 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "ShowMenuAction": "Editor",
+        "ToggleCursorAction": "Cursor",
+        "ToggleMenuAction": "Editor",
         "Tool": {
           "_type": "component",
           "component_id": "f3f9b2a6-8975-42e1-9633-c6313e931117",
@@ -108,7 +109,7 @@
                 "OnComponentFixedUpdate": null,
                 "OnComponentStart": null,
                 "OnComponentUpdate": null,
-                "ToolDescription": "Destroys non-essential stuff.",
+                "ToolDescription": "Gets rid of most stuff.",
                 "ToolEmoji": "✂",
                 "ToolName": "Remover",
                 "ToolType": "Utility"
@@ -384,7 +385,7 @@
                   "KeyForward": "KP_6",
                   "KeyReverse": "KP_4"
                 },
-                "ToolDescription": "Makes things turn.",
+                "ToolDescription": "Adds turny thingies.",
                 "ToolEmoji": "♻",
                 "ToolName": "Spinner",
                 "ToolType": "Physics"

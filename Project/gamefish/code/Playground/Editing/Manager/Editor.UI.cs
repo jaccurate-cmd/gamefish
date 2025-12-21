@@ -6,7 +6,7 @@ partial class Editor
 
 	[Property]
 	[InputAction]
-	[Title( "Show Menu" )]
+	[Title( "Toggle Menu" )]
 	[Feature( EDITOR ), Group( INPUT )]
 	public string ToggleMenuAction { get; set; } = "Editor";
 
@@ -16,7 +16,7 @@ partial class Editor
 
 	[Property]
 	[InputAction]
-	[Title( "Show Menu" )]
+	[Title( "Toggle Cursor" )]
 	[Feature( EDITOR ), Group( INPUT )]
 	public string ToggleCursorAction { get; set; } = "Cursor";
 
