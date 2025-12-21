@@ -2,9 +2,9 @@ namespace Playground;
 
 partial class EditorTool
 {
-	public static bool HoldingAlt => Input.Keyboard.Down( "ALT" );
-	public static bool HoldingShift => Input.Keyboard.Down( "SHIFT" );
-	public static bool HoldingControl => Input.Keyboard.Down( "CTRL" );
+	public static bool HoldingAlt => IsDown( "ALT", isKeyboard: true );
+	public static bool HoldingShift => IsDown( "SHIFT", isKeyboard: true );
+	public static bool HoldingControl => IsDown( "CTRL", isKeyboard: true );
 
 	public static bool PressedUse => IsPressed( "Use", isKeyboard: false );
 	public static bool PressedReload => IsPressed( "Reload", isKeyboard: false );
@@ -22,7 +22,7 @@ partial class EditorTool
 	public static bool ReleasedSecondary => IsReleased( "Attack2", isKeyboard: false );
 
 	public virtual bool PreventAiming => ShowCursor is true;
-	public virtual bool PreventAction => ShowCursor is true;
+	public virtual bool PreventAction => true; //ShowCursor is true;
 
 	public virtual bool PreventMoving => false;
 
@@ -38,30 +38,27 @@ partial class EditorTool
 	public virtual bool TryTrace( out SceneTraceResult tr )
 		=> Editor.TryTrace( Scene, out tr );
 
-	/// <returns> If this action/key is allowed and was pressed. </returns>
-	protected static bool IsPressed( string code, bool isKeyboard )
-	{
-		if ( !Client.IsValid() || code.IsBlank() )
-			return false;
-
-		return Client.IsButtonPressed( code, isKeyboard );
-	}
-
-	/// <returns> If this action/key is allowed and being pressed. </returns>
+	/// <returns> If this action/key is being pressed. </returns>
 	protected static bool IsDown( string code, bool isKeyboard )
 	{
-		if ( !Client.IsValid() || code.IsBlank() )
-			return false;
-
-		return Client.IsButtonDown( code, isKeyboard );
+		return isKeyboard
+			? Input.Keyboard.Down( code )
+			: Input.Down( code );
 	}
 
-	/// <returns> If this action/key is allowed and being pressed. </returns>
+	/// <returns> If this action/key was pressed. </returns>
+	protected static bool IsPressed( string code, bool isKeyboard )
+	{
+		return isKeyboard
+			? Input.Keyboard.Pressed( code )
+			: Input.Pressed( code );
+	}
+
+	/// <returns> If this action/key was released. </returns>
 	protected static bool IsReleased( string code, bool isKeyboard )
 	{
-		if ( !Client.IsValid() || code.IsBlank() )
-			return false;
-
-		return Client.IsButtonReleased( code, isKeyboard );
+		return isKeyboard
+			? Input.Keyboard.Released( code )
+			: Input.Released( code );
 	}
 }

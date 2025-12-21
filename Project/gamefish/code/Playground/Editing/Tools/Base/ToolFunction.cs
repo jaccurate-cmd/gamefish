@@ -23,10 +23,5 @@ public struct ToolFunction
 	public ToolFunction() { }
 
 	public readonly bool IsInputting()
-	{
-		if ( Action.IsBlank() )
-			return false;
-
-		return Mode.Active( Action );
-	}
+		=> Mode.Active( Action );
 }
