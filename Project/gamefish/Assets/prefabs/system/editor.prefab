@@ -566,6 +566,86 @@
             "Children": []
           }
         ]
+      },
+      {
+        "__guid": "77cff09e-fa02-462b-a213-fa03fa197d55",
+        "__version": 1,
+        "Flags": 0,
+        "Name": "Vehicles",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [],
+        "Children": [
+          {
+            "__guid": "18bab7a0-1746-47f3-af0c-4771089ea9a2",
+            "__version": 1,
+            "Flags": 0,
+            "Name": "Vehicle",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkInterpolation": true,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Playground.PrefabTool",
+                "__guid": "772d151b-8359-414e-a211-c451fb8d000d",
+                "__enabled": true,
+                "ClassId": null,
+                "ClassName": null,
+                "Distance": 512,
+                "DistanceRange": {
+                  "Min": 16,
+                  "Max": 2048
+                },
+                "Filter": null,
+                "FunctionHints": [
+                  {
+                    "Name": "Spawn",
+                    "Description": null,
+                    "Action": "Attack1",
+                    "Mode": "Pressed"
+                  }
+                ],
+                "IsAdminOnly": false,
+                "IsClass": false,
+                "IsNetworkingForced": true,
+                "NetworkAutomatically": true,
+                "NetworkId": "772d151b-8359-414e-a211-c451fb8d000d",
+                "NetworkingMode": "Object",
+                "NetworkOrphanedMode": "Host",
+                "NetworkOwner": null,
+                "NetworkTransferMode": "Fixed",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Prefab": "prefabs/editing/tools/prefab/vehicles/ae86.prefab",
+                "ScrollSensitivity": 20,
+                "ToolDescription": "Spawns a car.",
+                "ToolEmoji": "\uD83D\uDE98",
+                "ToolName": "Vehicle",
+                "ToolType": "Vehicle"
+              }
+            ],
+            "Children": []
+          }
+        ]
       }
     ],
     "__properties": {

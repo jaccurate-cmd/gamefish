@@ -2806,427 +2806,77 @@
     {
       "__guid": "4449089c-3ec7-4d4e-96eb-5b9bcf88e2b5",
       "__version": 1,
-      "Flags": 0,
-      "Name": "Car",
-      "Position": "-384,0,48",
-      "Rotation": "0,0,-0.7071069,-0.7071066",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkInterpolation": true,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [],
-      "Children": [
-        {
-          "__guid": "9cde06a5-f773-4a50-874b-366e6295a3aa",
-          "__version": 1,
-          "Flags": 0,
-          "Name": "car_body",
-          "Position": "0,0,0",
-          "Rotation": "0,0,0,1",
-          "Scale": "0.45,0.45,0.45",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkInterpolation": true,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.Rigidbody",
-              "__guid": "8a2616c9-96b2-46ae-adc5-0ba7fcc06f06",
-              "__enabled": true,
-              "AngularDamping": 0,
-              "EnableImpactDamage": false,
-              "Gravity": true,
-              "GravityScale": 1,
-              "ImpactDamage": 0,
-              "LinearDamping": 0,
-              "Locking": {
-                "X": false,
-                "Y": false,
-                "Z": false,
-                "Pitch": false,
-                "Yaw": false,
-                "Roll": false
-              },
-              "MassCenterOverride": "0,0,0",
-              "MassOverride": 0,
-              "MinImpactDamageSpeed": 500,
-              "MotionEnabled": true,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "OverrideMassCenter": false,
-              "RigidbodyFlags": 0,
-              "StartAsleep": false
+      "__Prefab": "prefabs/editing/tools/prefab/vehicles/ae86.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "6b1cdeb5-84f0-4bd0-8fba-ec94965d0eb5"
             },
-            {
-              "__type": "Sandbox.ModelRenderer",
-              "__guid": "0a858acd-adc9-44a9-8012-d6805d7cb800",
-              "__enabled": true,
-              "BodyGroups": 18446744073709551615,
-              "CreateAttachments": false,
-              "LodOverride": null,
-              "MaterialGroup": null,
-              "MaterialOverride": null,
-              "Materials": null,
-              "Model": "models/vidya/ae86car/ae86body.vmdl",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "RenderOptions": {
-                "GameLayer": true,
-                "OverlayLayer": false,
-                "BloomLayer": false,
-                "AfterUILayer": false
-              },
-              "RenderType": "On",
-              "Tint": "1,1,1,1"
-            },
-            {
-              "__type": "Sandbox.ModelCollider",
-              "__guid": "f6d3164a-795d-4256-96d0-af1fa13022e5",
-              "__enabled": true,
-              "ColliderFlags": 0,
-              "Elasticity": null,
-              "Friction": null,
-              "IsTrigger": false,
-              "Model": "models/vidya/ae86car/ae86body.vmdl",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "OnObjectTriggerEnter": null,
-              "OnObjectTriggerExit": null,
-              "OnTriggerEnter": null,
-              "OnTriggerExit": null,
-              "RollingResistance": null,
-              "Static": false,
-              "Surface": null,
-              "SurfaceVelocity": "0,0,0"
-            }
-          ],
-          "Children": [
-            {
-              "__guid": "42e415ae-8e01-4f93-abbb-2a5805693f84",
-              "__version": 1,
-              "Flags": 0,
-              "Name": "Front Left Axle",
-              "Position": "191.1108,75.55535,-48.88889",
-              "Rotation": "0.5,0.5,-0.5,0.5",
-              "Scale": "2.222222,2.222222,2.222222",
-              "Tags": "",
-              "Enabled": true,
-              "NetworkMode": 2,
-              "NetworkInterpolation": true,
-              "NetworkOrphaned": 0,
-              "NetworkTransmit": true,
-              "OwnerTransfer": 1,
-              "Components": [],
-              "Children": []
-            },
-            {
-              "__guid": "845a9552-3636-46d8-8330-8b4b85bc998c",
-              "__version": 1,
-              "Flags": 0,
-              "Name": "Front Right Axle",
-              "Position": "191.1108,-75.55571,-48.88889",
-              "Rotation": "0.5,0.5,-0.5,0.5",
-              "Scale": "1,1,1",
-              "Tags": "",
-              "Enabled": true,
-              "NetworkMode": 2,
-              "NetworkInterpolation": true,
-              "NetworkOrphaned": 0,
-              "NetworkTransmit": true,
-              "OwnerTransfer": 1,
-              "Components": [],
-              "Children": []
-            },
-            {
-              "__guid": "224a7eb8-4f10-4254-ae9d-0b7258f45985",
-              "__version": 1,
-              "Flags": 0,
-              "Name": "Back Left Axle",
-              "Position": "-111.1114,75.55547,-48.88889",
-              "Rotation": "0.5,0.5,-0.5,0.5",
-              "Scale": "1,1,1",
-              "Tags": "",
-              "Enabled": true,
-              "NetworkMode": 2,
-              "NetworkInterpolation": true,
-              "NetworkOrphaned": 0,
-              "NetworkTransmit": true,
-              "OwnerTransfer": 1,
-              "Components": [],
-              "Children": []
-            },
-            {
-              "__guid": "ca06171c-d3f1-4183-9307-e50be6d3bfc4",
-              "__version": 1,
-              "Flags": 0,
-              "Name": "Back Right Axle",
-              "Position": "-111.1114,-75.55579,-48.88889",
-              "Rotation": "0.5,0.5,-0.5,0.5",
-              "Scale": "1,1,1",
-              "Tags": "",
-              "Enabled": true,
-              "NetworkMode": 2,
-              "NetworkInterpolation": true,
-              "NetworkOrphaned": 0,
-              "NetworkTransmit": true,
-              "OwnerTransfer": 1,
-              "Components": [],
-              "Children": []
-            }
-          ]
-        },
-        {
-          "__guid": "5e86401e-dfbe-47d6-93be-65a9395517e3",
-          "__version": 1,
-          "__Prefab": "prefabs/editing/tools/vehicle/wheel_default.prefab",
-          "__PrefabInstancePatch": {
-            "AddedObjects": [],
-            "RemovedObjects": [],
-            "PropertyOverrides": [
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Name",
-                "Value": "Front Left Wheel"
-              },
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Position",
-                "Value": "85.99995,35.99994,-14"
-              },
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Rotation",
-                "Value": "0,0,1,0.0000001490116"
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "bb150ebc-c854-4c08-aa51-b1df61fe0f75"
-                },
-                "Property": "Body",
-                "Value": {
-                  "_type": "gameobject",
-                  "go": "42e415ae-8e01-4f93-abbb-2a5805693f84"
-                }
-              }
-            ],
-            "MovedObjects": []
+            "Property": "Position",
+            "Value": "-197.5052,349.5818,47.99903"
           },
-          "__PrefabIdToInstanceId": {
-            "ce3e6000-c043-4f80-b619-8e2bc06507b3": "5e86401e-dfbe-47d6-93be-65a9395517e3",
-            "f0009f33-4a6e-4dc3-ba18-1423baaf3c89": "ee5964e9-368f-4948-b9dc-43a4efb97fe1",
-            "d0e1b32c-9ad4-4cae-87e0-8e970b0138dc": "f03e398a-3a23-4a8e-ae1f-feb5262c2d67",
-            "5e4e05af-ca27-4f80-8fc8-d616f918c98f": "fd149a9a-c2e1-4ddf-91e8-ea106cb45ac9",
-            "339fcd38-080a-4452-9d6e-1795155bae18": "48f3a332-7423-44ca-b50f-fb0c07902d89",
-            "3db00fd6-e4c5-4ba7-be27-3a0adf3f53ed": "b02d2675-1221-49bf-89b7-6ec7720c85cb",
-            "bb150ebc-c854-4c08-aa51-b1df61fe0f75": "6ec84578-8b73-4783-b6dc-843bb1dded97",
-            "2611741f-26f6-4008-9602-59e476a19d66": "ba384f8e-5caf-495e-9507-52ff3987f076",
-            "abee01bf-2a16-4179-9e7b-108d43bf902f": "be1d8bf5-7e52-46ca-a76c-0338bcbb8869"
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "6b1cdeb5-84f0-4bd0-8fba-ec94965d0eb5"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,0.1305262,0.9914449"
           }
-        },
-        {
-          "__guid": "42bab897-bddb-4159-970b-428dadcdcc7d",
-          "__version": 1,
-          "__Prefab": "prefabs/editing/tools/vehicle/wheel_default.prefab",
-          "__PrefabInstancePatch": {
-            "AddedObjects": [],
-            "RemovedObjects": [],
-            "PropertyOverrides": [
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Name",
-                "Value": "Front Right Wheel"
-              },
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Position",
-                "Value": "86,-36.00019,-14"
-              },
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Rotation",
-                "Value": "-0.000000000000003552714,0.00000001053673,0.0000004470348,-0.9999999"
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "bb150ebc-c854-4c08-aa51-b1df61fe0f75"
-                },
-                "Property": "Body",
-                "Value": {
-                  "_type": "gameobject",
-                  "go": "845a9552-3636-46d8-8330-8b4b85bc998c"
-                }
-              }
-            ],
-            "MovedObjects": []
-          },
-          "__PrefabIdToInstanceId": {
-            "ce3e6000-c043-4f80-b619-8e2bc06507b3": "42bab897-bddb-4159-970b-428dadcdcc7d",
-            "f0009f33-4a6e-4dc3-ba18-1423baaf3c89": "cbfadff0-fd5e-4dd5-9fd8-c7b97fbe5b18",
-            "d0e1b32c-9ad4-4cae-87e0-8e970b0138dc": "3f430025-6f33-4eac-809b-1238201f0d79",
-            "5e4e05af-ca27-4f80-8fc8-d616f918c98f": "efae20dd-ba81-451e-8ba6-82e89403acec",
-            "339fcd38-080a-4452-9d6e-1795155bae18": "cefcd7c4-33e8-43e7-b9d7-33f6b03cfe12",
-            "3db00fd6-e4c5-4ba7-be27-3a0adf3f53ed": "4d7803ef-a94a-41eb-bcfe-c8f5ab2eeb7e",
-            "bb150ebc-c854-4c08-aa51-b1df61fe0f75": "bbfc5acc-1c79-4fac-bd2d-94c0531778f4",
-            "2611741f-26f6-4008-9602-59e476a19d66": "03b3b1d1-7c61-4c01-bf63-d52df75f3994",
-            "abee01bf-2a16-4179-9e7b-108d43bf902f": "f78b4a11-ec03-4d8c-bd91-a0e83aa0cd83"
-          }
-        },
-        {
-          "__guid": "4c218e35-2b25-448c-b00d-526a6d0608be",
-          "__version": 1,
-          "__Prefab": "prefabs/editing/tools/vehicle/wheel_default.prefab",
-          "__PrefabInstancePatch": {
-            "AddedObjects": [],
-            "RemovedObjects": [],
-            "PropertyOverrides": [
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Name",
-                "Value": "Back Left Wheel"
-              },
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Position",
-                "Value": "-50.00009,35.99996,-14"
-              },
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Rotation",
-                "Value": "0,0,1,0.0000001192093"
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "bb150ebc-c854-4c08-aa51-b1df61fe0f75"
-                },
-                "Property": "Body",
-                "Value": {
-                  "_type": "gameobject",
-                  "go": "224a7eb8-4f10-4254-ae9d-0b7258f45985"
-                }
-              }
-            ],
-            "MovedObjects": []
-          },
-          "__PrefabIdToInstanceId": {
-            "ce3e6000-c043-4f80-b619-8e2bc06507b3": "4c218e35-2b25-448c-b00d-526a6d0608be",
-            "f0009f33-4a6e-4dc3-ba18-1423baaf3c89": "792716fa-f923-41e7-83ec-03ecf353f3d5",
-            "d0e1b32c-9ad4-4cae-87e0-8e970b0138dc": "861bd252-7658-4710-9363-ea3a90468a7f",
-            "5e4e05af-ca27-4f80-8fc8-d616f918c98f": "ec1421d6-9686-4a00-8515-39dd409eecc7",
-            "339fcd38-080a-4452-9d6e-1795155bae18": "07576c56-1405-40cb-a11f-eb183400d21e",
-            "3db00fd6-e4c5-4ba7-be27-3a0adf3f53ed": "36b21ce6-3e6f-4374-a352-8c1982c385a1",
-            "bb150ebc-c854-4c08-aa51-b1df61fe0f75": "7bd10133-2e86-47d4-9dc4-30d199f5bda4",
-            "2611741f-26f6-4008-9602-59e476a19d66": "92114c67-3cb7-4659-9c76-7e055dd920f1",
-            "abee01bf-2a16-4179-9e7b-108d43bf902f": "e5e97b88-8d0c-4352-aad1-fb0b54a80bd9"
-          }
-        },
-        {
-          "__guid": "bd36c6d9-4fd1-48c0-853d-288d68c1dab6",
-          "__version": 1,
-          "__Prefab": "prefabs/editing/tools/vehicle/wheel_default.prefab",
-          "__PrefabInstancePatch": {
-            "AddedObjects": [],
-            "RemovedObjects": [],
-            "PropertyOverrides": [
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Name",
-                "Value": "Back Right Wheel"
-              },
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Position",
-                "Value": "-49.99979,-36.00016,-14"
-              },
-              {
-                "Target": {
-                  "Type": "GameObject",
-                  "IdValue": "ce3e6000-c043-4f80-b619-8e2bc06507b3"
-                },
-                "Property": "Rotation",
-                "Value": "-0.000000000000003552714,0.00000001053673,0.0000004768372,-0.9999999"
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "bb150ebc-c854-4c08-aa51-b1df61fe0f75"
-                },
-                "Property": "Body",
-                "Value": {
-                  "_type": "gameobject",
-                  "go": "ca06171c-d3f1-4183-9307-e50be6d3bfc4"
-                }
-              }
-            ],
-            "MovedObjects": []
-          },
-          "__PrefabIdToInstanceId": {
-            "ce3e6000-c043-4f80-b619-8e2bc06507b3": "bd36c6d9-4fd1-48c0-853d-288d68c1dab6",
-            "f0009f33-4a6e-4dc3-ba18-1423baaf3c89": "a7e4b25e-a637-4551-93a1-9920be872b72",
-            "d0e1b32c-9ad4-4cae-87e0-8e970b0138dc": "eacd6039-2b6e-40a5-a61a-c95c7df6ac0e",
-            "5e4e05af-ca27-4f80-8fc8-d616f918c98f": "b64aa91b-730a-46a9-be0d-fef090f9cc97",
-            "339fcd38-080a-4452-9d6e-1795155bae18": "065030ac-0d76-4d1f-8495-cafca6aa1619",
-            "3db00fd6-e4c5-4ba7-be27-3a0adf3f53ed": "0b24e567-994d-469d-ba47-b0639a57b0db",
-            "bb150ebc-c854-4c08-aa51-b1df61fe0f75": "b13a4f74-220f-4c28-82d5-88bd8d67a032",
-            "2611741f-26f6-4008-9602-59e476a19d66": "4a69e323-514e-4cd8-bf9d-3765b61b8032",
-            "abee01bf-2a16-4179-9e7b-108d43bf902f": "f195711c-d59f-4298-9b88-6f1815231cd3"
-          }
-        }
-      ]
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "6b1cdeb5-84f0-4bd0-8fba-ec94965d0eb5": "4449089c-3ec7-4d4e-96eb-5b9bcf88e2b5",
+        "e526cbae-f21f-45ce-8619-f8c86a198d4f": "9cde06a5-f773-4a50-874b-366e6295a3aa",
+        "2ba0edf5-74ea-4037-bb84-b839248aee84": "8a2616c9-96b2-46ae-adc5-0ba7fcc06f06",
+        "4b4a9631-4cb9-44b9-9760-aff6ea1bcd81": "0a858acd-adc9-44a9-8012-d6805d7cb800",
+        "ea3a0af0-d656-4026-b252-39074a525819": "f6d3164a-795d-4256-96d0-af1fa13022e5",
+        "57fb4402-cbef-4a01-87b6-7bceed590e8e": "42e415ae-8e01-4f93-abbb-2a5805693f84",
+        "bb78b0dd-3ded-48d9-a57d-3378391a9cae": "845a9552-3636-46d8-8330-8b4b85bc998c",
+        "de4ee1d2-65b7-4d81-901b-93e45a9f1636": "224a7eb8-4f10-4254-ae9d-0b7258f45985",
+        "01961657-a376-4b24-af6e-6869cac4d366": "ca06171c-d3f1-4183-9307-e50be6d3bfc4",
+        "906ac1a1-d7e6-46eb-96e9-72c078ea1cd5": "5e86401e-dfbe-47d6-93be-65a9395517e3",
+        "2b3637ba-8b7b-4cdf-9b8c-8d844c0ecf32": "ee5964e9-368f-4948-b9dc-43a4efb97fe1",
+        "842c20f4-6f6f-46fb-8607-49454b062357": "f03e398a-3a23-4a8e-ae1f-feb5262c2d67",
+        "84f33a7e-7efe-4843-85de-6739887dd8b5": "fd149a9a-c2e1-4ddf-91e8-ea106cb45ac9",
+        "ee526712-ff8f-49c1-855a-59d07f3b2ea6": "48f3a332-7423-44ca-b50f-fb0c07902d89",
+        "ce5b85b8-43af-4073-979a-12945d06d37b": "b02d2675-1221-49bf-89b7-6ec7720c85cb",
+        "0de66367-11bc-4afc-900e-a55742689b6b": "6ec84578-8b73-4783-b6dc-843bb1dded97",
+        "7839bb97-7447-432e-a036-dbeb95814444": "ba384f8e-5caf-495e-9507-52ff3987f076",
+        "15b428d9-a536-4d7b-9908-3fd26bafc4b0": "be1d8bf5-7e52-46ca-a76c-0338bcbb8869",
+        "bff60717-ea09-453d-ab95-da83c4d13fa1": "42bab897-bddb-4159-970b-428dadcdcc7d",
+        "cd10c7bf-ff1e-470b-8a6d-a61a6bdca521": "cbfadff0-fd5e-4dd5-9fd8-c7b97fbe5b18",
+        "c23f9472-d1c1-499b-b86a-981782eff664": "3f430025-6f33-4eac-809b-1238201f0d79",
+        "00311261-8d86-415b-9304-74e395307356": "efae20dd-ba81-451e-8ba6-82e89403acec",
+        "6a04ea23-d7ac-4a73-9c43-d4845b336869": "cefcd7c4-33e8-43e7-b9d7-33f6b03cfe12",
+        "56ae84cd-bdf2-4c9a-819d-2b2589c5e082": "4d7803ef-a94a-41eb-bcfe-c8f5ab2eeb7e",
+        "f5426f1b-4945-4daa-a67d-170e281f11ba": "bbfc5acc-1c79-4fac-bd2d-94c0531778f4",
+        "a0c30214-6b8c-459b-b984-f268346473b4": "03b3b1d1-7c61-4c01-bf63-d52df75f3994",
+        "7df3bf71-4050-439e-a2e6-ce632d3e026f": "f78b4a11-ec03-4d8c-bd91-a0e83aa0cd83",
+        "31ed87b9-6f93-4405-8173-b4438cbbe1b6": "4c218e35-2b25-448c-b00d-526a6d0608be",
+        "e451ff8b-ae7f-461c-bd70-e9011d73a092": "792716fa-f923-41e7-83ec-03ecf353f3d5",
+        "58d45bda-44a7-4023-a7cb-64e5fdab08bb": "861bd252-7658-4710-9363-ea3a90468a7f",
+        "5434491b-aab4-4eae-ac7c-e19c03fc2e3f": "ec1421d6-9686-4a00-8515-39dd409eecc7",
+        "fdef2081-fccc-4317-8b7b-6a875e275ef9": "07576c56-1405-40cb-a11f-eb183400d21e",
+        "4dafbc2f-c77a-44fc-97a8-19d269ef2cb6": "36b21ce6-3e6f-4374-a352-8c1982c385a1",
+        "eb80f189-0037-48d2-b4e2-d7e01007c0a5": "7bd10133-2e86-47d4-9dc4-30d199f5bda4",
+        "e7452c49-1e90-4306-888c-e7d6693e754d": "92114c67-3cb7-4659-9c76-7e055dd920f1",
+        "fe9f9586-a4f9-45fe-8003-c84047b5a49c": "e5e97b88-8d0c-4352-aad1-fb0b54a80bd9",
+        "71a201ea-8231-47b1-8258-7c6c055187e3": "bd36c6d9-4fd1-48c0-853d-288d68c1dab6",
+        "5bfb23f5-67c1-45c8-b4ce-f664ed85418b": "a7e4b25e-a637-4551-93a1-9920be872b72",
+        "9417d35b-edc6-45e3-918f-1a2ffd2f615d": "eacd6039-2b6e-40a5-a61a-c95c7df6ac0e",
+        "eeb86ed3-ca80-484a-a10d-640f186c45a2": "b64aa91b-730a-46a9-be0d-fef090f9cc97",
+        "e8fa4827-e198-4ffb-98b6-6f3e48a1830c": "065030ac-0d76-4d1f-8495-cafca6aa1619",
+        "1daff1ca-310e-4b04-8164-636696e14d66": "0b24e567-994d-469d-ba47-b0639a57b0db",
+        "7324a55b-de67-4579-8768-ac4971281526": "b13a4f74-220f-4c28-82d5-88bd8d67a032",
+        "47fafd6c-631b-43c5-9b19-8e344073ee9a": "4a69e323-514e-4cd8-bf9d-3765b61b8032",
+        "f346c452-60ae-4860-9f04-ade675899412": "f195711c-d59f-4298-9b88-6f1815231cd3"
+      }
     }
   ],
   "SceneProperties": {
@@ -3257,8 +2907,6 @@
   "ResourceVersion": 3,
   "Title": "Example Scene",
   "Description": "It's for showing off and testing stuff.",
-  "__references": [
-    "vidyacontent.model-ae86body#85735"
-  ],
+  "__references": [],
   "__version": 3
 }

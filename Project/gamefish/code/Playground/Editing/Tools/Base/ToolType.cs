@@ -40,15 +40,23 @@ public enum ToolType
 	/// <summary>
 	/// Physical behaviors.
 	/// </summary>
-	[Order( 25 )]
+	[Order( 30 )]
 	[Icon( "💪" )]
 	[Group( "Joints" )]
 	Constraint,
 
 	/// <summary>
-	/// Silly/weird stuff
+	/// Automobiles.
 	/// </summary>
 	[Order( 40 )]
+	[Icon( "🚘" )]
+	[Group( "Vehicles" )]
+	Vehicle,
+
+	/// <summary>
+	/// Silly/weird stuff
+	/// </summary>
+	[Order( 60 )]
 	[Icon( "👽" )]
 	[Group( "Fun" )]
 	Fun,

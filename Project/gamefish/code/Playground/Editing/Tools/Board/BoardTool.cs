@@ -1,5 +1,3 @@
-using System.Runtime.Serialization;
-
 namespace Playground;
 
 public partial class BoardTool : EditorTool

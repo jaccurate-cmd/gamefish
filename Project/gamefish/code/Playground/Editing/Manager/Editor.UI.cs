@@ -121,6 +121,24 @@ partial class Editor
 		ShowCursor = isOpen;
 	}
 
+	public static bool TryGetAimRay( Scene sc, out Ray ray )
+	{
+		var cam = sc?.Camera;
+
+		if ( !sc.IsValid() || !cam.IsValid() )
+		{
+			ray = default;
+			return false;
+		}
+
+		if ( Mouse.Active )
+			ray = cam.ScreenPixelToRay( Mouse.Position );
+		else
+			ray = new( cam.WorldPosition, cam.WorldRotation.Forward );
+
+		return true;
+	}
+
 	public static SceneTraceResult Trace( Scene sc, in Vector3 start, in Vector3 dir, in float? dist = null )
 	{
 		if ( !sc.IsValid() )
@@ -140,23 +158,13 @@ partial class Editor
 
 	public static bool TryTrace( Scene sc, out SceneTraceResult tr, in float? dist = null )
 	{
-		var cam = sc?.Camera;
-
-		if ( !TryGetInstance( out var e ) || !sc.IsValid() || !cam.IsValid() )
+		if ( !TryGetAimRay( sc, out var ray ) )
 		{
 			tr = default;
 			return false;
 		}
 
-		if ( Mouse.Active )
-		{
-			var ray = cam.ScreenPixelToRay( Mouse.Position );
-			tr = Trace( sc, ray.Position, ray.Forward, dist );
-		}
-		else
-		{
-			tr = Trace( sc, cam.WorldPosition, cam.WorldRotation.Forward, dist );
-		}
+		tr = Trace( sc, ray.Position, ray.Forward, dist: dist );
 
 		return true;
 	}
