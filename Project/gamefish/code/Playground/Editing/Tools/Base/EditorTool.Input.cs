@@ -63,4 +63,58 @@ partial class EditorTool
 			? Input.Keyboard.Released( code )
 			: Input.Released( code );
 	}
+
+	public virtual void OnCursorToggled( in bool isOpen )
+	{
+	}
+
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual bool TryLeftClick()
+	{
+		// this.Log( "Left clicked." );
+
+		return false;
+	}
+
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual bool TryRightClick()
+	{
+		// this.Log( "Right clicked." );
+
+		return false;
+	}
+
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual bool TryMiddleClick()
+	{
+		// this.Log( "Middle clicked." );
+
+		return false;
+	}
+
+	public virtual void OnMouseUp( in MouseButtons mb )
+	{
+		// this.Log( $"Mouse up:[{mb}]" );
+	}
+
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual bool TryMouseWheel( in Vector2 dir )
+	{
+		// this.Log( $"Mouse wheel:[{dir}]" );
+
+		return false;
+	}
+
+	/// <returns> If the default editor behavior should be prevented. </returns>
+	public virtual bool TryMouseDrag( in Vector2 delta )
+	{
+		// this.Log( "Mouse dragged." );
+
+		return false;
+	}
+
+	public virtual void OnMouseDragEnd()
+	{
+		// this.Log( "Mouse drag ended." );
+	}
 }

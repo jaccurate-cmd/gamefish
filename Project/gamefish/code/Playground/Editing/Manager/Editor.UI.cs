@@ -32,6 +32,9 @@ partial class Editor
 		get => _isOpen;
 		set
 		{
+			if ( _isOpen == value )
+				return;
+
 			_isOpen = value;
 			OnSetOpen( _isOpen );
 		}
@@ -47,6 +50,9 @@ partial class Editor
 		get => _showCursor;
 		set
 		{
+			if ( _showCursor == value )
+				return;
+
 			_showCursor = value;
 			OnSetShowCursor( _showCursor );
 		}
@@ -73,9 +79,6 @@ partial class Editor
 		{
 			ShowCursor = IsCursorDown;
 		}
-
-		// if ( IsMenuDown || IsCursorDown )
-		// Mouse.Visibility = MouseVisibility.Visible;
 	}
 
 	protected virtual void OnSetShowCursor( in bool isVisible )
@@ -83,6 +86,9 @@ partial class Editor
 		Mouse.Visibility = isVisible
 			? MouseVisibility.Visible
 			: MouseVisibility.Auto;
+
+		if ( Tool.IsValid() )
+			Tool.OnCursorToggled( in isVisible );
 	}
 
 	protected virtual void UpdateMenu()

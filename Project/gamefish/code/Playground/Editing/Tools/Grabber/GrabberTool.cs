@@ -51,6 +51,14 @@ public partial class GrabberTool : EditorTool
 		UpdateGrab( in deltaTime );
 	}
 
+	public override void OnCursorToggled( in bool isOpen )
+	{
+		base.OnCursorToggled( isOpen );
+
+		// Prevent bugging out from snapping between cursor/view angles.
+		TryDropHeld();
+	}
+
 	public override bool TryLeftClick()
 	{
 		TryGrabTarget();
