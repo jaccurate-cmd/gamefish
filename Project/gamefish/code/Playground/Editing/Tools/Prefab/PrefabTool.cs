@@ -86,6 +86,22 @@ public partial class PrefabTool : EditorTool
 			return;
 	}
 
+	public virtual Rotation GetPrefabRotation()
+	{
+		Rotation rLook;
+
+		if ( Client.Local?.Pawn?.IsValid() is true )
+			rLook = Client.Local.Pawn.EyeRotation;
+		else if ( Scene?.Camera?.IsValid() is true )
+			rLook = Scene.Camera.WorldRotation;
+		else
+			rLook = Rotation.Identity;
+
+		var dir = rLook.Forward.Flatten( isNormal: true );
+
+		return Rotation.LookAt( dir, Vector3.Up );
+	}
+
 	public override bool TryTrace( out SceneTraceResult tr )
 	{
 		if ( !PrefabLocalBounds.HasValue )
@@ -94,14 +110,11 @@ public partial class PrefabTool : EditorTool
 		if ( !Editor.TryGetAimRay( Scene, out var ray ) )
 			return base.TryTrace( out tr );
 
-		var dir = ray.Forward.Flatten( isNormal: true );
-		var rDir = Rotation.LookAt( dir );
-
 		var bounds = PrefabLocalBounds.Value;
 
 		tr = Scene.Trace.Box( bounds.Extents, ray, Editor.TRACE_DISTANCE_DEFAULT )
 			.IgnoreGameObjectHierarchy( Client.Local?.Pawn?.GameObject )
-			.Rotated( rDir )
+			.Rotated( GetPrefabRotation() )
 			.Run();
 
 		return true;
@@ -135,10 +148,9 @@ public partial class PrefabTool : EditorTool
 		}
 
 		var bounds = PrefabLocalBounds.Value;
-		var rPrefab = Rotation.LookAt( tr.Direction.Flatten( isNormal: true ) );
 
 		TargetPoint = point;
-		PrefabTransform = new( point, rPrefab );
+		PrefabTransform = new( point, GetPrefabRotation() );
 
 		var tBox = PrefabTransform;
 		tBox.Scale *= 0.5f;
