@@ -51,10 +51,18 @@ public enum ToolType
 	[Order( 40 )]
 	[Icon( "🚘" )]
 	[Group( "Vehicles" )]
-	Vehicle,
+	Vehicles,
 
 	/// <summary>
-	/// Silly/weird stuff
+	/// Non-player characters.
+	/// </summary>
+	[Order( 40 )]
+	[Icon( "🤖" )]
+	[Group( "NPCs" )]
+	Actors,
+
+	/// <summary>
+	/// Silly/weird stuff.
 	/// </summary>
 	[Order( 60 )]
 	[Icon( "👽" )]

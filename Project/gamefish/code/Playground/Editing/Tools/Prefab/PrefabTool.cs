@@ -37,7 +37,7 @@ public partial class PrefabTool : EditorTool
 	protected PrefabFile _prefab;
 
 
-	public Vector3? TargetPoint { get; protected set; }
+	public bool HasTargetPosition { get; set; }
 
 	public BBox? PrefabLocalBounds { get; protected set; }
 	public Transform PrefabTransform { get; protected set; }
@@ -47,7 +47,7 @@ public partial class PrefabTool : EditorTool
 	{
 		base.OnExit();
 
-		TargetPoint = null;
+		HasTargetPosition = false;
 	}
 
 	public override void FrameSimulate( in float deltaTime )
@@ -62,7 +62,7 @@ public partial class PrefabTool : EditorTool
 
 	public override bool TryLeftClick()
 	{
-		if ( TargetPoint.HasValue )
+		if ( HasTargetPosition )
 			TryPlacePrefab( PrefabTransform, out _ );
 
 		return true;
@@ -122,7 +122,7 @@ public partial class PrefabTool : EditorTool
 
 	protected virtual void UpdatePlace( in float deltaTime )
 	{
-		TargetPoint = null;
+		HasTargetPosition = false;
 
 		if ( !Prefab.IsValid() || !PrefabLocalBounds.HasValue )
 			return;
@@ -149,7 +149,7 @@ public partial class PrefabTool : EditorTool
 
 		var bounds = PrefabLocalBounds.Value;
 
-		TargetPoint = point;
+		HasTargetPosition = true;
 		PrefabTransform = new( point, GetPrefabRotation() );
 
 		var tBox = PrefabTransform;

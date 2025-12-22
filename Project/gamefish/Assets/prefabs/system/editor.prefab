@@ -64,6 +64,53 @@
         "Components": [],
         "Children": [
           {
+            "__guid": "14e3912a-8722-4671-9166-a44178557a8b",
+            "__version": 1,
+            "Flags": 0,
+            "Name": "Inspector",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkInterpolation": true,
+            "NetworkOrphaned": 1,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Playground.InspectorTool",
+                "__guid": "ddacf578-be9a-4bf1-9b61-e8e2c387142d",
+                "__enabled": true,
+                "ClassId": null,
+                "ClassName": null,
+                "Filter": null,
+                "FunctionHints": [],
+                "IsAdminOnly": false,
+                "IsClass": false,
+                "IsNetworkingForced": true,
+                "NetworkAutomatically": true,
+                "NetworkId": "ddacf578-be9a-4bf1-9b61-e8e2c387142d",
+                "NetworkingMode": "Object",
+                "NetworkOrphanedMode": "Host",
+                "NetworkOwner": null,
+                "NetworkTransferMode": "Fixed",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "ToolDescription": "Manage entity properties and functionality. (WIP!)",
+                "ToolEmoji": "\uD83D\uDD0D",
+                "ToolName": "Inspector",
+                "ToolType": "Utility"
+              }
+            ],
+            "Children": []
+          },
+          {
             "__guid": "a0a01d85-f30a-4ed4-9d5d-ddbfeb6e16e8",
             "__version": 1,
             "Flags": 0,
@@ -588,7 +635,7 @@
             "__guid": "18bab7a0-1746-47f3-af0c-4771089ea9a2",
             "__version": 1,
             "Flags": 0,
-            "Name": "Vehicle",
+            "Name": "Physical",
             "Position": "0,0,0",
             "Rotation": "0,0,0,1",
             "Scale": "1,1,1",
@@ -637,10 +684,10 @@
                 "OnComponentUpdate": null,
                 "Prefab": "prefabs/editing/tools/prefab/vehicles/ae86.prefab",
                 "ScrollSensitivity": 20,
-                "ToolDescription": "Spawns a car.",
+                "ToolDescription": "Spawns a car with physics wheels.",
                 "ToolEmoji": "\uD83D\uDE98",
-                "ToolName": "Vehicle",
-                "ToolType": "Vehicle"
+                "ToolName": "Car",
+                "ToolType": "Vehicles"
               }
             ],
             "Children": []

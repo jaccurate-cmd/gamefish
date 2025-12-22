@@ -21,10 +21,6 @@ public partial class BoxTool : EditorTool
 
 
 	[Property]
-	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
-	public bool UseHeight { get; set; } = true;
-
-	[Property]
 	[Range( 0f, 2048f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public float Height { get; set; } = 32f;
@@ -43,6 +39,10 @@ public partial class BoxTool : EditorTool
 	[Range( 0f, 4096f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public FloatRange DistanceRange { get; set; } = new( 16f, 1024f );
+
+	[Property]
+	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
+	public bool UseHeight { get; set; } = true;
 
 
 
