@@ -38,12 +38,12 @@ public enum ToolType
 	Physics,
 
 	/// <summary>
-	/// Physical behaviors.
+	/// Contraption parts.
 	/// </summary>
 	[Order( 30 )]
-	[Icon( "💪" )]
-	[Group( "Joints" )]
-	Constraint,
+	[Icon( "⚙" )]
+	[Group( "Mechanical" )]
+	Mechanical,
 
 	/// <summary>
 	/// Automobiles.
@@ -51,7 +51,7 @@ public enum ToolType
 	[Order( 40 )]
 	[Icon( "🚘" )]
 	[Group( "Vehicles" )]
-	Vehicles,
+	Vehicle,
 
 	/// <summary>
 	/// Non-player characters.
@@ -59,7 +59,7 @@ public enum ToolType
 	[Order( 40 )]
 	[Icon( "🤖" )]
 	[Group( "NPCs" )]
-	Actors,
+	Actor,
 
 	/// <summary>
 	/// Silly/weird stuff.

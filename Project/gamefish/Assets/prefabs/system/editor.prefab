@@ -19,6 +19,7 @@
         "__type": "Playground.Editor",
         "__guid": "993ed032-9e55-45b5-93ac-9a9578e282f3",
         "__enabled": true,
+        "Flags": 0,
         "ClassId": "editor",
         "ClassName": null,
         "IsClass": false,
@@ -83,6 +84,7 @@
                 "__type": "Playground.InspectorTool",
                 "__guid": "ddacf578-be9a-4bf1-9b61-e8e2c387142d",
                 "__enabled": true,
+                "Flags": 0,
                 "ClassId": null,
                 "ClassName": null,
                 "Filter": null,
@@ -130,6 +132,7 @@
                 "__type": "Playground.RemoverTool",
                 "__guid": "26fd1bbb-4a76-4f1f-a66b-9fa2c1be48da",
                 "__enabled": true,
+                "Flags": 0,
                 "ClassId": null,
                 "ClassName": null,
                 "Filter": null,
@@ -184,6 +187,7 @@
                 "__type": "Playground.DuplicatorTool",
                 "__guid": "045e85d6-4de1-4f16-b97a-a8cc56a2df7d",
                 "__enabled": true,
+                "Flags": 0,
                 "ClassId": null,
                 "ClassName": null,
                 "Filter": null,
@@ -250,6 +254,7 @@
                 "__type": "Playground.GrabberTool",
                 "__guid": "f3f9b2a6-8975-42e1-9633-c6313e931117",
                 "__enabled": true,
+                "Flags": 0,
                 "ClassId": null,
                 "ClassName": null,
                 "Filter": null,
@@ -312,6 +317,7 @@
                 "__type": "Playground.LeafblowerTool",
                 "__guid": "b2b066f7-5763-4eb4-8e50-205edf592d95",
                 "__enabled": true,
+                "Flags": 0,
                 "ClassId": null,
                 "ClassName": null,
                 "Filter": null,
@@ -352,7 +358,26 @@
               }
             ],
             "Children": []
-          },
+          }
+        ]
+      },
+      {
+        "__guid": "3e7ab18c-612d-41ba-bc24-40b9c0c47329",
+        "__version": 1,
+        "Flags": 0,
+        "Name": "Mechanical",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [],
+        "Children": [
           {
             "__guid": "1f2bbaf9-3bd4-490c-a95b-d17145d19183",
             "__version": 1,
@@ -373,6 +398,7 @@
                 "__type": "Playground.ThrusterTool",
                 "__guid": "bae22bbc-9080-483c-8585-817565aba846",
                 "__enabled": true,
+                "Flags": 0,
                 "AttachingSound": null,
                 "ClassId": null,
                 "ClassName": null,
@@ -415,7 +441,7 @@
                 "ToolDescription": "Adds rocket boosters.",
                 "ToolEmoji": "\uD83D\uDE80",
                 "ToolName": "Thruster",
-                "ToolType": "Physics"
+                "ToolType": "Mechanical"
               }
             ],
             "Children": []
@@ -440,6 +466,7 @@
                 "__type": "Playground.SpinnerTool",
                 "__guid": "a3981a1b-33f9-4fad-a32c-af50f565c8f8",
                 "__enabled": true,
+                "Flags": 0,
                 "AttachingSound": null,
                 "ClassId": null,
                 "ClassName": null,
@@ -482,7 +509,77 @@
                 "ToolDescription": "Adds turny thingies.",
                 "ToolEmoji": "♻",
                 "ToolName": "Spinner",
-                "ToolType": "Physics"
+                "ToolType": "Mechanical"
+              }
+            ],
+            "Children": []
+          },
+          {
+            "__guid": "e24b3f97-16e0-4118-9b27-89def68cf8f0",
+            "__version": 1,
+            "Flags": 0,
+            "Name": "Arm",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkInterpolation": true,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Playground.ArmTool",
+                "__guid": "99855a87-1db7-4ae9-b26f-5d3c8bd92e25",
+                "__enabled": true,
+                "Flags": 0,
+                "ArmPrefab": "prefabs/editing/tools/physics/arm.prefab",
+                "ArmSettings": {
+                  "Speed": 120,
+                  "KeyPitchUp": "KP_9",
+                  "KeyPitchDown": "KP_3",
+                  "KeyYawUp": null,
+                  "KeyYawDown": null
+                },
+                "AttachingSound": null,
+                "ClassId": null,
+                "ClassName": null,
+                "Filter": null,
+                "FunctionHints": [
+                  {
+                    "Name": "Attach",
+                    "Description": null,
+                    "Action": "Attack1",
+                    "Mode": "Pressed"
+                  },
+                  {
+                    "Name": "Clear",
+                    "Description": null,
+                    "Action": "Reload",
+                    "Mode": "Pressed"
+                  }
+                ],
+                "IsAdminOnly": false,
+                "IsClass": false,
+                "IsNetworkingForced": true,
+                "NetworkAutomatically": true,
+                "NetworkId": "99855a87-1db7-4ae9-b26f-5d3c8bd92e25",
+                "NetworkingMode": "Object",
+                "NetworkOrphanedMode": "Host",
+                "NetworkOwner": null,
+                "NetworkTransferMode": "Fixed",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "ToolDescription": "A fixed hinge with angle control.",
+                "ToolEmoji": "\uD83D\uDCAA",
+                "ToolName": "Arm",
+                "ToolType": "Mechanical"
               }
             ],
             "Children": []
@@ -526,6 +623,7 @@
                 "__type": "Playground.BoxTool",
                 "__guid": "a79dcd39-4fd8-4d80-b8cf-9d69214cccdc",
                 "__enabled": true,
+                "Flags": 0,
                 "BoxPrefab": "prefabs/editing/tools/box/box_50.prefab",
                 "BoxSize": 50,
                 "ClassId": null,
@@ -609,6 +707,7 @@
                 "__type": "Playground.BoardTool",
                 "__guid": "a6ba7d7b-8951-45cd-97d9-30364ccf1a37",
                 "__enabled": true,
+                "Flags": 0,
                 "BoardHeight": 5,
                 "BoardPrefab": "prefabs/editing/tools/board/board_50.prefab",
                 "BoardWidth": 16,
@@ -682,7 +781,7 @@
             "__guid": "18bab7a0-1746-47f3-af0c-4771089ea9a2",
             "__version": 1,
             "Flags": 0,
-            "Name": "Physical",
+            "Name": "Physics Car",
             "Position": "0,0,0",
             "Rotation": "0,0,0,1",
             "Scale": "1,1,1",
@@ -698,6 +797,7 @@
                 "__type": "Playground.PrefabTool",
                 "__guid": "772d151b-8359-414e-a211-c451fb8d000d",
                 "__enabled": true,
+                "Flags": 0,
                 "ClassId": null,
                 "ClassName": null,
                 "Distance": 512,
@@ -733,8 +833,8 @@
                 "ScrollSensitivity": 20,
                 "ToolDescription": "Spawns a car with physics wheels.",
                 "ToolEmoji": "\uD83D\uDE98",
-                "ToolName": "Car",
-                "ToolType": "Vehicles"
+                "ToolName": "Physics Car",
+                "ToolType": "Vehicle"
               }
             ],
             "Children": []
