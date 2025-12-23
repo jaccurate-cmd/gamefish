@@ -45,9 +45,15 @@ public abstract class JointTool : EditorTool
 		}
 
 		PointTarget = new( tr );
+
+		if ( PressedPrimary )
+			TryAddPointAtTarget();
 	}
 
 	public override bool TryLeftClick()
+		=> TryAddPointAtTarget();
+
+	public virtual bool TryAddPointAtTarget()
 		=> TryAddPoint( PointTarget );
 
 	protected virtual bool TryAddPoint( in ToolAttachPoint point )
