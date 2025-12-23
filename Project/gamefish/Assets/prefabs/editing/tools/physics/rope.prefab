@@ -79,7 +79,7 @@
             "BreakForce": 0,
             "BreakTorque": 0,
             "Damping": 0.7,
-            "EnableCollision": false,
+            "EnableCollision": true,
             "ForceMode": "Pull",
             "Frequency": 5,
             "LocalFrame1": {
