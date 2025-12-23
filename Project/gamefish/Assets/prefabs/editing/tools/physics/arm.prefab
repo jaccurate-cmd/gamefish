@@ -43,9 +43,9 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "Settings": {
-          "Speed": 90,
-          "KeyPitchUp": null,
-          "KeyPitchDown": null,
+          "Speed": 0,
+          "KeyPitchUp": "",
+          "KeyPitchDown": "",
           "KeyYawUp": null,
           "KeyYawDown": null
         },
@@ -79,7 +79,7 @@
             "Body": null,
             "BreakForce": 0,
             "BreakTorque": 0,
-            "DampingRatio": 15,
+            "DampingRatio": 10,
             "EnableCollision": false,
             "Frequency": 10,
             "Friction": 0.5,

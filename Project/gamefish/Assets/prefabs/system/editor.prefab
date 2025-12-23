@@ -537,7 +537,7 @@
                 "Flags": 0,
                 "ArmPrefab": "prefabs/editing/tools/physics/arm.prefab",
                 "ArmSettings": {
-                  "Speed": 120,
+                  "Speed": 100,
                   "KeyPitchUp": "KP_9",
                   "KeyPitchDown": "KP_3",
                   "KeyYawUp": null,

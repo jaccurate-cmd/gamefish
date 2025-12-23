@@ -1,25 +1,11 @@
-using System;
-using System.Numerics;
-using System.Text.Json.Serialization;
-using Sandbox.Physics;
-
 namespace Playground;
 
-[Icon( "rocket_launch" )]
-public partial class Arm : Entity
+[Icon( "precision_manufacturing" )]
+public partial class Arm : JointEntity
 {
-	protected const int EDITOR_ORDER = DEFAULT_ORDER - 1000;
-	protected const int PHYSICS_ORDER = EDITOR_ORDER + 10;
-
 	[Property]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
 	public Sandbox.BallJoint Ball { get; set; }
-
-	[Sync]
-	public ToolAttachPoint ParentPoint { get; set; }
-
-	[Sync]
-	public ToolAttachPoint TargetPoint { get; set; }
 
 	/// <summary>
 	/// The key you press to activate the spiner you're placing.
@@ -58,22 +44,12 @@ public partial class Arm : Entity
 	{
 		base.OnUpdate();
 
-		DrawPhysicsGizmo();
+		DrawJointGizmo();
 
 		if ( IsProxy )
 			return;
 
 		UpdateSteering( Time.Delta );
-	}
-
-	protected override void OnFixedUpdate()
-	{
-		base.OnFixedUpdate();
-
-		if ( SteerAngles.IsNearlyZero() )
-			return;
-
-		Apply( Time.Delta );
 	}
 
 	protected override void OnDestroy()
@@ -91,7 +67,7 @@ public partial class Arm : Entity
 			GameObject.Destroy();
 	}
 
-	protected virtual void UpdateSteering( in float deltaTime )
+	protected void UpdateSteering( in float deltaTime )
 	{
 		var steer = Angles.Zero;
 
@@ -111,7 +87,7 @@ public partial class Arm : Entity
 		SteerAngles = steer;
 	}
 
-	protected virtual void DrawPhysicsGizmo()
+	protected override void DrawJointGizmo()
 	{
 		var c = Color.Green.WithAlpha( 0.3f );
 
@@ -126,9 +102,12 @@ public partial class Arm : Entity
 		);
 	}
 
-	public virtual void Apply( in float deltaTime )
+	public override void UpdateJoint( in float deltaTime )
 	{
 		if ( !Ball.IsValid() )
+			return;
+
+		if ( SteerAngles.IsNearlyZero() )
 			return;
 
 		if ( !ParentPoint.Object.IsValid() )
@@ -155,7 +134,7 @@ public partial class Arm : Entity
 		Ball.TargetRotation = TargetAngles;
 	}
 
-	public virtual bool TryAttachTo( in ToolAttachPoint a, in ToolAttachPoint b )
+	public override bool TryAttachTo( in ToolAttachPoint a, in ToolAttachPoint b )
 	{
 		// Must have a Ball(the entire point).
 		if ( !Ball.IsValid() )
