@@ -84,15 +84,27 @@ public partial class ArmJoint : JointEntity
 
 	protected override void DrawJointGizmo()
 	{
+		var objParent = ParentPoint.Object;
+		var objTarget = TargetPoint.Object;
+
+		if ( !objParent.IsValid() || !objTarget.IsValid() )
+			return;
+
+		if ( ParentPoint.Offset is not Offset parentOffset )
+			return;
+
+		if ( TargetPoint.Offset is not Offset targetOffset )
+			return;
+
 		var c = Color.Green.WithAlpha( 0.3f );
 
-		var tObj = WorldTransform.WithScale( 1f );
-		var dir = tObj.Forward;
+		var tParentPoint = objParent.WorldTransform.WithOffset( parentOffset );
+		var tTargetPoint = objTarget.WorldTransform.WithOffset( targetOffset );
 
 		this.DrawArrow(
-			from: tObj.Position,
-			to: tObj.Position + (dir * 6f),
-			c: c, len: 0.1f, w: 5f, th: 4f,
+			from: tParentPoint.Position,
+			to: tTargetPoint.Position,
+			c: c, len: 7f, w: 2f, th: 4f,
 			tWorld: global::Transform.Zero
 		);
 	}

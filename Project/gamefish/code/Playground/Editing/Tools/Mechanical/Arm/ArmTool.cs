@@ -9,6 +9,29 @@ public partial class ArmTool : JointTool
 	public override bool TryAttach( in ToolAttachPoint point1, in ToolAttachPoint point2 )
 		=> TryAttach<ArmJoint>( in point1, in point2 );
 
+	protected override void DrawJointGizmos()
+	{
+		base.DrawJointGizmos();
+
+		var a = Point1;
+		var b = PointTarget;
+
+		if ( !a.IsValid || !b.IsValid )
+			return;
+
+		var tParentPoint = a.Object.WorldTransform.WithOffset( a.Offset.Value );
+		var tTargetPoint = b.Object.WorldTransform.WithOffset( b.Offset.Value );
+
+		var c = Color.Green.WithAlpha( 0.3f );
+
+		this.DrawArrow(
+			from: tParentPoint.Position,
+			to: tTargetPoint.Position,
+			c: c, len: 7f, w: 2f, th: 4f,
+			tWorld: global::Transform.Zero
+		);
+	}
+
 	protected override void DrawPointGizmo( in ToolAttachPoint point )
 	{
 		if ( !point.Object.IsValid() || !point.Offset.HasValue )
@@ -27,7 +50,7 @@ public partial class ArmTool : JointTool
 		this.DrawArrow(
 			from: tArrow.Position,
 			to: tArrow.Position + (dir * 6f),
-			c: c, len: 0.1f, w: 5f, th: 4f,
+			c: c, len: 5f, w: 5f, th: 4f,
 			tWorld: global::Transform.Zero
 		);
 	}
