@@ -1,13 +1,13 @@
 namespace Playground;
 
-public partial class SpringTool : JointTool
+public partial class GlueTool : JointTool
 {
 	[Property, InlineEditor]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
-	public virtual SpringSettings SpringSettings { get; set; }
+	public virtual GlueSettings JointSettings { get; set; }
 
 	public override bool TryAttach( in ToolAttachPoint point1, in ToolAttachPoint point2 )
-		=> TryAttach<SpringJoint>( in point1, in point2 );
+		=> TryAttach<GlueJoint>( in point1, in point2 );
 
 	protected override void DrawJointGizmos()
 	{
@@ -22,7 +22,7 @@ public partial class SpringTool : JointTool
 		var tParentPoint = a.Object.WorldTransform.WithOffset( a.Offset.Value );
 		var tTargetPoint = b.Object.WorldTransform.WithOffset( b.Offset.Value );
 
-		var c = Color.Yellow.Desaturate( 0.3f ).WithAlpha( 0.3f );
+		var c = Color.Magenta.Desaturate( 0.4f ).WithAlpha( 0.3f );
 
 		this.DrawArrow(
 			from: tParentPoint.Position,
@@ -40,7 +40,7 @@ public partial class SpringTool : JointTool
 		if ( !ValidAttachment( point ) )
 			return;
 
-		var c = Color.Yellow.Desaturate( 0.3f ).WithAlpha( 0.3f );
+		var c = Color.Magenta.Desaturate( 0.4f ).WithAlpha( 0.3f );
 
 		var tObj = point.Object.WorldTransform;
 		var tArrow = tObj.ToWorld( point.Offset.Value );
@@ -57,14 +57,14 @@ public partial class SpringTool : JointTool
 
 	public override void ApplySettings<TJoint>( TJoint joint )
 	{
-		if ( joint is not SpringJoint j )
+		if ( joint is not GlueJoint j )
 			return;
 
-		j.Settings = SpringSettings;
+		j.Settings = JointSettings;
 	}
 
 	public override bool TryClear( GameObject obj )
-		=> TryClear<SpringJoint>( obj );
+		=> TryClear<GlueJoint>( obj );
 
 	[Rpc.Host]
 	protected override void RpcRemoveJoints( GameObject obj )
@@ -74,7 +74,7 @@ public partial class SpringTool : JointTool
 
 		const FindMode findMode = FindMode.EverythingInSelf | FindMode.InDescendants;
 
-		var joints = obj.Components.GetAll<SpringJoint>( findMode );
+		var joints = obj.Components.GetAll<GlueJoint>( findMode );
 
 		if ( !joints.Any() )
 			return;

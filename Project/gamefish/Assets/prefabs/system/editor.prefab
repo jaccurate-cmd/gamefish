@@ -449,6 +449,73 @@
             "Children": []
           },
           {
+            "__guid": "746942df-3a71-4c71-bc68-f6dab9082e15",
+            "__version": 1,
+            "Flags": 0,
+            "Name": "Glue",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkInterpolation": true,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Playground.GlueTool",
+                "__guid": "5b74a1b1-165a-4b5f-9507-1b97401a2af3",
+                "__enabled": true,
+                "Flags": 0,
+                "AttachingSound": null,
+                "ClassId": null,
+                "ClassName": null,
+                "Filter": null,
+                "FunctionHints": [
+                  {
+                    "Name": "Glue",
+                    "Description": null,
+                    "Action": "Attack1",
+                    "Mode": "Pressed"
+                  },
+                  {
+                    "Name": "Clear",
+                    "Description": null,
+                    "Action": "Reload",
+                    "Mode": "Pressed"
+                  }
+                ],
+                "IsAdminOnly": false,
+                "IsClass": false,
+                "IsNetworkingForced": true,
+                "JointPrefab": "prefabs/editing/tools/physics/glue.prefab",
+                "JointSettings": {
+                  "Strength": 15,
+                  "Damping": 2
+                },
+                "NetworkAutomatically": true,
+                "NetworkId": "5b74a1b1-165a-4b5f-9507-1b97401a2af3",
+                "NetworkingMode": "Object",
+                "NetworkOrphanedMode": "Host",
+                "NetworkOwner": null,
+                "NetworkTransferMode": "Fixed",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "ToolDescription": "Sticks stuff together.",
+                "ToolEmoji": "\uD83E\uDDF2",
+                "ToolName": "Glue",
+                "ToolType": "Mechanical"
+              }
+            ],
+            "Children": []
+          },
+          {
             "__guid": "e3aaf472-e677-4f02-bb68-a194c5f4f045",
             "__version": 1,
             "Flags": 0,

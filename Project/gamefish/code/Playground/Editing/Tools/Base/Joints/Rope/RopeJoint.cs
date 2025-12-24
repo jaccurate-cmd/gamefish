@@ -9,9 +9,6 @@ public partial class RopeJoint : JointEntity
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
 	public Sandbox.SpringJoint Joint { get; set; }
 
-	/// <summary>
-	/// The key you press to activate the spiner you're placing.
-	/// </summary>
 	[Sync]
 	[Property, InlineEditor]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]

@@ -21,9 +21,6 @@ public partial class Spinner : Entity
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
 	public Offset Offset { get; set; }
 
-	/// <summary>
-	/// The key you press to activate the spiner you're placing.
-	/// </summary>
 	[Sync]
 	[Property, InlineEditor]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]

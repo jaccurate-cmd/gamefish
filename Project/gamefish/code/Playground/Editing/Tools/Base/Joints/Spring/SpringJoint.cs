@@ -9,9 +9,6 @@ public partial class SpringJoint : JointEntity
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
 	public Sandbox.SpringJoint Joint { get; set; }
 
-	/// <summary>
-	/// The key you press to activate the spiner you're placing.
-	/// </summary>
 	[Sync]
 	[Property, InlineEditor]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
@@ -82,7 +79,7 @@ public partial class SpringJoint : JointEntity
 		if ( TargetPoint.Offset is not Offset targetOffset )
 			return;
 
-		var c = Color.Magenta.Desaturate( 0.4f ).WithAlpha( 0.3f );
+		var c = Color.Yellow.Desaturate( 0.4f ).WithAlpha( 0.3f );
 
 		var tParentPoint = objParent.WorldTransform.WithOffset( parentOffset );
 		var tTargetPoint = objTarget.WorldTransform.WithOffset( targetOffset );

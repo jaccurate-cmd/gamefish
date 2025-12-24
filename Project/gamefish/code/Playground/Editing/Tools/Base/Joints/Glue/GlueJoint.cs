@@ -1,46 +1,16 @@
-using System.Drawing;
-
 namespace Playground;
 
 [Icon( "import_export" )]
-public partial class SliderJoint : JointEntity
+public partial class GlueJoint : JointEntity
 {
 	[Property]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
-	public Sandbox.SliderJoint Slider { get; set; }
+	public Sandbox.FixedJoint Joint { get; set; }
 
 	[Sync]
 	[Property, InlineEditor]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
-	public SliderSettings Settings { get; set; }
-
-	/// <summary>
-	/// Should the length be restricted? Otherwise it will move freely along.
-	/// </summary>
-	[Sync]
-	[Property]
-	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
-	public bool IsLengthEnabled { get; set; }
-
-	[Sync]
-	[Property, ReadOnly]
-	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
-	public float Direction
-	{
-		get => _direction.Clamp( -1f, 1f );
-		set => _direction = value.Clamp( -1f, 1f );
-	}
-
-	protected float _direction;
-
-	[Sync]
-	public float TargetLength { get; set; }
-
-	[Sync]
-	public float MinLength { get; set; }
-
-	[Sync]
-	public float MaxLength { get; set; }
+	public GlueSettings Settings { get; set; }
 
 	protected override void OnStart()
 	{
@@ -49,16 +19,6 @@ public partial class SliderJoint : JointEntity
 		// Snap to the offset without lag if we're the owner.
 		if ( GameObject.Parent.IsValid() && !GameObject.Parent.IsProxy )
 			TryAttachTo( a: ParentPoint, b: TargetPoint );
-	}
-
-	protected override void OnUpdate()
-	{
-		base.OnUpdate();
-
-		if ( IsProxy )
-			return;
-
-		UpdateInput( Time.Delta );
 	}
 
 	protected override void OnDestroy()
@@ -76,40 +36,8 @@ public partial class SliderJoint : JointEntity
 			GameObject.Destroy();
 	}
 
-	protected void UpdateInput( in float deltaTime )
-	{
-		// Toggle Length
-		var bToggle = !Settings.KeyToggle.IsBlank()
-			&& Input.Keyboard.Down( Settings.KeyToggle );
-
-		if ( bToggle )
-			IsLengthEnabled = !IsLengthEnabled;
-
-		// Length Controls
-		if ( !IsLengthEnabled )
-			return;
-
-		var dir = 0f;
-
-		var bShorten = !Settings.KeyShorten.IsBlank()
-			&& Input.Keyboard.Down( Settings.KeyShorten );
-
-		var bLengthen = !Settings.KeyLengthen.IsBlank()
-			&& Input.Keyboard.Down( Settings.KeyLengthen );
-
-		if ( bShorten )
-			dir += 1;
-
-		if ( bLengthen )
-			dir -= 1;
-
-		Direction = dir;
-	}
-
 	protected override void DrawJointGizmo()
 	{
-		var c = Color.Red.Desaturate( 0.3f ).WithAlpha( 0.3f );
-
 		var objParent = ParentPoint.Object;
 		var objTarget = TargetPoint.Object;
 
@@ -121,6 +49,8 @@ public partial class SliderJoint : JointEntity
 
 		if ( TargetPoint.Offset is not Offset targetOffset )
 			return;
+
+		var c = Color.Magenta.Desaturate( 0.4f ).WithAlpha( 0.3f );
 
 		var tParentPoint = objParent.WorldTransform.WithOffset( parentOffset );
 		var tTargetPoint = objTarget.WorldTransform.WithOffset( targetOffset );
@@ -135,36 +65,26 @@ public partial class SliderJoint : JointEntity
 
 	public override void ApplySettings()
 	{
+		if ( !Joint.IsValid() )
+			return;
+
+		var damping = Settings.Damping.Clamp( 0f, 100f );
+		var strength = Settings.Strength.Clamp( 0f, 20f );
+
+		Joint.LinearDamping = damping;
+		Joint.LinearFrequency = strength;
+
+		Joint.AngularDamping = damping;
+		Joint.AngularFrequency = strength;
 	}
 
 	public override void UpdateJoint( in float deltaTime )
 	{
-		if ( !Slider.IsValid() )
-			return;
-
-		if ( !ParentPoint.Object.IsValid() )
-			return;
-
-		/*
-		if ( Direction.AlmostEqual( 0f ) )
-			return;
-
-		if ( !IsLengthEnabled )
-		{
-			Slider.MinLength = 0f;
-			Slider.MaxLength = 0f;
-
-			return;
-		}
-
-		// var newLength = 
-		*/
 	}
 
 	public override bool TryAttachTo( in ToolAttachPoint a, in ToolAttachPoint b )
 	{
-		// Must have a Slider(the entire point).
-		if ( !Slider.IsValid() )
+		if ( !Joint.IsValid() )
 			return false;
 
 		var objParent = a.Object;
@@ -190,11 +110,6 @@ public partial class SliderJoint : JointEntity
 		var tParentPoint = objParent.WorldTransform.WithOffset( parentOffset );
 		var tTargetPoint = objTarget.WorldTransform.WithOffset( targetOffset );
 
-		MaxLength = tParentPoint.Position.Distance( tTargetPoint.Position );
-
-		Slider.MinLength = -MaxLength;
-		Slider.MaxLength = 0f;
-
 		var aPhysLocal = aPhys.Transform.ToLocal( tParentPoint );
 		var bPhysLocal = bPhys.Transform.ToLocal( tParentPoint );
 
@@ -210,13 +125,15 @@ public partial class SliderJoint : JointEntity
 		Transform.ClearInterpolation();
 
 		// Let the engine's component handle it.
-		Slider.Attachment = Joint.AttachmentMode.LocalFrames;
+		Joint.Attachment = Sandbox.Joint.AttachmentMode.LocalFrames;
 
-		Slider.LocalFrame1 = aPhysLocal;
-		Slider.LocalFrame2 = bPhysLocal;
+		Joint.LocalFrame1 = aPhysLocal;
+		Joint.LocalFrame2 = bPhysLocal;
+
+		ApplySettings();
 
 		// Set the other body.
-		Slider.Body = objTarget;
+		Joint.Body = objTarget;
 
 		return true;
 	}
