@@ -3,7 +3,7 @@ using System.Drawing;
 namespace Playground;
 
 [Icon( "import_export" )]
-public partial class RopeJoint : JointEntity
+public partial class SpringJoint : JointEntity
 {
 	[Property]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
@@ -15,27 +15,15 @@ public partial class RopeJoint : JointEntity
 	[Sync]
 	[Property, InlineEditor]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
-	public RopeSettings Settings { get; set; }
+	public SpringSettings Settings { get; set; }
 
 	[Sync]
 	[Property, ReadOnly]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
-	public float Direction
-	{
-		get => _direction.Clamp( -1f, 1f );
-		set => _direction = value.Clamp( -1f, 1f );
-	}
-
-	protected float _direction;
+	public bool IsToggled { get; set; }
 
 	[Sync]
-	public float TargetLength { get; set; }
-
-	[Sync]
-	public float MinLength { get; set; }
-
-	[Sync]
-	public float MaxLength { get; set; }
+	public float Length { get; set; }
 
 	protected override void OnStart()
 	{
@@ -71,29 +59,17 @@ public partial class RopeJoint : JointEntity
 			GameObject.Destroy();
 	}
 
-	protected void UpdateInput( in float deltaTime )
+	protected virtual void UpdateInput( in float deltaTime )
 	{
-		var dir = 0f;
+		var bToggle = !Settings.KeyToggle.IsBlank()
+			&& Input.Keyboard.Pressed( Settings.KeyToggle );
 
-		var bShorten = !Settings.KeyShorten.IsBlank()
-			&& Input.Keyboard.Down( Settings.KeyShorten );
-
-		var bLengthen = !Settings.KeyLengthen.IsBlank()
-			&& Input.Keyboard.Down( Settings.KeyLengthen );
-
-		if ( bShorten )
-			dir += 1;
-
-		if ( bLengthen )
-			dir -= 1;
-
-		Direction = dir;
+		if ( bToggle != IsToggled )
+			IsToggled = bToggle;
 	}
 
 	protected override void DrawJointGizmo()
 	{
-		var c = Color.Orange.Desaturate( 0.3f ).WithAlpha( 0.3f );
-
 		var objParent = ParentPoint.Object;
 		var objTarget = TargetPoint.Object;
 
@@ -105,6 +81,8 @@ public partial class RopeJoint : JointEntity
 
 		if ( TargetPoint.Offset is not Offset targetOffset )
 			return;
+
+		var c = Color.Magenta.Desaturate( 0.4f ).WithAlpha( 0.3f );
 
 		var tParentPoint = objParent.WorldTransform.WithOffset( parentOffset );
 		var tTargetPoint = objTarget.WorldTransform.WithOffset( targetOffset );
@@ -122,12 +100,13 @@ public partial class RopeJoint : JointEntity
 		if ( !Joint.IsValid() )
 			return;
 
-		Joint.Damping = Settings.Damping;
+		Joint.Damping = Settings.Damping.Clamp( 0f, 1000f );
+		Joint.Frequency = Settings.Springiness.Clamp( 0f, 1000f );
 
-		Joint.RestLength = MaxLength;
+		Joint.RestLength = Length.Positive();
 
 		Joint.MinLength = 0f;
-		Joint.MaxLength = Joint.RestLength + Settings.Slack;
+		Joint.MaxLength = (Joint.RestLength + Settings.Slack).Positive();
 	}
 
 	public override void UpdateJoint( in float deltaTime )
@@ -176,10 +155,7 @@ public partial class RopeJoint : JointEntity
 		var tParentPoint = objParent.WorldTransform.WithOffset( parentOffset );
 		var tTargetPoint = objTarget.WorldTransform.WithOffset( targetOffset );
 
-		var length = tParentPoint.Position.Distance( tTargetPoint.Position );
-
-		MinLength = 0;
-		MaxLength = length;
+		Length = tParentPoint.Position.Distance( tTargetPoint.Position );
 
 		var aPhysLocal = aPhys.Transform.ToLocal( tParentPoint );
 		var bPhysLocal = bPhys.Transform.ToLocal( tTargetPoint );

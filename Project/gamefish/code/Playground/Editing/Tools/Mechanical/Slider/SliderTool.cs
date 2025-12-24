@@ -2,9 +2,6 @@ namespace Playground;
 
 public partial class SliderTool : JointTool
 {
-	/// <summary>
-	/// The key you press to activate the thruster you're placing.
-	/// </summary>
 	[Property, InlineEditor]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public virtual SliderSettings SliderSettings { get; set; }

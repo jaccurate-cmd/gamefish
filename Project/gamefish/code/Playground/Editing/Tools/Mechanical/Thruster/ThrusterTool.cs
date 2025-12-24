@@ -12,9 +12,6 @@ public partial class ThrusterTool : EditorTool
 	[Feature( EDITOR ), Group( SOUNDS ), Order( SOUNDS_ORDER )]
 	public virtual SoundEvent AttachingSound { get; set; }
 
-	/// <summary>
-	/// The key you press to activate the thruster you're placing.
-	/// </summary>
 	[Property, InlineEditor]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public virtual ThrusterSettings ThrusterSettings { get; set; }

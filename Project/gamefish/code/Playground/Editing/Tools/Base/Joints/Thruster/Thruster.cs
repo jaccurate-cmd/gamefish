@@ -13,17 +13,11 @@ public partial class Thruster : Entity
 	public Rigidbody Rigidbody => _rb.GetCached( GameObject, FindMode.InAncestors );
 	protected Rigidbody _rb;
 
-	/// <summary>
-	/// The local transform of thrust origin.
-	/// </summary>
 	[Sync]
 	[Property, InlineEditor]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
 	public Offset Offset { get; set; }
 
-	/// <summary>
-	/// The key you press to activate the thruster you're placing.
-	/// </summary>
 	[Sync]
 	[Property, InlineEditor]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]

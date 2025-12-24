@@ -379,10 +379,10 @@
         "Components": [],
         "Children": [
           {
-            "__guid": "1f2bbaf9-3bd4-490c-a95b-d17145d19183",
+            "__guid": "e24b3f97-16e0-4118-9b27-89def68cf8f0",
             "__version": 1,
             "Flags": 0,
-            "Name": "Thruster",
+            "Name": "Arm",
             "Position": "0,0,0",
             "Rotation": "0,0,0,1",
             "Scale": "1,1,1",
@@ -395,10 +395,17 @@
             "OwnerTransfer": 1,
             "Components": [
               {
-                "__type": "Playground.ThrusterTool",
-                "__guid": "bae22bbc-9080-483c-8585-817565aba846",
+                "__type": "Playground.ArmTool",
+                "__guid": "99855a87-1db7-4ae9-b26f-5d3c8bd92e25",
                 "__enabled": true,
                 "Flags": 0,
+                "ArmSettings": {
+                  "Speed": 100,
+                  "KeyPitchUp": "KP_9",
+                  "KeyPitchDown": "KP_3",
+                  "KeyYawUp": null,
+                  "KeyYawDown": null
+                },
                 "AttachingSound": null,
                 "ClassId": null,
                 "ClassName": null,
@@ -420,8 +427,9 @@
                 "IsAdminOnly": false,
                 "IsClass": false,
                 "IsNetworkingForced": true,
+                "JointPrefab": "prefabs/editing/tools/physics/arm.prefab",
                 "NetworkAutomatically": true,
-                "NetworkId": "bae22bbc-9080-483c-8585-817565aba846",
+                "NetworkId": "99855a87-1db7-4ae9-b26f-5d3c8bd92e25",
                 "NetworkingMode": "Object",
                 "NetworkOrphanedMode": "Host",
                 "NetworkOwner": null,
@@ -432,152 +440,9 @@
                 "OnComponentFixedUpdate": null,
                 "OnComponentStart": null,
                 "OnComponentUpdate": null,
-                "ThrusterPrefab": "prefabs/editing/tools/physics/thruster.prefab",
-                "ThrusterSettings": {
-                  "Force": 1000,
-                  "KeyForward": "KP_8",
-                  "KeyBackward": "KP_2"
-                },
-                "ToolDescription": "Adds rocket boosters.",
-                "ToolEmoji": "\uD83D\uDE80",
-                "ToolName": "Thruster",
-                "ToolType": "Mechanical"
-              }
-            ],
-            "Children": []
-          },
-          {
-            "__guid": "dc28c648-aebb-4f92-b0df-71dd5de59e37",
-            "__version": 1,
-            "Flags": 0,
-            "Name": "Spinner",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 2,
-            "NetworkInterpolation": true,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [
-              {
-                "__type": "Playground.SpinnerTool",
-                "__guid": "a3981a1b-33f9-4fad-a32c-af50f565c8f8",
-                "__enabled": true,
-                "Flags": 0,
-                "AttachingSound": null,
-                "ClassId": null,
-                "ClassName": null,
-                "Filter": null,
-                "FunctionHints": [
-                  {
-                    "Name": "Attach",
-                    "Description": null,
-                    "Action": "Attack1",
-                    "Mode": "Pressed"
-                  },
-                  {
-                    "Name": "Clear",
-                    "Description": null,
-                    "Action": "Reload",
-                    "Mode": "Pressed"
-                  }
-                ],
-                "IsAdminOnly": false,
-                "IsClass": false,
-                "IsNetworkingForced": true,
-                "NetworkAutomatically": true,
-                "NetworkId": "a3981a1b-33f9-4fad-a32c-af50f565c8f8",
-                "NetworkingMode": "Object",
-                "NetworkOrphanedMode": "Host",
-                "NetworkOwner": null,
-                "NetworkTransferMode": "Fixed",
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null,
-                "SpinnerPrefab": "prefabs/editing/tools/physics/spinner.prefab",
-                "SpinnerSettings": {
-                  "Speed": 30,
-                  "KeyForward": "KP_6",
-                  "KeyReverse": "KP_4"
-                },
-                "ToolDescription": "Adds turny thingies.",
-                "ToolEmoji": "♻",
-                "ToolName": "Spinner",
-                "ToolType": "Mechanical"
-              }
-            ],
-            "Children": []
-          },
-          {
-            "__guid": "f88780fb-20a1-470e-807f-ffb9006f8089",
-            "__version": 1,
-            "Flags": 0,
-            "Name": "Slider",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 2,
-            "NetworkInterpolation": true,
-            "NetworkOrphaned": 1,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [
-              {
-                "__type": "Playground.SliderTool",
-                "__guid": "2ce72447-f4a9-4d82-bd8f-33163e5a24af",
-                "__enabled": true,
-                "Flags": 0,
-                "AttachingSound": null,
-                "ClassId": null,
-                "ClassName": null,
-                "Filter": null,
-                "FunctionHints": [
-                  {
-                    "Name": "Attach",
-                    "Description": null,
-                    "Action": "Attack1",
-                    "Mode": "Pressed"
-                  },
-                  {
-                    "Name": "Clear",
-                    "Description": null,
-                    "Action": "Reload",
-                    "Mode": "Pressed"
-                  }
-                ],
-                "IsAdminOnly": false,
-                "IsClass": false,
-                "IsNetworkingForced": true,
-                "JointPrefab": "prefabs/editing/tools/physics/slider.prefab",
-                "NetworkAutomatically": true,
-                "NetworkId": "2ce72447-f4a9-4d82-bd8f-33163e5a24af",
-                "NetworkingMode": "Object",
-                "NetworkOrphanedMode": "Host",
-                "NetworkOwner": null,
-                "NetworkTransferMode": "Fixed",
-                "OnComponentDestroy": null,
-                "OnComponentDisabled": null,
-                "OnComponentEnabled": null,
-                "OnComponentFixedUpdate": null,
-                "OnComponentStart": null,
-                "OnComponentUpdate": null,
-                "SliderSettings": {
-                  "Speed": 120,
-                  "KeyToggle": "KP_MULTIPLY",
-                  "KeyShorten": "KP_MINUS",
-                  "KeyLengthen": "KP_PLUS"
-                },
-                "ToolDescription": "Restrict movement along a pole.",
-                "ToolEmoji": "\uD83C\uDF9A",
-                "ToolName": "Slider",
+                "ToolDescription": "Sticks things together with angular control.",
+                "ToolEmoji": "\uD83D\uDCAA",
+                "ToolName": "Arm",
                 "ToolType": "Mechanical"
               }
             ],
@@ -654,10 +519,10 @@
             "Children": []
           },
           {
-            "__guid": "e24b3f97-16e0-4118-9b27-89def68cf8f0",
+            "__guid": "f88780fb-20a1-470e-807f-ffb9006f8089",
             "__version": 1,
             "Flags": 0,
-            "Name": "Arm",
+            "Name": "Slider",
             "Position": "0,0,0",
             "Rotation": "0,0,0,1",
             "Scale": "1,1,1",
@@ -665,22 +530,15 @@
             "Enabled": true,
             "NetworkMode": 2,
             "NetworkInterpolation": true,
-            "NetworkOrphaned": 0,
+            "NetworkOrphaned": 1,
             "NetworkTransmit": true,
             "OwnerTransfer": 1,
             "Components": [
               {
-                "__type": "Playground.ArmTool",
-                "__guid": "99855a87-1db7-4ae9-b26f-5d3c8bd92e25",
+                "__type": "Playground.SliderTool",
+                "__guid": "2ce72447-f4a9-4d82-bd8f-33163e5a24af",
                 "__enabled": true,
                 "Flags": 0,
-                "ArmSettings": {
-                  "Speed": 100,
-                  "KeyPitchUp": "KP_9",
-                  "KeyPitchDown": "KP_3",
-                  "KeyYawUp": null,
-                  "KeyYawDown": null
-                },
                 "AttachingSound": null,
                 "ClassId": null,
                 "ClassName": null,
@@ -702,9 +560,9 @@
                 "IsAdminOnly": false,
                 "IsClass": false,
                 "IsNetworkingForced": true,
-                "JointPrefab": "prefabs/editing/tools/physics/arm.prefab",
+                "JointPrefab": "prefabs/editing/tools/physics/slider.prefab",
                 "NetworkAutomatically": true,
-                "NetworkId": "99855a87-1db7-4ae9-b26f-5d3c8bd92e25",
+                "NetworkId": "2ce72447-f4a9-4d82-bd8f-33163e5a24af",
                 "NetworkingMode": "Object",
                 "NetworkOrphanedMode": "Host",
                 "NetworkOwner": null,
@@ -715,9 +573,221 @@
                 "OnComponentFixedUpdate": null,
                 "OnComponentStart": null,
                 "OnComponentUpdate": null,
-                "ToolDescription": "Sticks things together with angular control.",
-                "ToolEmoji": "\uD83D\uDCAA",
-                "ToolName": "Arm",
+                "SliderSettings": {
+                  "Speed": 120,
+                  "KeyToggle": "KP_MULTIPLY",
+                  "KeyShorten": "KP_MINUS",
+                  "KeyLengthen": "KP_PLUS"
+                },
+                "ToolDescription": "Restrict movement along a pole.",
+                "ToolEmoji": "\uD83C\uDF9A",
+                "ToolName": "Slider",
+                "ToolType": "Mechanical"
+              }
+            ],
+            "Children": []
+          },
+          {
+            "__guid": "cc18295f-6e27-41e0-b429-667bd9fd8774",
+            "__version": 1,
+            "Flags": 0,
+            "Name": "Spring",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkInterpolation": true,
+            "NetworkOrphaned": 1,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Playground.SpringTool",
+                "__guid": "88b83b11-1425-4751-8ca7-f8ef41da6ec0",
+                "__enabled": true,
+                "Flags": 0,
+                "AttachingSound": null,
+                "ClassId": null,
+                "ClassName": null,
+                "Filter": null,
+                "FunctionHints": [
+                  {
+                    "Name": "Attach",
+                    "Description": null,
+                    "Action": "Attack1",
+                    "Mode": "Pressed"
+                  },
+                  {
+                    "Name": "Clear",
+                    "Description": null,
+                    "Action": "Reload",
+                    "Mode": "Pressed"
+                  }
+                ],
+                "IsAdminOnly": false,
+                "IsClass": false,
+                "IsNetworkingForced": true,
+                "JointPrefab": "prefabs/editing/tools/physics/spring.prefab",
+                "NetworkAutomatically": true,
+                "NetworkId": "88b83b11-1425-4751-8ca7-f8ef41da6ec0",
+                "NetworkingMode": "Object",
+                "NetworkOrphanedMode": "Host",
+                "NetworkOwner": null,
+                "NetworkTransferMode": "Fixed",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "SpringSettings": {
+                  "Slack": 256,
+                  "Damping": 0.7,
+                  "Springiness": 3,
+                  "ToggleLength": 0.1,
+                  "KeyToggle": "KP_INSERT"
+                },
+                "ToolDescription": "Creates a bouncy coil-like joint.",
+                "ToolEmoji": "\uD83C\uDF65",
+                "ToolName": "Spring",
+                "ToolType": "Mechanical"
+              }
+            ],
+            "Children": []
+          },
+          {
+            "__guid": "dc28c648-aebb-4f92-b0df-71dd5de59e37",
+            "__version": 1,
+            "Flags": 0,
+            "Name": "Spinner",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkInterpolation": true,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Playground.SpinnerTool",
+                "__guid": "a3981a1b-33f9-4fad-a32c-af50f565c8f8",
+                "__enabled": true,
+                "Flags": 0,
+                "AttachingSound": null,
+                "ClassId": null,
+                "ClassName": null,
+                "Filter": null,
+                "FunctionHints": [
+                  {
+                    "Name": "Attach",
+                    "Description": null,
+                    "Action": "Attack1",
+                    "Mode": "Pressed"
+                  },
+                  {
+                    "Name": "Clear",
+                    "Description": null,
+                    "Action": "Reload",
+                    "Mode": "Pressed"
+                  }
+                ],
+                "IsAdminOnly": false,
+                "IsClass": false,
+                "IsNetworkingForced": true,
+                "NetworkAutomatically": true,
+                "NetworkId": "a3981a1b-33f9-4fad-a32c-af50f565c8f8",
+                "NetworkingMode": "Object",
+                "NetworkOrphanedMode": "Host",
+                "NetworkOwner": null,
+                "NetworkTransferMode": "Fixed",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "SpinnerPrefab": "prefabs/editing/tools/physics/spinner.prefab",
+                "SpinnerSettings": {
+                  "Speed": 30,
+                  "KeyForward": "KP_6",
+                  "KeyReverse": "KP_4"
+                },
+                "ToolDescription": "Adds turny thingies.",
+                "ToolEmoji": "♻",
+                "ToolName": "Spinner",
+                "ToolType": "Mechanical"
+              }
+            ],
+            "Children": []
+          },
+          {
+            "__guid": "1f2bbaf9-3bd4-490c-a95b-d17145d19183",
+            "__version": 1,
+            "Flags": 0,
+            "Name": "Thruster",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkInterpolation": true,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Playground.ThrusterTool",
+                "__guid": "bae22bbc-9080-483c-8585-817565aba846",
+                "__enabled": true,
+                "Flags": 0,
+                "AttachingSound": null,
+                "ClassId": null,
+                "ClassName": null,
+                "Filter": null,
+                "FunctionHints": [
+                  {
+                    "Name": "Attach",
+                    "Description": null,
+                    "Action": "Attack1",
+                    "Mode": "Pressed"
+                  },
+                  {
+                    "Name": "Clear",
+                    "Description": null,
+                    "Action": "Reload",
+                    "Mode": "Pressed"
+                  }
+                ],
+                "IsAdminOnly": false,
+                "IsClass": false,
+                "IsNetworkingForced": true,
+                "NetworkAutomatically": true,
+                "NetworkId": "bae22bbc-9080-483c-8585-817565aba846",
+                "NetworkingMode": "Object",
+                "NetworkOrphanedMode": "Host",
+                "NetworkOwner": null,
+                "NetworkTransferMode": "Fixed",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "ThrusterPrefab": "prefabs/editing/tools/physics/thruster.prefab",
+                "ThrusterSettings": {
+                  "Force": 1000,
+                  "KeyForward": "KP_8",
+                  "KeyBackward": "KP_2"
+                },
+                "ToolDescription": "Adds rocket boosters.",
+                "ToolEmoji": "\uD83D\uDE80",
+                "ToolName": "Thruster",
                 "ToolType": "Mechanical"
               }
             ],
