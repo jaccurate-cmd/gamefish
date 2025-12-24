@@ -283,6 +283,46 @@
                   "Children": []
                 },
                 {
+                  "__guid": "06a68a05-d78b-4571-a1dd-55419fd0d5d8",
+                  "__version": 1,
+                  "Flags": 0,
+                  "Name": "Underground Light",
+                  "Position": "-0.0002441406,0,-2544",
+                  "Rotation": "0,0.7071067,0,0.7071068",
+                  "Scale": "1,1,1",
+                  "Tags": "light_point,light,light_spot",
+                  "Enabled": true,
+                  "NetworkMode": 2,
+                  "NetworkInterpolation": true,
+                  "NetworkOrphaned": 0,
+                  "NetworkTransmit": true,
+                  "OwnerTransfer": 1,
+                  "Components": [
+                    {
+                      "__type": "Sandbox.SpotLight",
+                      "__guid": "38de6e4a-3cd7-419e-a8ce-5be7bb9b1205",
+                      "__enabled": true,
+                      "Flags": 0,
+                      "Attenuation": 0.02,
+                      "ConeInner": 48.232044,
+                      "ConeOuter": 63.149174,
+                      "Cookie": null,
+                      "FogMode": "Enabled",
+                      "FogStrength": 1,
+                      "LightColor": "0.69302,0.469,0.24498,1",
+                      "OnComponentDestroy": null,
+                      "OnComponentDisabled": null,
+                      "OnComponentEnabled": null,
+                      "OnComponentFixedUpdate": null,
+                      "OnComponentStart": null,
+                      "OnComponentUpdate": null,
+                      "Radius": 2048,
+                      "Shadows": true
+                    }
+                  ],
+                  "Children": []
+                },
+                {
                   "__guid": "ee4f3652-8943-452c-a689-1bed81220a9a",
                   "__version": 1,
                   "Flags": 0,
@@ -1059,7 +1099,7 @@
               "IdValue": "6b1cdeb5-84f0-4bd0-8fba-ec94965d0eb5"
             },
             "Property": "Position",
-            "Value": "-88.66745,887.2847,35.20189"
+            "Value": "-5.330387,880,32"
           },
           {
             "Target": {
@@ -1067,7 +1107,7 @@
               "IdValue": "6b1cdeb5-84f0-4bd0-8fba-ec94965d0eb5"
             },
             "Property": "Rotation",
-            "Value": "0,0,0.1305262,0.9914449"
+            "Value": "0,0,0.00000001490116,1"
           }
         ],
         "MovedObjects": []
