@@ -208,10 +208,10 @@ public partial class GrabberTool : EditorTool
 
 		var obj = tr.GameObject;
 
-		// TEMP: Can't ever grab unowned pawns.
+		// TEMP: Can't ever grab pawns not explicitly ours.
 		if ( Pawn.TryGet( obj, out var pawn ) )
 		{
-			if ( pawn.IsProxy )
+			if ( !pawn.IsOwner() )
 				return false;
 
 			obj = pawn.GameObject;
