@@ -76,7 +76,17 @@ partial class Spectator
 		if ( AllowDescend && Input.Down( DescendAction ) )
 			wishVel += Vector3.Down * speed;
 
-		var move = EyeRotation * (wishVel * deltaTime);
+		var rEye = EyeRotation;
+		var move = rEye * (wishVel * deltaTime);
+
+		if ( Input.MouseWheel != Vector2.Zero )
+		{
+			var xWheel = Input.MouseWheel.x;
+			var yWheel = Input.MouseWheel.y;
+
+			move += rEye.Right * xWheel * speed * 0.1f;
+			move += rEye.Forward * yWheel * speed * 0.05f;
+		}
 
 		Velocity += move;
 
