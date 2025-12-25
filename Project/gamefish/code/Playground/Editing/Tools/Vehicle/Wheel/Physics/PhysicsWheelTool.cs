@@ -97,7 +97,13 @@ public partial class PhysicsWheelTool : JointTool
 	}
 
 	public override bool TryClear( GameObject obj )
-		=> false;
+	{
+		if ( !obj.IsValid() || !obj.Components.TryGet<PhysicsWheel>( out var w ) )
+			return false;
+
+		w.RpcToggleReverse();
+		return true;
+	}
 
 	protected override void RpcRemoveJoints( GameObject obj )
 	{

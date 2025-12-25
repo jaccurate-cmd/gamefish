@@ -22,6 +22,9 @@ public partial class PhysicsWheel : EditorEntity
 	[Sync]
 	public ToolAttachPoint ParentPoint { get; set; }
 
+	[Sync]
+	public bool IsReversed { get; set; }
+
 	protected override void OnStart()
 	{
 		base.OnStart();
@@ -60,7 +63,7 @@ public partial class PhysicsWheel : EditorEntity
 			GameObject.Destroy();
 	}
 
-	protected void UpdateInput( in float deltaTime )
+	protected virtual void UpdateInput( in float deltaTime )
 	{
 		if ( IsProxy )
 			return;
@@ -101,7 +104,9 @@ public partial class PhysicsWheel : EditorEntity
 			return;
 
 		Joint.TargetSteeringAngle = DriveInput.x * 30f;
-		Joint.SpinMotorSpeed = DriveInput.y * Joint.MaxSpinTorque;
+
+		Joint.SpinMotorSpeed = DriveInput.y * Joint.MaxSpinTorque
+			* (IsReversed ? -1f : 1f);
 	}
 
 	public bool TryAttachTo( in ToolAttachPoint point )
@@ -180,5 +185,14 @@ public partial class PhysicsWheel : EditorEntity
 			c: c, len: 7f, w: 2f, th: 4f,
 			tWorld: global::Transform.Zero
 		);
+	}
+
+	[Rpc.Owner( NetFlags.Reliable | NetFlags.SendImmediate )]
+	public void RpcToggleReverse()
+	{
+		if ( !Server.TryFindClient( Rpc.Caller, out var _ ) )
+			return;
+
+		IsReversed = !IsReversed;
 	}
 }
