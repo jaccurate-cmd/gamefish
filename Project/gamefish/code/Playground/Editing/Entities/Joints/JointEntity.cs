@@ -5,7 +5,6 @@ namespace Playground;
 [Icon( "precision_manufacturing" )]
 public abstract class JointEntity : EditorDevice
 {
-	protected const int PHYSICS_ORDER = EDITOR_ORDER + 10;
 	protected const int SETTINGS_ORDER = EDITOR_ORDER + 50;
 
 	protected override bool? IsNetworkedOverride => true;

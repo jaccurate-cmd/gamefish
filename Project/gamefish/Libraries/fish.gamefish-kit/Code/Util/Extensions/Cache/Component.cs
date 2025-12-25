@@ -15,7 +15,7 @@ partial class Library
 		if ( !obj.IsValid() )
 			return null;
 
-		if ( c.IsValid() )
+		if ( c.IsValid() && c.GameObject == obj )
 			return c;
 
 		c = obj.Components?.Get<TComp>( findMode );
