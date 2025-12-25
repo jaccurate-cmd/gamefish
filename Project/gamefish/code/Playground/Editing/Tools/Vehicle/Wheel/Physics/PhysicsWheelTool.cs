@@ -12,20 +12,34 @@ public partial class PhysicsWheelTool : JointTool
 
 		if ( PressedUse )
 			TryToggleSteering();
+
+		if ( PressedReload )
+			TryToggleReverse();
+	}
+
+	protected bool TryGetTargetWheel( out PhysicsWheel w )
+	{
+		w = null;
+
+		if ( !TryTrace( out var tr ) || !tr.Hit )
+			return false;
+
+		if ( !tr.GameObject.IsValid() )
+			return false;
+
+		return tr.GameObject.Components.TryGet<PhysicsWheel>( out w );
 	}
 
 	protected void TryToggleSteering()
 	{
-		if ( !TryTrace( out var tr ) || !tr.Hit )
-			return;
+		if ( TryGetTargetWheel( out var w ) )
+			w.RpcToggleSteering();
+	}
 
-		if ( !tr.GameObject.IsValid() )
-			return;
-
-		if ( !tr.GameObject.Components.TryGet<PhysicsWheel>( out var w ) )
-			return;
-
-		w.RpcToggleSteering();
+	protected void TryToggleReverse()
+	{
+		if ( TryGetTargetWheel( out var w ) )
+			w.RpcToggleReverse();
 	}
 
 	public override bool TryAddPointAtTarget()
@@ -119,13 +133,7 @@ public partial class PhysicsWheelTool : JointTool
 	}
 
 	public override bool TryClear( GameObject obj )
-	{
-		if ( !obj.IsValid() || !obj.Components.TryGet<PhysicsWheel>( out var w ) )
-			return false;
-
-		w.RpcToggleReverse();
-		return true;
-	}
+		=> false;
 
 	protected override void RpcRemoveJoints( GameObject obj )
 	{

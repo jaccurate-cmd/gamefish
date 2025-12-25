@@ -51,7 +51,7 @@ public abstract class JointTool : EditorTool
 	}
 
 	public override bool TryLeftClick()
-		=> TryAddPointAtTarget();
+		=> true;
 
 	public virtual bool TryAddPointAtTarget()
 		=> TryAddPoint( PointTarget );
