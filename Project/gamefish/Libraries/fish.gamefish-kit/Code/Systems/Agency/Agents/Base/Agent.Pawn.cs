@@ -62,7 +62,7 @@ partial class Agent
 	/// <summary>
 	/// Called by the host to try swapping/taking a new pawn.
 	/// </summary>
-	public virtual bool TryTakePawn( Pawn pawn )
+	public virtual bool TryTakePawn( Pawn newPawn )
 	{
 		if ( !Networking.IsHost )
 			return false;
@@ -70,20 +70,19 @@ partial class Agent
 		if ( !this.IsValid() || !Scene.IsValid() )
 			return false;
 
-		if ( !pawn.IsValid() || !pawn.AllowOwnership( this ) )
+		if ( !newPawn.IsValid() || !newPawn.AllowOwnership( this ) )
 			return false;
 
-		var oldPawn = Pawn;
+		if ( Pawn.IsValid() && Pawn != newPawn )
+			if ( !Pawn.TryDropOwner( this ) )
+				return false;
 
-		if ( oldPawn.IsValid() && !oldPawn.TryDropOwner( this ) )
+		if ( !newPawn.TryAssignOwner( this ) )
 			return false;
 
-		if ( !pawn.TryAssignOwner( this ) )
-			return false;
+		Pawn = newPawn;
 
-		Pawn = pawn;
-
-		this.Log( $"Added pawn:[{pawn}]" );
+		this.Log( $"set pawn:[{newPawn}]" );
 
 		return true;
 	}
@@ -113,15 +112,13 @@ partial class Agent
 	/// <summary>
 	/// Spawns a <see cref="GameFish.Pawn"/> prefab and assigns it to this agent.
 	/// </summary>
-	/// <param name="prefab"></param>
-	public Pawn SetPawnFromPrefab( PrefabFile prefab )
-		=> SetPawnFromPrefab<Pawn>( prefab );
+	public Pawn SetPawnFromPrefab( PrefabFile prefab, in Transform? tWorld = null )
+		=> SetPawnFromPrefab<Pawn>( prefab, tWorld );
 
 	/// <summary>
 	/// Spawns a <typeparamref name="TPawn"/> prefab and assigns it to this agent.
 	/// </summary>
-	/// <param name="prefab"></param>
-	public TPawn SetPawnFromPrefab<TPawn>( PrefabFile prefab ) where TPawn : Pawn
+	public TPawn SetPawnFromPrefab<TPawn>( PrefabFile prefab, in Transform? tWorld = null ) where TPawn : Pawn
 	{
 		if ( !Networking.IsHost )
 		{
@@ -135,7 +132,7 @@ partial class Agent
 			return null;
 		}
 
-		var spawnPoint = FindSpawnPoint();
+		var spawnPoint = tWorld ?? FindSpawnPoint();
 
 		if ( !spawnPoint.HasValue )
 		{
@@ -145,6 +142,8 @@ partial class Agent
 
 		if ( !prefab.TrySpawn( spawnPoint.Value.WithScale( Vector3.One ), out var go ) )
 			return null;
+
+		go.Transform.ClearInterpolation();
 
 		return SetPawnFromObject<TPawn>( go, failDestroy: true );
 	}
