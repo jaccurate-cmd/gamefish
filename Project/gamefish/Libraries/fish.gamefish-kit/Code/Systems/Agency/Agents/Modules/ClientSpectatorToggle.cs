@@ -49,14 +49,15 @@ public partial class ClientSpectatorToggle : Module
 		if ( !GameState.TryGetCurrent( out var s ) )
 			return;
 
-		var tPrev = Client.Pawn?.EyeTransform;
+		var tEye = Client.Pawn?.EyeTransform;
+		var tPawn = tEye?.WithRotation( Rotation.Identity ); // TEMP
 
 		if ( Pawn is Spectator )
-			s.TryAssignPlayer( Client, out _, force: true, oldCleanup: true );
+			s.TryAssignPlayer( Client, out _, force: true, tPawn: tPawn, oldCleanup: true );
 		else
-			s.TryAssignSpectator( Client, out _, force: true, oldCleanup: true );
+			s.TryAssignSpectator( Client, out _, force: true, tPawn: tPawn, oldCleanup: true );
 
-		if ( tPrev.HasValue && Pawn.IsValid() )
-			Pawn.RpcHostTeleport( tPrev.Value );
+		if ( tEye.HasValue && Pawn.IsValid() )
+			Pawn.RpcHostTeleport( tEye.Value );
 	}
 }

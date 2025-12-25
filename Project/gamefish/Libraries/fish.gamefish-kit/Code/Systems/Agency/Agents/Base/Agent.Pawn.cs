@@ -112,13 +112,13 @@ partial class Agent
 	/// <summary>
 	/// Spawns a <see cref="GameFish.Pawn"/> prefab and assigns it to this agent.
 	/// </summary>
-	public Pawn SetPawnFromPrefab( PrefabFile prefab, in Transform? tWorld = null )
-		=> SetPawnFromPrefab<Pawn>( prefab, tWorld );
+	public Pawn SetPawnFromPrefab( PrefabFile prefab, in Transform? tPawn = null )
+		=> SetPawnFromPrefab<Pawn>( prefab, tPawn );
 
 	/// <summary>
 	/// Spawns a <typeparamref name="TPawn"/> prefab and assigns it to this agent.
 	/// </summary>
-	public TPawn SetPawnFromPrefab<TPawn>( PrefabFile prefab, in Transform? tWorld = null ) where TPawn : Pawn
+	public TPawn SetPawnFromPrefab<TPawn>( PrefabFile prefab, in Transform? tPawn = null ) where TPawn : Pawn
 	{
 		if ( !Networking.IsHost )
 		{
@@ -132,7 +132,7 @@ partial class Agent
 			return null;
 		}
 
-		var spawnPoint = tWorld ?? FindSpawnPoint();
+		var spawnPoint = tPawn ?? FindSpawnPoint();
 
 		if ( !spawnPoint.HasValue )
 		{
