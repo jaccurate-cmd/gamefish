@@ -91,27 +91,11 @@ partial class Editor
 			return;
 	}
 
-	/// <returns> If the default editor behavior should be prevented. </returns>
-	public virtual void OnMouseDrag( in Vector2 delta )
-	{
-		// this.Log( "Mouse dragged." );
-
-		if ( Tool.IsValid() )
-			Tool.TryMouseDrag( in delta );
-	}
-
 	public virtual void OnMouseUp( in MouseButtons mb )
 	{
 		// this.Log( $"Mouse up:[{mb}]" );
 
 		if ( Tool.IsValid() )
 			Tool.OnMouseUp( in mb );
-	}
-
-	public virtual void OnMouseDragEnd()
-	{
-		// this.Log( "Mouse drag ended." );
-		if ( Tool.IsValid() )
-			Tool.OnMouseDragEnd();
 	}
 }

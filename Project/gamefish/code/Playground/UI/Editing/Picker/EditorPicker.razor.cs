@@ -10,11 +10,29 @@ partial class EditorPicker
 
 	public static bool ShowCursor => Editor?.ShowCursor is true;
 
+	public override bool WantsDrag => true;
+	protected override bool WantsDragScrolling => false;
+
 	public override bool WantsMouseInput()
 		=> ShowCursor;
 
-	public override bool WantsDrag => true;
-	protected override bool WantsDragScrolling => false;
+
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+
+		ButtonInput = PanelInputType.Game;
+	}
+
+	protected override void OnMouseOut( MousePanelEvent e )
+	{
+		base.OnMouseOut( e );
+
+		// Hackfix to hopefully clear the drag state.
+		// Sometimes it would act like you had a mouse button still held.
+
+		Blur();
+	}
 
 	protected override void OnClick( MousePanelEvent e )
 	{
@@ -54,22 +72,6 @@ partial class EditorPicker
 
 		if ( Editor.IsValid() )
 			Editor.OnMouseWheel( in value );
-	}
-
-	protected override void OnDrag( DragEvent e )
-	{
-		base.OnDrag( e );
-
-		if ( Editor.IsValid() )
-			Editor.OnMouseDrag( e.MouseDelta );
-	}
-
-	protected override void OnDragEnd( DragEvent e )
-	{
-		base.OnDragEnd( e );
-
-		if ( Editor.IsValid() )
-			Editor.OnMouseDragEnd();
 	}
 
 	protected override int BuildHash()

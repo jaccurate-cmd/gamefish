@@ -77,18 +77,11 @@ public partial class GrabberTool : EditorTool
 		return true;
 	}
 
-	public override void OnMouseDragEnd()
-	{
-		base.OnMouseDragEnd();
-
-		TryDropHeld();
-	}
-
 	public override void OnMouseUp( in MouseButtons mb )
 	{
 		base.OnMouseUp( mb );
 
-		TryDropHeld();
+		// TryDropHeld();
 	}
 
 	public override bool TryMouseWheel( in Vector2 dir )
@@ -159,8 +152,7 @@ public partial class GrabberTool : EditorTool
 	{
 		if ( HoldingPrimary )
 			TryGrabTarget();
-
-		if ( ReleasedPrimary )
+		else if ( ReleasedPrimary )
 			TryDropHeld();
 
 		if ( !IsGrabbing )

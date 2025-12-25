@@ -61,15 +61,11 @@ public partial class BoxTool : EditorTool
 		StartPoint = null;
 	}
 
-	public override bool TryLeftClick()
-		=> TryPlacePoint( TargetPoint );
-
 	public override bool TryRightClick()
 	{
 		if ( !StartPoint.HasValue )
 			return false;
 
-		StopShaping();
 		return true;
 	}
 
@@ -146,6 +142,10 @@ public partial class BoxTool : EditorTool
 		}
 
 		TargetPoint = point;
+
+		// Clear
+		if ( PressedSecondary && StartPoint.HasValue )
+			StopShaping();
 
 		// Point Placement
 		if ( PressedPrimary )
