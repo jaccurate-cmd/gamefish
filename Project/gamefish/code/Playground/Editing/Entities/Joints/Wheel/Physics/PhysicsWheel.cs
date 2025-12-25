@@ -84,7 +84,7 @@ public partial class PhysicsWheel : EditorEntity
 			&& Input.Keyboard.Down( Settings.KeyLeft );
 
 		var bRight = !Settings.KeyRight.IsBlank()
-			&& Input.Keyboard.Down( Settings.KeyLeft );
+			&& Input.Keyboard.Down( Settings.KeyRight );
 
 		if ( bLeft )
 			drive.x -= 1;

@@ -44,31 +44,16 @@ public partial class BoxTool : EditorTool
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public bool UseHeight { get; set; } = true;
 
-
-
-	/// <summary>
-	/// If defined: the starting point for the shape.
-	/// </summary>
+	public Vector3? TargetPoint { get; set; }
 	public Vector3? StartPoint { get; set; }
-
 
 	public override void OnExit()
 	{
 		base.OnExit();
 
 		StopShaping();
-	}
 
-	public override void FrameSimulate( in float deltaTime )
-	{
-		if ( !Mouse.Active )
-			return;
-
-		UpdateScroll( in deltaTime );
-		UpdateUse( in deltaTime );
-
-		UpdatePlace( in deltaTime );
-		UpdateCancel( in deltaTime );
+		TargetPoint = null;
 	}
 
 	protected virtual void StopShaping()
@@ -76,9 +61,54 @@ public partial class BoxTool : EditorTool
 		StartPoint = null;
 	}
 
+	public override bool TryLeftClick()
+		=> TryPlacePoint( TargetPoint );
+
+	public override bool TryRightClick()
+	{
+		if ( !StartPoint.HasValue )
+			return false;
+
+		StopShaping();
+		return true;
+	}
+
+	public override bool TryMouseWheel( in Vector2 dir )
+	{
+		var scroll = dir.y != 0f ? -dir.y : dir.x;
+
+		var isPrecise = HoldingShift;
+
+		if ( !isPrecise )
+			scroll *= ScrollSensitivity;
+
+		if ( UseHeight )
+		{
+			Height = (Height + scroll).Clamp( -HeightLimit, HeightLimit );
+
+			if ( !isPrecise )
+				Height = Height.Round();
+		}
+		else
+		{
+			Distance = (Distance + scroll).Clamp( DistanceRange );
+		}
+
+		return true;
+	}
+
+	public override void FrameSimulate( in float deltaTime )
+	{
+		UpdateScroll( in deltaTime );
+		UpdateUse( in deltaTime );
+
+		UpdatePlace( in deltaTime );
+		UpdateCancel( in deltaTime );
+	}
+
 	protected virtual void UpdateCancel( in float deltaTime )
 	{
-		if ( PressedSecondary )
+		if ( PressedReload )
 			StopShaping();
 	}
 
@@ -90,27 +120,8 @@ public partial class BoxTool : EditorTool
 
 	protected virtual void UpdateScroll( in float deltaTime )
 	{
-		var yScroll = Input.MouseWheel.y;
-
-		if ( yScroll == 0f )
+		if ( !Mouse.Active )
 			return;
-
-		var isPrecise = HoldingShift;
-
-		if ( !isPrecise )
-			yScroll *= ScrollSensitivity;
-
-		if ( UseHeight )
-		{
-			Height = (Height + yScroll).Clamp( -HeightLimit, HeightLimit );
-
-			if ( !isPrecise )
-				Height = Height.Round();
-		}
-		else
-		{
-			Distance = (Distance + yScroll).Clamp( DistanceRange );
-		}
 	}
 
 	protected virtual void UpdatePlace( in float deltaTime )
@@ -119,7 +130,7 @@ public partial class BoxTool : EditorTool
 			return;
 
 		// Point Height
-		Vector3 point = tr.EndPosition;
+		Vector3 point;
 
 		if ( UseHeight )
 		{
@@ -133,6 +144,8 @@ public partial class BoxTool : EditorTool
 			var dist = tr.Distance.Min( Distance );
 			point = tr.StartPosition + (tr.Direction * dist);
 		}
+
+		TargetPoint = point;
 
 		// Point Placement
 		if ( PressedPrimary )
@@ -162,14 +175,17 @@ public partial class BoxTool : EditorTool
 		}
 	}
 
-	protected virtual bool TryPlacePoint( in Vector3 point )
+	protected virtual bool TryPlacePoint( in Vector3? point )
 	{
 		if ( !IsClientAllowed( Client.Local ) )
 			return false;
 
+		if ( point is not Vector3 pos )
+			return false;
+
 		if ( StartPoint is Vector3 start )
 		{
-			if ( !TryCreateBox( start, in point, out _ ) )
+			if ( !TryCreateBox( start, in pos, out _ ) )
 				return false;
 
 			StopShaping();
@@ -177,7 +193,7 @@ public partial class BoxTool : EditorTool
 			return true;
 		}
 
-		StartPoint = point;
+		StartPoint = pos;
 
 		return true;
 	}
