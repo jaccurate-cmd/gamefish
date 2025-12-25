@@ -110,7 +110,7 @@ public partial class PhysicsWheel : EditorEntity
 		if ( Joint.EnableSteering != IsSteering )
 			Joint.EnableSteering = IsSteering;
 
-		var steeringAngle = DriveInput.x * 30f;
+		var steeringAngle = DriveInput.x * 40f;
 		Joint.TargetSteeringAngle = steeringAngle;
 		// Joint.SteeringLimits = new( -steeringAngle, steeringAngle );
 
