@@ -167,7 +167,7 @@ public partial class RopeJoint : JointEntity
 
 		var bPhys = Physics.FindBody( objTarget );
 
-		if ( !aPhys.IsValid() || b.Offset is not Offset targetOffset )
+		if ( !bPhys.IsValid() || b.Offset is not Offset targetOffset )
 			return false;
 
 		var tParentPoint = objParent.WorldTransform.WithOffset( parentOffset );
