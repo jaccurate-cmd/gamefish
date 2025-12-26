@@ -47,7 +47,7 @@ public partial class SimpleVehicle : Vehicle
 			var drivingAxis = rDrive * DrivingAxis;
 			var speed = InputAcceleration * DrivingSpeed;
 
-			Velocity += rDrive.Forward * speed * deltaTime;
+			Velocity += drivingAxis * speed * deltaTime;
 		}
 
 		if ( InputSteering != 0f )
