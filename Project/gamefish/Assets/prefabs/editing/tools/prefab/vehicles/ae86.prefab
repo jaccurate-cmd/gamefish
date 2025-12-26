@@ -46,6 +46,8 @@
               "go": "b5512442-37cb-4752-96dc-e38d3690b519",
               "component_type": "Seat"
             },
+            "DrivingAxis": "1,0,0",
+            "DrivingSpeed": 800,
             "Health": 100,
             "IsAlive": false,
             "IsClass": false,
@@ -63,7 +65,9 @@
             "OnComponentEnabled": null,
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
-            "OnComponentUpdate": null
+            "OnComponentUpdate": null,
+            "SteeringAxis": "0,0,1",
+            "SteeringTorque": 6
           },
           {
             "__type": "Sandbox.Rigidbody",
