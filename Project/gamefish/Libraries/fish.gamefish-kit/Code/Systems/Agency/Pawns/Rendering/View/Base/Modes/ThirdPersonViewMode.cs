@@ -82,13 +82,19 @@ public partial class ThirdPersonViewMode : ViewMode
 			var endPos = startPos - (aimDir * CurrentDistance);
 			var radius = View.GetCollisionRadius();
 
-			var trAll = Scene.Trace.Sphere( radius, startPos, endPos )
+			var trView = Scene.Trace.Sphere( radius, startPos, endPos )
 				.IgnoreGameObject( pawn.GameObject )
 				.WithAnyTags( View.CollisionHitTags )
-				.WithoutTags( View.CollisionIgnoreTags )
-				.RunAll();
+				.WithoutTags( View.CollisionIgnoreTags );
 
-			foreach ( var tr in trAll )
+			if ( pawn.Seat.IsValid() )
+			{
+				trView = trView
+					.IgnoreGameObject( pawn.Seat.GameObject )
+					.IgnoreGameObjectHierarchy( pawn.Seat.Vehicle?.GameObject );
+			}
+
+			foreach ( var tr in trView.RunAll() )
 			{
 				if ( !tr.Hit || (!View.CollideOwned && tr.GameObject.IsOwner()) )
 					continue;

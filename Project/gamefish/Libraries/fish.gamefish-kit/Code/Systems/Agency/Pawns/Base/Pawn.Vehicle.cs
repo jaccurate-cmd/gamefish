@@ -29,6 +29,8 @@ partial class Pawn
 			var old = _seat;
 			_seat = value;
 
+			Tags?.Set( TAG_SITTING, _seat.IsValid() );
+
 			OnSetSeat( _seat, old );
 		}
 	}
@@ -37,12 +39,7 @@ partial class Pawn
 
 	protected virtual void OnSetSeat( Seat newSeat, Seat oldSeat )
 	{
-		var bSitting = newSeat.IsValid();
-
-		Tags.Set( TAG_SITTING, bSitting );
-
-		if ( bSitting )
-			FollowSeat( newSeat );
+		FollowSeat( newSeat );
 	}
 
 	public virtual void OnSeatMoved( Seat seat )
@@ -68,10 +65,13 @@ partial class Pawn
 		if ( !Seat.IsValid() )
 		{
 			if ( Tags.Has( TAG_SITTING ) )
-				Tags.Set( TAG_SITTING, false );
+				Tags.Remove( TAG_SITTING );
 
 			return;
 		}
+
+		if ( !Tags.Has( TAG_SITTING ) )
+			Tags.Add( TAG_SITTING );
 
 		Seat.Simulate( in deltaTime, in isFixedUpdate );
 	}

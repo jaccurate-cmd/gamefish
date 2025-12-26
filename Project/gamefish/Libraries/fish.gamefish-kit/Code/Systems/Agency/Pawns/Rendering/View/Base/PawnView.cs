@@ -33,7 +33,7 @@ public partial class PawnView : Module, ISimulate
 	[Title( "Radius" )]
 	[Range( 1f, 64f, clamped: false )]
 	[Feature( VIEW ), ToggleGroup( nameof( Collision ) )]
-	public virtual float DefaultCollisionRadius { get; set; } = 8f;
+	protected virtual float DefaultCollisionRadius { get; set; } = 8f;
 	public virtual float GetCollisionRadius() => DefaultCollisionRadius * WorldScale.x.NonZero();
 
 	/// <summary>
