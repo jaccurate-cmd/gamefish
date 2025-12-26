@@ -37,6 +37,10 @@ public partial class Player : Pawn
 
 	public virtual bool TryUse( in Vector3 dir )
 	{
+		if ( Seat.IsValid() && Seat.IsOccupied )
+			if ( Seat.TryRequestExit( this ) )
+				return false;
+
 		if ( !TryFindUsable( in dir, out var usable ) )
 			return false;
 

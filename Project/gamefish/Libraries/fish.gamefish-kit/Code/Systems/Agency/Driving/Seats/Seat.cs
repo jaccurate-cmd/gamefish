@@ -9,6 +9,9 @@ public partial class Seat : Module, IUsable, ISitTarget
 	protected const int SEAT_ORDER = DEFAULT_ORDER - 1000;
 	protected const int SEAT_DEBUG_ORDER = SEAT_ORDER - 10;
 
+	protected override bool? IsNetworkedOverride => true;
+	protected override bool IsNetworkedAutomatically => true;
+
 	public override bool IsParent( ModuleEntity comp )
 		=> comp is Vehicle; // auto-attach to vehicles
 
@@ -43,6 +46,8 @@ public partial class Seat : Module, IUsable, ISitTarget
 
 	protected virtual void OnSetSitter( Pawn newSitter, Pawn oldSitter )
 	{
+		if ( newSitter.IsValid() )
+			newSitter.OnSeatMoved( this );
 	}
 
 	protected override void OnStart()
@@ -56,6 +61,12 @@ public partial class Seat : Module, IUsable, ISitTarget
 	{
 		if ( Sitter.IsValid() )
 			Sitter.OnSeatMoved( this );
+	}
+
+	public virtual void Simulate( in float deltaTime, in bool isFixedUpdate )
+	{
+		if ( Vehicle.IsValid() )
+			Vehicle.Simulate( this, Sitter, in deltaTime, in isFixedUpdate );
 	}
 
 	public virtual bool CanEnter( Pawn pawn )

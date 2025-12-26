@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Sandbox.Services;
 
 namespace GameFish;
 
@@ -16,16 +17,50 @@ partial class Pawn
 		set => Seat = value;
 	}
 
-	[Sync]
-	public Seat Seat { get; set; }
+	[Sync( SyncFlags.FromHost )]
+	public Seat Seat
+	{
+		get => _seat;
+		set
+		{
+			if ( _seat == value )
+				return;
+
+			var old = _seat;
+			_seat = value;
+		}
+	}
+
+	protected Seat _seat;
+
+	protected virtual void OnSetSeat( Seat newSeat, Seat oldSeat )
+	{
+		FollowSeat( newSeat );
+	}
 
 	public virtual void OnSeatMoved( Seat seat )
 	{
-		if ( IsProxy || !Seat.IsValid() )
+		FollowSeat( seat );
+	}
+
+	/// <summary>
+	/// Glue they ass onto the seat.
+	/// </summary>
+	protected virtual void FollowSeat( Seat seat )
+	{
+		if ( IsProxy || !seat.IsValid() )
 			return;
 
 		// TEMP!
 		WorldPosition = seat.WorldPosition;
 		WorldRotation = seat.WorldRotation;
+	}
+
+	protected virtual void SimulateSeat( in float deltaTime, in bool isFixedUpdate )
+	{
+		if ( !Seat.IsValid() )
+			return;
+
+		Seat.Simulate( in deltaTime, in isFixedUpdate );
 	}
 }
