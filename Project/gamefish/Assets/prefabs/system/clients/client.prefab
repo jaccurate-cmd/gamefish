@@ -19,6 +19,7 @@
         "__type": "GameFish.Client",
         "__guid": "af98a2ba-66d5-4a1e-b3b9-1dab13ece240",
         "__enabled": true,
+        "Flags": 0,
         "ClassId": "client_player",
         "ClassName": null,
         "IsClass": false,
@@ -36,6 +37,61 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "Team": "data/teams/player.team"
+      },
+      {
+        "__type": "Sandbox.Voice",
+        "__guid": "c14b7927-2a28-4fbe-953a-2f44c6014289",
+        "__enabled": true,
+        "Flags": 0,
+        "Distance": 7000,
+        "Falloff": [
+          {
+            "x": 0,
+            "y": 1,
+            "in": 13.499992,
+            "out": -13.499992,
+            "mode": "Mirrored"
+          },
+          {
+            "x": 0.02264151,
+            "y": 0.72019696,
+            "in": 4.723807,
+            "out": -4.723807,
+            "mode": "Mirrored"
+          },
+          {
+            "x": 0.16320755,
+            "y": 0.31970447,
+            "in": 1.0977784,
+            "out": -1.0977784,
+            "mode": "Mirrored"
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "in": -0,
+            "out": -0,
+            "mode": "Mirrored"
+          }
+        ],
+        "Loopback": false,
+        "Mode": "PushToTalk",
+        "MorphScale": 3,
+        "MorphSmoothTime": 0.1,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PushToTalkInput": "voice",
+        "Renderer": null,
+        "VoiceMixer": {
+          "Name": "voice",
+          "Id": "3b76efb2-90e2-4edf-81fd-64544e503943"
+        },
+        "Volume": 1,
+        "WorldspacePlayback": false
       }
     ],
     "Children": [
