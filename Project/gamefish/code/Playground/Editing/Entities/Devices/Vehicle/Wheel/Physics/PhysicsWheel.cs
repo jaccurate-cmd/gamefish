@@ -81,9 +81,16 @@ public partial class PhysicsWheel : Device
 		if ( Wires is not null )
 		{
 			foreach ( var (ent, _) in Wires )
-				if ( ent is WiredSeat seat )
-					if ( seat.DriveInput != default )
-						drive = seat.DriveInput;
+			{
+				if ( ent is not IPilot pilot )
+					continue;
+
+				if ( pilot.DriveInput != default )
+				{
+					drive = pilot.DriveInput;
+					break;
+				}
+			}
 		}
 
 		// Pitch

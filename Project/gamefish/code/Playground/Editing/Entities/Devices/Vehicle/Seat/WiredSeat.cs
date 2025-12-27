@@ -1,11 +1,11 @@
 namespace Playground;
 
-public partial class WiredSeat : Seat, IWired
+public partial class WiredSeat : Seat, IWired, IPilot
 {
 	[Property]
 	[Sync( SyncFlags.FromHost )]
 	[Feature( SEAT ), Group( DEBUG ), Order( SEAT_DEBUG_ORDER + 1 )]
-	public Vector2 DriveInput { get; set; }
+	public Vector3 DriveInput { get; set; }
 
 	public void WireSimulate( Device device, in float deltaTime, in bool isFixedUpdate )
 	{
