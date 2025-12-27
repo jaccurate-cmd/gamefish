@@ -31,7 +31,7 @@ public partial class Device : EditorEntity, IWired
 			return;
 
 		var center = Center;
-		var c = Color.Black.WithAlpha( 0.7f );
+		var c = Color.Black.WithAlpha( 2f );
 
 		foreach ( var (ent, localPos) in Wires )
 		{
