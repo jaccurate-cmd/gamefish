@@ -6,9 +6,9 @@ namespace GameFish;
 partial class Pawn
 {
 	/// <summary>
-	/// The thing we're currently focusing on.
+	/// The comfy chair we're sitting in.
 	/// </summary>
-	[Title( "Focus" )]
+	[Title( "Seat" )]
 	[Property, JsonIgnore]
 	[Feature( PAWN ), Group( VEHICLE )]
 	protected Seat InspectorSeat

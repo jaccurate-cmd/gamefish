@@ -65,8 +65,8 @@ public abstract partial class Vehicle : DynamicEntity
 			return;
 		}
 
-		InputAcceleration = cl.VehicleInput.Acceleration;
-		InputSteering = cl.VehicleInput.Steering;
+		InputAcceleration = cl.InputForward;
+		InputSteering = cl.InputHorizontal;
 	}
 
 	public virtual bool IsDriver( Seat seat, Pawn pawn )

@@ -2,11 +2,22 @@ namespace GameFish;
 
 partial class Client
 {
-	/// <summary>
-	/// Vehicle steering direction.
-	/// </summary>
 	[Sync]
-	public VehicleInput VehicleInput { get; set; }
+	public float InputForward
+	{
+		get => _vForward.Clamp( -1f, 1f );
+		set => _vForward = value.Clamp( -1f, 1f );
+	}
+
+	[Sync]
+	public float InputHorizontal
+	{
+		get => _vHorizontal.Clamp( -1f, 1f );
+		set => _vHorizontal = value.Clamp( -1f, 1f );
+	}
+
+	protected float _vForward;
+	protected float _vHorizontal;
 
 	public override void FrameSimulate( in float deltaTime )
 	{
@@ -19,12 +30,8 @@ partial class Client
 	{
 		if ( IControls.BlockMoving )
 		{
-			VehicleInput = VehicleInput with
-			{
-				Acceleration = 0f,
-				Steering = 0f
-			};
-
+			InputForward = 0f;
+			InputHorizontal = 0f;
 			return;
 		}
 
@@ -45,11 +52,8 @@ partial class Client
 		if ( Input.Down( "Right" ) )
 			steerDir -= 1f;
 
-		VehicleInput = VehicleInput with
-		{
-			Acceleration = accelDir.Clamp( -1f, 1f ),
-			Steering = steerDir.Clamp( -1f, 1f )
-		};
+		InputForward = accelDir.Clamp( -1f, 1f );
+		InputHorizontal = steerDir.Clamp( -1f, 1f );
 	}
 
 	/// <summary>
