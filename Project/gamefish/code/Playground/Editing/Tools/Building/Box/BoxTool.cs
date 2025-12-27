@@ -13,12 +13,10 @@ public partial class BoxTool : EditorTool
 	[Feature( EDITOR ), Group( PREFABS ), Order( PREFABS_ORDER )]
 	public float BoxSize { get; set; } = 50f;
 
-
 	[Property]
 	[Range( 0f, 100f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public virtual float ScrollSensitivity { get; set; } = 10f;
-
 
 	[Property]
 	[Range( 0f, 2048f )]
@@ -215,17 +213,6 @@ public partial class BoxTool : EditorTool
 
 		var tBox = new Transform( center, Rotation.Identity, scale );
 
-		if ( !BoxPrefab.TrySpawn( tBox, out objBox ) )
-			return false;
-
-		objBox.NetworkSetup(
-			cn: Connection.Local,
-			orphanMode: NetworkOrphaned.ClearOwner,
-			ownerTransfer: OwnerTransfer.Takeover,
-			netMode: NetworkMode.Object,
-			ignoreProxy: true
-		);
-
-		return true;
+		return TrySpawnPrefab( BoxPrefab, out objBox, tWorld: tBox );
 	}
 }

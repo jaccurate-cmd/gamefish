@@ -1,3 +1,5 @@
+using Microsoft.VisualBasic;
+
 namespace Playground;
 
 partial class EditorTool

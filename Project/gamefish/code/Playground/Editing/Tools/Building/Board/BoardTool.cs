@@ -186,25 +186,6 @@ public partial class BoardTool : EditorTool
 		}
 	}
 
-	protected virtual bool TryCreateBoard( in Transform t, out GameObject objBoard )
-	{
-		if ( !IsClientAllowed( Client.Local ) )
-		{
-			objBoard = null;
-			return false;
-		}
-
-		if ( !BoardPrefab.TrySpawn( t, out objBoard ) )
-			return false;
-
-		objBoard.NetworkSetup(
-			cn: Connection.Local,
-			orphanMode: NetworkOrphaned.ClearOwner,
-			ownerTransfer: OwnerTransfer.Takeover,
-			netMode: NetworkMode.Object,
-			ignoreProxy: true
-		);
-
-		return true;
-	}
+	protected virtual bool TryCreateBoard( in Transform t, out GameObject obj )
+		=> TrySpawnPrefab( BoardPrefab, tWorld: t, obj: out obj );
 }

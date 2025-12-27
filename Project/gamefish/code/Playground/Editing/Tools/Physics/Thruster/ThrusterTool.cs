@@ -86,8 +86,8 @@ public partial class ThrusterTool : EditorTool
 		if ( !rb.IsValid() )
 			return false;
 
-			if ( !IsClientAllowed( Client.Local ) )
-				return false;
+		if ( !IsClientAllowed( Client.Local ) )
+			return false;
 
 		if ( !CanTarget( Client.Local, rb, in hitPos, in hitNormal ) )
 			return false;
@@ -95,27 +95,25 @@ public partial class ThrusterTool : EditorTool
 		var rAim = Rotation.LookAt( -hitNormal );
 		var tWorld = new Transform( hitPos, rAim );
 
-		if ( !ThrusterPrefab.TrySpawn( tWorld, out var thrusterObj ) )
+		if ( !TrySpawnPrefab( ThrusterPrefab, tWorld: tWorld, obj: out var obj ) )
 			return false;
 
-		thrusterObj.NetworkInterpolation = false;
+		obj.NetworkInterpolation = false;
 
-		if ( !thrusterObj.Components.TryGet<Thruster>( out var thruster ) )
+		if ( !obj.Components.TryGet<Thruster>( out var thruster ) )
 		{
-			this.Warn( $"No {typeof( Thruster )} on obj:[{thrusterObj}]!" );
-			thrusterObj.Destroy();
+			this.Warn( $"No {typeof( Thruster )} on obj:[{obj}]!" );
+			obj.Destroy();
 			return false;
 		}
 
 		thruster.Settings = ThrusterSettings;
 		thruster.Offset = rb.WorldTransform.ToLocal( tWorld );
 
-		thruster.TrySetNetworkOwner( Connection.Local, allowProxy: true );
-
 		if ( !thruster.TryAttachTo( rb, thruster.Offset ) )
 		{
 			this.Warn( $"Couldn't attach thruster:[{thruster}] to rb:{rb}!" );
-			thrusterObj.Destroy();
+			obj.Destroy();
 			return false;
 		}
 

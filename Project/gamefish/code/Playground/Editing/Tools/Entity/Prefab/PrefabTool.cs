@@ -161,25 +161,6 @@ public partial class PrefabTool : EditorTool
 		return TryPlace( TargetTransform, out obj );
 	}
 
-	protected virtual bool TryPlace( Transform tPrefab, out GameObject obj )
-	{
-		if ( !IsClientAllowed( Client.Local ) )
-		{
-			obj = null;
-			return false;
-		}
-
-		if ( !Prefab.TrySpawn( in tPrefab, out obj ) )
-			return false;
-
-		obj.NetworkSetup(
-			cn: Connection.Local,
-			orphanMode: NetworkOrphaned.ClearOwner,
-			ownerTransfer: OwnerTransfer.Takeover,
-			netMode: NetworkMode.Object,
-			ignoreProxy: true
-		);
-
-		return true;
-	}
+	protected virtual bool TryPlace( Transform t, out GameObject obj )
+		=> TrySpawnPrefab( Prefab, tWorld: t, obj: out obj );
 }

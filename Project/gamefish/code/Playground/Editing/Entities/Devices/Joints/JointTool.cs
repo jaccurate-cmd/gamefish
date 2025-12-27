@@ -147,7 +147,7 @@ public abstract class JointTool : EditorTool
 		if ( !point2.IsValid() || !ValidAttachment( point2 ) )
 			return false;
 
-		if ( !JointPrefab.TrySpawn( out var jointObj ) )
+		if ( !TrySpawnPrefab( JointPrefab, obj: out var jointObj ) )
 		{
 			this.Warn( $"Couldn't find/spawn {typeof( TJoint )} prefab:[{JointPrefab}]!" );
 			return false;

@@ -47,7 +47,7 @@ public partial class PropellerTool : JointTool
 
 		// var tHit = hitPoint.Object.WorldTransform.WithOffset( hitPoint.Offset.Value );
 
-		if ( !JointPrefab.TrySpawn( out var jointObj ) )
+		if ( !TrySpawnPrefab( JointPrefab, obj: out var jointObj ) )
 		{
 			this.Warn( $"Couldn't find/spawn {typeof( Propeller )} prefab:[{JointPrefab}]!" );
 			return false;
@@ -64,8 +64,6 @@ public partial class PropellerTool : JointTool
 
 		joint.ParentPoint = hitPoint;
 		joint.Settings = DeviceSettings;
-
-		joint.TrySetNetworkOwner( Connection.Local, allowProxy: true );
 
 		if ( !joint.TryAttachTo( hitPoint ) )
 		{

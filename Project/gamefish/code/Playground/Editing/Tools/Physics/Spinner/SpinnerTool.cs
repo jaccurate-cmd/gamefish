@@ -95,15 +95,15 @@ public partial class SpinnerTool : EditorTool
 		var rAim = Rotation.LookAt( -hitNormal );
 		var tWorld = new Transform( hitPos, rAim );
 
-		if ( !SpinnerPrefab.TrySpawn( tWorld, out var thrusterObj ) )
+		if ( !TrySpawnPrefab( SpinnerPrefab, obj: out var jointObj ) )
 			return false;
 
-		thrusterObj.NetworkInterpolation = false;
+		jointObj.NetworkInterpolation = false;
 
-		if ( !thrusterObj.Components.TryGet<Spinner>( out var thruster ) )
+		if ( !jointObj.Components.TryGet<Spinner>( out var thruster ) )
 		{
-			this.Warn( $"No {typeof( Spinner )} on obj:[{thrusterObj}]!" );
-			thrusterObj.Destroy();
+			this.Warn( $"No {typeof( Spinner )} on obj:[{jointObj}]!" );
+			jointObj.Destroy();
 			return false;
 		}
 
@@ -115,7 +115,7 @@ public partial class SpinnerTool : EditorTool
 		if ( !thruster.TryAttachTo( rb, thruster.Offset ) )
 		{
 			this.Warn( $"Couldn't attach thruster:[{thruster}] to rb:{rb}!" );
-			thrusterObj.Destroy();
+			jointObj.Destroy();
 			return false;
 		}
 
