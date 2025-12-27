@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Playground;
 
 public partial class PrefabTool : EditorTool
@@ -30,34 +32,35 @@ public partial class PrefabTool : EditorTool
 			_prefab = value;
 
 			if ( _prefab.IsValid() )
-				PrefabLocalBounds = SceneUtility.GetPrefabScene( _prefab )?.GetLocalBounds();
+				PrefabBounds = SceneUtility.GetPrefabScene( _prefab )?.GetBounds();
 		}
 	}
 
 	protected PrefabFile _prefab;
 
+	[Title( "Prefab Bounds" )]
+	[Property, ReadOnly, JsonIgnore]
+	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
+	public BBox InspectorPrefabBounds => PrefabBounds ?? default;
 
-	public bool HasTargetPosition { get; set; }
+	public BBox? PrefabBounds { get; protected set; }
 
-	public BBox? PrefabLocalBounds { get; protected set; }
-	public Transform PrefabTransform { get; protected set; }
+	public bool HasTarget { get; protected set; }
+	public Transform TargetTransform { get; protected set; }
 
 	public override void OnExit()
 	{
 		base.OnExit();
 
-		HasTargetPosition = false;
+		HasTarget = false;
 	}
 
 	public override void FrameSimulate( in float deltaTime )
 	{
 		UpdateTarget( in deltaTime );
 
-		if ( !HasTargetPosition )
-			return;
-
 		if ( PressedPrimary )
-			TryPlacePrefab( PrefabTransform, out _ );
+			TryPlaceAtTarget( out _ );
 	}
 
 	public override bool TryMouseWheel( in Vector2 dir )
@@ -88,15 +91,16 @@ public partial class PrefabTool : EditorTool
 
 	public override bool TryTrace( out SceneTraceResult tr )
 	{
-		if ( !PrefabLocalBounds.HasValue )
+		if ( !PrefabBounds.HasValue )
 			return base.TryTrace( out tr );
 
 		if ( !Editor.TryGetAimRay( Scene, out var ray ) )
 			return base.TryTrace( out tr );
 
-		var bounds = PrefabLocalBounds.Value;
+		var bounds = PrefabBounds.Value;
+		// var extents = bounds.Extents;
 
-		tr = Scene.Trace.Box( bounds.Extents, ray, Editor.TRACE_DISTANCE_DEFAULT )
+		tr = Scene.Trace.Box( bounds, ray, Editor.TRACE_DISTANCE_DEFAULT )
 			.IgnoreGameObjectHierarchy( Client.Local?.Pawn?.GameObject )
 			.Rotated( GetPrefabRotation() )
 			.Run();
@@ -106,9 +110,9 @@ public partial class PrefabTool : EditorTool
 
 	protected virtual void UpdateTarget( in float deltaTime )
 	{
-		HasTargetPosition = false;
+		HasTarget = false;
 
-		if ( !Prefab.IsValid() || !PrefabLocalBounds.HasValue )
+		if ( !Prefab.IsValid() || !PrefabBounds.HasValue )
 			return;
 
 		if ( !IsClientAllowed( Client.Local ) )
@@ -118,8 +122,6 @@ public partial class PrefabTool : EditorTool
 			return;
 
 		var traceHit = tr.Distance <= Distance;
-		var pointDist = tr.Distance.Min( Distance );
-		var point = tr.StartPosition + (tr.Direction * pointDist);
 
 		var c = Color.White.Desaturate( 0.4f );
 		var c1 = c.WithAlpha( 0.4f );
@@ -131,29 +133,47 @@ public partial class PrefabTool : EditorTool
 			c2 = c2.WithAlphaMultiplied( 0.3f );
 		}
 
-		var bounds = PrefabLocalBounds.Value;
+		if ( !TrySetTarget( in tr ) )
+			return;
 
-		HasTargetPosition = true;
-		PrefabTransform = new( point, GetPrefabRotation() );
-
-		var tBox = PrefabTransform;
-		tBox.Scale *= 0.5f;
-
-		this.DrawBox( bounds, c1, c2, tWorld: tBox );
+		var bounds = PrefabBounds.Value;
+		this.DrawBox( bounds, c1, c2, tWorld: TargetTransform );
 	}
 
-	protected virtual bool TryPlacePrefab( in Transform t, out GameObject objBoard )
+	protected virtual bool TrySetTarget( in SceneTraceResult tr )
 	{
-		if ( !IsClientAllowed( Client.Local ) )
+		var pointDist = tr.Distance.Min( Distance );
+		var hitPoint = tr.StartPosition + (tr.Direction * pointDist);
+
+		HasTarget = true;
+		TargetTransform = new Transform( hitPoint, GetPrefabRotation() );
+
+		return true;
+	}
+
+	protected virtual bool TryPlaceAtTarget( out GameObject obj )
+	{
+		if ( !HasTarget )
 		{
-			objBoard = null;
+			obj = null;
 			return false;
 		}
 
-		if ( !Prefab.TrySpawn( t, out objBoard ) )
+		return TryPlace( TargetTransform, out obj );
+	}
+
+	protected virtual bool TryPlace( Transform tPrefab, out GameObject obj )
+	{
+		if ( !IsClientAllowed( Client.Local ) )
+		{
+			obj = null;
+			return false;
+		}
+
+		if ( !Prefab.TrySpawn( in tPrefab, out obj ) )
 			return false;
 
-		objBoard.NetworkSetup(
+		obj.NetworkSetup(
 			cn: Connection.Local,
 			orphanMode: NetworkOrphaned.ClearOwner,
 			ownerTransfer: OwnerTransfer.Takeover,
