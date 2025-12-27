@@ -42,7 +42,6 @@ public partial class PrefabTool : EditorTool
 	public BBox? PrefabLocalBounds { get; protected set; }
 	public Transform PrefabTransform { get; protected set; }
 
-
 	public override void OnExit()
 	{
 		base.OnExit();
@@ -52,20 +51,13 @@ public partial class PrefabTool : EditorTool
 
 	public override void FrameSimulate( in float deltaTime )
 	{
-		if ( !Mouse.Active )
+		UpdateTarget( in deltaTime );
+
+		if ( !HasTargetPosition )
 			return;
 
-		UpdateScroll( in deltaTime );
-
-		UpdatePlace( in deltaTime );
-	}
-
-	public override bool TryLeftClick()
-	{
-		if ( HasTargetPosition )
+		if ( PressedPrimary )
 			TryPlacePrefab( PrefabTransform, out _ );
-
-		return true;
 	}
 
 	public override bool TryMouseWheel( in Vector2 dir )
@@ -76,14 +68,6 @@ public partial class PrefabTool : EditorTool
 		Distance = (Distance + scroll).Clamp( DistanceRange );
 
 		return true;
-	}
-
-	protected virtual void UpdateScroll( in float deltaTime )
-	{
-		var yScroll = Input.MouseWheel.y;
-
-		if ( yScroll == 0f )
-			return;
 	}
 
 	public virtual Rotation GetPrefabRotation()
@@ -120,7 +104,7 @@ public partial class PrefabTool : EditorTool
 		return true;
 	}
 
-	protected virtual void UpdatePlace( in float deltaTime )
+	protected virtual void UpdateTarget( in float deltaTime )
 	{
 		HasTargetPosition = false;
 
