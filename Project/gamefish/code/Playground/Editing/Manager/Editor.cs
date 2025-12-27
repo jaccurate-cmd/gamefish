@@ -32,6 +32,8 @@ public partial class Editor : Singleton<Editor>
 		UpdateUI();
 
 		SimulateTool( Time.Delta, isFixedUpdate: false );
+
+		DrawNearbyHelpers();
 	}
 
 	protected override void OnFixedUpdate()

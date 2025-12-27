@@ -43,4 +43,8 @@ public partial class EditorEntity : ModuleEntity
 		if ( !comps.Any() )
 			GameObject.Destroy();
 	}
+
+	public virtual void RenderHelpers()
+	{
+	}
 }

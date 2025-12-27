@@ -57,10 +57,17 @@ public abstract partial class Device : EditorEntity, IWired
 	protected virtual void SimulateWire( IWired wire, in float deltaTime, in bool isFixedUpdate )
 		=> wire?.WireSimulate( this, in deltaTime, in isFixedUpdate );
 
+	public override void RenderHelpers()
+	{
+		base.RenderHelpers();
+
+		RenderWires();
+	}
+
 	/// <summary>
-	/// Show active connections.
+	/// Show active wire connections.
 	/// </summary>
-	public virtual void DrawWireGizmos()
+	public virtual void RenderWires()
 	{
 		if ( Wires is null || Wires.Count == 0 )
 			return;

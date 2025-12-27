@@ -23,8 +23,11 @@ public partial class WiringTool : EditorTool
 	{
 		UpdateTarget( in deltaTime );
 
-		if ( TargetEntity.IsValid() && TargetEntity is Device device )
-			device.DrawWireGizmos();
+		if ( !IsMenuOpen )
+		{
+			if ( TargetEntity.IsValid() && TargetEntity is Device device )
+				device.RenderHelpers();
+		}
 
 		UpdatePlacing();
 		UpdateClearing();
