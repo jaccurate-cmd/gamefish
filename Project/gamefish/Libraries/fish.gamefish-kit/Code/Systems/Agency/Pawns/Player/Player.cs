@@ -59,7 +59,7 @@ public partial class Player : Pawn
 		usable = tr.GameObject.Components
 			.GetAll<IUsable>( FindMode.EnabledInSelf | FindMode.InDescendants | FindMode.InAncestors )
 			.Where( u => u.IsUsable( this ) )
-			.OrderBy( u => u.UsablePriority )
+			.OrderBy( u => u.GetUsablePriority( this ) )
 			.FirstOrDefault();
 
 		return usable is not null;

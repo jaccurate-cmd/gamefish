@@ -4,7 +4,7 @@ using Sandbox.Movement;
 namespace GameFish;
 
 [Icon( "chair" )]
-public partial class Seat : Module, IUsable, ISitTarget
+public partial class Seat : DynamicEntity, IUsable, ISitTarget
 {
 	protected const int SEAT_ORDER = DEFAULT_ORDER - 1000;
 	protected const int SEAT_DEBUG_ORDER = SEAT_ORDER - 10;
@@ -12,17 +12,10 @@ public partial class Seat : Module, IUsable, ISitTarget
 	protected override bool? IsNetworkedOverride => true;
 	protected override bool IsNetworkedAutomatically => true;
 
-	public override bool IsParent( ModuleEntity comp )
-		=> comp is Vehicle; // auto-attach to vehicles
-
-	public Vehicle Vehicle => Parent as Vehicle;
-
-	public virtual float UsablePriority => 0f;
-
 	[Title( "Sitter" )]
 	[Property, JsonIgnore, ReadOnly]
 	[Feature( SEAT ), Group( DEBUG ), Order( SEAT_DEBUG_ORDER )]
-	public Pawn InspectorSitter => Sitter;
+	protected Pawn InspectorSitter => Sitter;
 
 	[Sync( SyncFlags.FromHost )]
 	public Pawn Sitter
@@ -44,17 +37,39 @@ public partial class Seat : Module, IUsable, ISitTarget
 
 	public bool IsOccupied => Sitter.IsValid() && Sitter.Seat == this;
 
+	[Sync( SyncFlags.FromHost )]
+	public Vehicle Vehicle
+	{
+		get => _vehicle;
+		set
+		{
+			if ( _vehicle == value )
+				return;
+
+			var old = _vehicle;
+			_vehicle = value;
+
+			OnSetVehicle( _vehicle, old );
+		}
+	}
+
+	protected Vehicle _vehicle;
+
+	public virtual float GetUsablePriority( Pawn pawn )
+	{
+		if ( !pawn.IsValid() )
+			return 0f;
+
+		return Center.DistanceSquared( pawn.EyePosition );
+	}
+
 	protected override void OnEnabled()
 	{
 		Tags?.Add( TAG_SEAT );
 
-		base.OnEnabled();
-	}
+		FindVehicle();
 
-	protected virtual void OnSetSitter( Pawn newSitter, Pawn oldSitter )
-	{
-		if ( newSitter.IsValid() )
-			newSitter.OnSeatMoved( this );
+		base.OnEnabled();
 	}
 
 	protected override void OnStart()
@@ -62,6 +77,23 @@ public partial class Seat : Module, IUsable, ISitTarget
 		base.OnStart();
 
 		Transform.OnTransformChanged = OnMoved;
+	}
+
+	public virtual void FindVehicle()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( !Vehicle.IsValid() )
+			Vehicle = Components.Get<Vehicle>( FindMode.EnabledInSelf | FindMode.InAncestors );
+	}
+
+	protected virtual void OnSetSitter( Pawn newSitter, Pawn oldSitter )
+	{
+	}
+
+	protected virtual void OnSetVehicle( Vehicle newVehicle, Vehicle oldVehicle )
+	{
 	}
 
 	protected virtual void OnMoved()

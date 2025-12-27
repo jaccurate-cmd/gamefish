@@ -1,5 +1,3 @@
-using Microsoft.VisualBasic;
-
 namespace GameFish;
 
 [Icon( "pedal_bike" )]
@@ -70,9 +68,6 @@ public abstract partial class Vehicle : DynamicEntity
 		InputAcceleration = cl.VehicleInput.Acceleration;
 		InputSteering = cl.VehicleInput.Steering;
 	}
-
-	public virtual IEnumerable<Seat> GetSeats()
-		=> GetModules<Seat>();
 
 	public virtual bool IsDriver( Seat seat, Pawn pawn )
 	{

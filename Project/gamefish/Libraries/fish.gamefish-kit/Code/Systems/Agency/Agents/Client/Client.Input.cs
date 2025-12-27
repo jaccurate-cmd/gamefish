@@ -6,11 +6,7 @@ partial class Client
 	/// Vehicle steering direction.
 	/// </summary>
 	[Sync]
-	public VehicleInput VehicleInput
-	{
-		get;
-		set;
-	}
+	public VehicleInput VehicleInput { get; set; }
 
 	public override void FrameSimulate( in float deltaTime )
 	{

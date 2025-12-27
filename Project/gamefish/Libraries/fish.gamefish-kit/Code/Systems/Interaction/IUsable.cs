@@ -9,7 +9,7 @@ public interface IUsable
 	/// Lets this be used over other possible usables.
 	/// Lower numbers should indicate a higher priority(useful with distance/angle).
 	/// </summary>
-	public float UsablePriority { get; }
+	public float GetUsablePriority( Pawn pawn );
 
 	/// <returns> If that pawn is allowed to use this. </returns>
 	public bool IsUsable( Pawn pawn );
