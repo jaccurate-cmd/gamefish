@@ -25,6 +25,29 @@ public partial class Device : EditorEntity, IWired
 	/// </summary>
 	public virtual bool TooManyWires => WireCount >= WIRE_LIMIT;
 
+	public virtual void DrawWireGizmos()
+	{
+		if ( Wires is null || Wires.Count == 0 )
+			return;
+
+		var center = Center;
+		var c = Color.Black.WithAlpha( 0.7f );
+
+		foreach ( var (ent, localPos) in Wires )
+		{
+			if ( !ent.IsValid() )
+				continue;
+
+			var plug = ent.WorldTransform.PointToWorld( localPos );
+
+			this.DrawArrow(
+				from: center, to: plug,
+				c: c, len: 7f, w: 2f, th: 4f,
+				tWorld: global::Transform.Zero
+			);
+		}
+	}
+
 	/// <returns> If these two are compatible. </returns>
 	public virtual bool CanWire( Entity to )
 	{
@@ -53,13 +76,12 @@ public partial class Device : EditorEntity, IWired
 
 		Wires ??= [];
 
-		if ( Wires is not null )
-		{
-			Wires[to] = localPos;
-			return true;
-		}
+		if ( Wires is null )
+			return false;
 
-		return false;
+		Wires[to] = localPos;
+
+		return true;
 	}
 
 	[Rpc.Host( NetFlags.Reliable | NetFlags.SendImmediate )]

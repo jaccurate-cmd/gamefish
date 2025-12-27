@@ -21,10 +21,10 @@ public partial class WiringTool : EditorTool
 
 	public override void FrameSimulate( in float deltaTime )
 	{
-		if ( !Mouse.Active )
-			return;
-
 		UpdateTarget( in deltaTime );
+
+		if ( TargetEntity.IsValid() && TargetEntity is Device device )
+			device.DrawWireGizmos();
 
 		UpdatePlacing();
 		UpdateClearing();
@@ -34,6 +34,9 @@ public partial class WiringTool : EditorTool
 
 	protected void DrawTargetGizmos()
 	{
+		if ( TargetWorldPosition is not Vector3 targetPos )
+			return;
+
 		var ent1 = Point1.Entity;
 
 		if ( !IsValidTarget( ent1 ) )
@@ -44,11 +47,7 @@ public partial class WiringTool : EditorTool
 		if ( !ent2.IsValid() )
 			return;
 
-		var a = ent1.WorldTransform.PointToWorld( Point1.LocalPos );
-		var b = ent2.WorldTransform.PointToWorld( Point2.LocalPos );
-
-		if ( ent2 == TargetEntity )
-			b = TargetWorldPosition ?? b;
+		var startPoint = ent1.WorldTransform.PointToWorld( Point1.LocalPos );
 
 		var c = Color.Black.WithAlpha( 0.7f );
 
@@ -56,7 +55,7 @@ public partial class WiringTool : EditorTool
 			c = c.WithAlphaMultiplied( 0.5f );
 
 		this.DrawArrow(
-			from: a, to: b,
+			from: startPoint, to: targetPos,
 			c: c, len: 7f, w: 2f, th: 4f,
 			tWorld: global::Transform.Zero
 		);
@@ -103,6 +102,7 @@ public partial class WiringTool : EditorTool
 	protected virtual void UpdateTarget( in float deltaTime )
 	{
 		TargetEntity = null;
+		TargetWorldPosition = null;
 
 		if ( !IsClientAllowed( Client.Local ) )
 			return;
@@ -155,6 +155,9 @@ public partial class WiringTool : EditorTool
 	public static bool CanWire( Entity ent1, Entity ent2 )
 	{
 		if ( ent1 == ent2 )
+			return false;
+
+		if ( ent1 is not Device && ent2 is not Device )
 			return false;
 
 		return IsValidTarget( ent1 ) && IsValidTarget( ent2 );
