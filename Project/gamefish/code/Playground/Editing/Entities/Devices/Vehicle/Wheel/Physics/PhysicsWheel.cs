@@ -28,6 +28,13 @@ public partial class PhysicsWheel : EditorEntity
 	[Sync]
 	public bool IsReversed { get; set; }
 
+	protected override void OnEnabled()
+	{
+		Tags?.Add( TAG_WHEEL );
+
+		base.OnEnabled();
+	}
+
 	protected override void OnStart()
 	{
 		base.OnStart();
