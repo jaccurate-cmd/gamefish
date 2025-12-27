@@ -1,19 +1,23 @@
-using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
-
 namespace Playground;
 
 public partial class WiringTool : EditorTool
 {
-	public Entity Target { get; set; }
+	public Entity TargetEntity { get; set; }
+	public Vector3? TargetWorldPosition { get; set; }
 	public Vector3? TargetLocalPosition { get; set; }
+
+	public (Entity Entity, Vector3 LocalPos) Point1 { get; set; }
+	public (Entity Entity, Vector3 LocalPos) Point2 { get; set; }
 
 	public override void OnExit()
 	{
 		base.OnExit();
 
-		ClearTarget();
+		Clear();
 	}
+
+	public override bool TryLeftClick()
+		=> true;
 
 	public override void FrameSimulate( in float deltaTime )
 	{
@@ -23,49 +27,82 @@ public partial class WiringTool : EditorTool
 		UpdateTarget( in deltaTime );
 
 		UpdatePlacing();
-		UpdateBreaking();
+		UpdateClearing();
+
+		DrawTargetGizmos();
 	}
 
-	public override bool TryLeftClick()
-		=> true;
-
-	/*
-	public override bool TryTrace( out SceneTraceResult tr )
+	protected void DrawTargetGizmos()
 	{
-		if ( !Editor.TryGetAimRay( Scene, out var ray ) )
-			return base.TryTrace( out tr );
+		var ent1 = Point1.Entity;
 
-		tr = Scene.Trace.Box( bounds.Extents, ray, Editor.TRACE_DISTANCE_DEFAULT )
-			.IgnoreGameObjectHierarchy( Client.Local?.Pawn?.GameObject )
-			.Rotated( GetPrefabRotation() )
-			.Run();
+		if ( !IsValidTarget( ent1 ) )
+			return;
 
-		return true;
+		var ent2 = IsValidTarget( Point2.Entity ) ? Point2.Entity : TargetEntity;
+
+		if ( !ent2.IsValid() )
+			return;
+
+		var a = ent1.WorldTransform.PointToWorld( Point1.LocalPos );
+		var b = ent2.WorldTransform.PointToWorld( Point2.LocalPos );
+
+		if ( ent2 == TargetEntity )
+			b = TargetWorldPosition ?? b;
+
+		var c = Color.Black.WithAlpha( 0.7f );
+
+		if ( !CanWire( ent1, ent2 ) )
+			c = c.WithAlphaMultiplied( 0.5f );
+
+		this.DrawArrow(
+			from: a, to: b,
+			c: c, len: 7f, w: 2f, th: 4f,
+			tWorld: global::Transform.Zero
+		);
 	}
-	*/
 
 	protected void UpdatePlacing()
 	{
 		if ( !PressedPrimary )
 			return;
 
+		if ( !IsValidTarget( TargetEntity ) )
+			return;
+
+		if ( TargetLocalPosition is not Vector3 localPos )
+			return;
+
+		if ( !Point1.Entity.IsValid() )
+		{
+			Point1 = (TargetEntity, localPos);
+		}
+		else
+		{
+			if ( TargetEntity != Point1.Entity )
+				Point2 = (TargetEntity, localPos);
+		}
+
+		if ( !CanWire( Point1.Entity, Point2.Entity ) )
+			return;
+
+		RpcHostRequestWire( Point1.Entity, Point2.Entity, Point1.LocalPos, Point2.LocalPos );
+
+		Clear();
 	}
 
-	protected void UpdateBreaking()
+	protected void UpdateClearing()
 	{
 		if ( !PressedReload )
 			return;
 
-		if ( !TryTrace( out var tr ) || !tr.Hit )
-			return;
-
-		if ( !Target.IsValid() )
-			return;
+		if ( TargetEntity.IsValid() )
+			RpcHostRequestClear( TargetEntity );
 	}
 
 	protected virtual void UpdateTarget( in float deltaTime )
 	{
-		ClearTarget();
+		TargetEntity = null;
 
 		if ( !IsClientAllowed( Client.Local ) )
 			return;
@@ -78,8 +115,6 @@ public partial class WiringTool : EditorTool
 
 		if ( !TrySetTarget( ent, in tr ) )
 			return;
-
-		this.Log( $"Set target:[{ent}]" );
 
 		var cSphere = Color.White.WithAlpha( 0.4f );
 
@@ -94,7 +129,6 @@ public partial class WiringTool : EditorTool
 			return false;
 
 		const FindMode findMode = FindMode.EnabledInSelf
-			| FindMode.InDescendants
 			| FindMode.InAncestors;
 
 		ent = obj.Components.GetAll<Entity>( findMode )
@@ -107,20 +141,26 @@ public partial class WiringTool : EditorTool
 
 	public bool TrySetTarget( Entity ent, in SceneTraceResult tr )
 	{
-		if ( !tr.Hit || !tr.GameObject.IsValid() )
+		if ( !IsValidTarget( ent ) )
 			return false;
 
-		if ( ent is not IWired )
-			return false;
+		TargetEntity = ent;
 
-		Target = ent;
-
+		TargetWorldPosition = tr.HitPosition;
 		TargetLocalPosition = ent.WorldTransform.PointToLocal( tr.HitPosition );
 
 		return true;
 	}
 
-	public bool IsValidTarget( Entity ent )
+	public static bool CanWire( Entity ent1, Entity ent2 )
+	{
+		if ( ent1 == ent2 )
+			return false;
+
+		return IsValidTarget( ent1 ) && IsValidTarget( ent2 );
+	}
+
+	public static bool IsValidTarget( Entity ent )
 	{
 		if ( !ent.IsValid() || ent is not IWired )
 			return false;
@@ -128,25 +168,42 @@ public partial class WiringTool : EditorTool
 		return true;
 	}
 
-	protected void ClearTarget()
+	protected void Clear()
 	{
-		Target = null;
+		TargetEntity = null;
+
+		TargetWorldPosition = null;
 		TargetLocalPosition = null;
+
+		Point1 = default;
+		Point2 = default;
 	}
 
 	[Rpc.Host]
-	protected void RpcHostRequestWire()
+	protected void RpcHostRequestWire( Entity ent1, Entity ent2, Vector3 localPos1, Vector3 localPos2 )
 	{
 		if ( !TryUse( Rpc.Caller, out _ ) )
 			return;
 
+		if ( !ent1.IsValid() || !ent2.IsValid() )
+			return;
+
+		if ( ent1 is Device device1 )
+			device1.TryWire( ent2, localPos2 );
+
+		if ( ent2 is Device device2 )
+			device2.TryWire( ent1, localPos1 );
 	}
 
 	[Rpc.Host]
 	protected void RpcHostRequestClear( Entity ent )
 	{
+		if ( !ent.IsValid() || ent is not Device device )
+			return;
+
 		if ( !TryUse( Rpc.Caller, out _ ) )
 			return;
 
+		device.Wires?.Clear();
 	}
 }
