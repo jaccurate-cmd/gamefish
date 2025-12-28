@@ -57,7 +57,6 @@ public partial class BrickTool : ShapeTool
 
 	protected override void OnPointAdded( in Vector3 pos, in Rotation r )
 	{
-		base.OnPointAdded( pos, r );
 	}
 
 	protected override bool TryCreateShape( out GameObject obj )

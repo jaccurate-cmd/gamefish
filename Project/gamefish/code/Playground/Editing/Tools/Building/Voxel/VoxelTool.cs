@@ -50,8 +50,10 @@ public partial class VoxelTool : EditorTool
 	}
 	*/
 
-	protected void ClearTarget()
+	protected override void ClearTarget()
 	{
+		base.ClearTarget();
+
 		// TargetVolume = null;
 		TargetPosition = null;
 	}

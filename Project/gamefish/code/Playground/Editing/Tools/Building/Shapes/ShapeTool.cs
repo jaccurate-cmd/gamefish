@@ -94,12 +94,11 @@ public abstract class ShapeTool : EditorTool
 		Distance = (Distance + yScroll).Clamp( DistanceRange );
 	}
 
-	protected override void UpdateActions( in float deltaTime )
+	protected override void OnReload( in SceneTraceResult tr )
 	{
-		base.UpdateActions( deltaTime );
+		base.OnReload( tr );
 
-		if ( PressedReload )
-			Clear();
+		Clear();
 	}
 
 	/// <summary>
@@ -107,6 +106,13 @@ public abstract class ShapeTool : EditorTool
 	/// </summary>
 	protected virtual Transform GetShapeOrigin()
 		=> global::Transform.Zero;
+
+	protected override void RenderHelpers()
+	{
+		base.RenderHelpers();
+
+		RenderShape();
+	}
 
 	protected virtual void RenderShape()
 	{
@@ -127,10 +133,11 @@ public abstract class ShapeTool : EditorTool
 
 		Points ??= [];
 
-		if ( Points.Count >= PointLimit && Points.Count > 0 )
+		if ( AtLimit )
 			Points.RemoveAt( Points.Count - 1 );
 
-		Points.Add( (pos, r) );
+		if ( !AtLimit )
+			Points.Add( (pos, r) );
 
 		OnPointAdded( pos, r );
 
@@ -139,8 +146,11 @@ public abstract class ShapeTool : EditorTool
 
 	protected virtual void OnPointAdded( in Vector3 pos, in Rotation r )
 	{
-		if ( AtLimit )
-			TryCreateShape( out _ );
+		if ( !AtLimit )
+			return;
+
+		if ( TryCreateShape( out _ ) )
+			Clear();
 	}
 
 	protected abstract bool TryCreateShape( out GameObject obj );
