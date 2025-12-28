@@ -13,11 +13,6 @@ public abstract class ShapeTool : EditorTool
 	public PrefabFile ShapePrefab { get; set; }
 
 	[Property]
-	[Title( "Shape Size" )]
-	[Feature( EDITOR ), Group( PREFABS ), Order( PREFABS_ORDER )]
-	public Vector3 ShapeSize { get; set; } = 50f;
-
-	[Property]
 	[ToolSetting]
 	[Range( 0f, 100f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
@@ -30,7 +25,6 @@ public abstract class ShapeTool : EditorTool
 	public float Distance { get; set; } = 512f;
 
 	[Property]
-	[ToolSetting]
 	[Range( 0f, 4096f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public FloatRange DistanceRange { get; set; } = new( 16f, 2048f );
@@ -89,15 +83,22 @@ public abstract class ShapeTool : EditorTool
 
 	protected override void OnPrimary( in SceneTraceResult tr )
 	{
-		TryAddPoint( tr.EndPosition, Rotation.LookAt( tr.Normal ) );
+		if ( TryGetCursorPosition( out var cursorPos ) )
+			TryAddPoint( cursorPos, Rotation.LookAt( tr.Normal ) );
 	}
 
-	protected override void OnScroll( in Vector2 scroll )
+	public override bool TryMouseWheel( in Vector2 dir )
 	{
-		var yScroll = scroll.y != 0f ? -scroll.y : scroll.x;
+		var scroll = dir.y != 0f ? -dir.y : dir.x;
+		scroll *= ScrollSensitivity;
 
-		Distance = (Distance + yScroll).Clamp( DistanceRange );
+		OnScroll( in scroll );
+
+		return true;
 	}
+
+	protected virtual void OnScroll( in float scroll )
+		=> Distance = (Distance + scroll).Clamp( DistanceRange );
 
 	protected override void OnReload( in SceneTraceResult tr )
 	{
@@ -123,16 +124,16 @@ public abstract class ShapeTool : EditorTool
 		if ( !HasPoints )
 			return;
 
+		var tOrigin = GetShapeOrigin().WithScale( 1f );
+
 		var points = Points?.Select( pr => pr.Position ).ToList();
-		var tOrigin = GetShapeOrigin();
 
 		if ( TryGetCursorPosition( out var cursorPos ) )
-		{
-			cursorPos = tOrigin.PointToLocal( cursorPos );
-			points.Add( cursorPos );
-		}
+			points.Add( tOrigin.PointToLocal( cursorPos ) );
 
-		var box = BBox.FromPoints( points ).Grow( -0.01f );
+		var box = BBox.FromPoints( points );
+		box = BBox.FromPositionAndSize( box.Center, box.Size - 0.1f );
+		// .Grow( -tOrigin.PointToLocal( float.Epsilon ).Length );
 
 		this.DrawBox( box, ColorOutline, ColorFilled, tOrigin );
 	}
@@ -177,13 +178,13 @@ public abstract class ShapeTool : EditorTool
 			Clear();
 	}
 
-	public virtual Transform GetShapeOrigin()
+	public virtual Transform GetShapeOrigin( in Transform? tOverride = null )
 	{
 		// Might be snapping to something.
 		if ( !OriginObject.IsValid() )
-			return global::Transform.Zero;
+			return tOverride ?? global::Transform.Zero;
 
-		var tOrigin = OriginObject.WorldTransform;
+		var tOrigin = tOverride ?? OriginObject.WorldTransform;
 
 		if ( OriginOffset is Offset offset )
 			tOrigin = tOrigin.WithOffset( offset );
