@@ -181,7 +181,7 @@ public abstract partial class EditorTool : PlaygroundModule
 	{
 		// Panel sends left/right click events.
 		// TODO: Not this. Something less stupid.
-		if ( !IsMenuOpen )
+		if ( !Mouse.Active )
 		{
 			if ( PressedPrimary )
 				if ( TryTrace( out var tr ) )

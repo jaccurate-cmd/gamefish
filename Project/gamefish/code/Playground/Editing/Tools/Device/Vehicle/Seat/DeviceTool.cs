@@ -5,8 +5,6 @@ namespace Playground;
 /// </summary>
 public partial class DeviceTool : PrefabTool
 {
-	public GameObject TargetObject { get; set; }
-
 	[Property]
 	[ToolSetting]
 	[Range( 0f, 360f )]
