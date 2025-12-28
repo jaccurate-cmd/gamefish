@@ -247,6 +247,69 @@
                   }
                 ],
                 "Children": []
+              },
+              {
+                "__guid": "046bb8fe-3b84-4051-a538-d1a5c67e0934",
+                "__version": 1,
+                "Flags": 0,
+                "Name": "Grabber",
+                "Position": "0,0,0",
+                "Rotation": "0,0,0,1",
+                "Scale": "1,1,1",
+                "Tags": "",
+                "Enabled": true,
+                "NetworkMode": 1,
+                "NetworkInterpolation": true,
+                "NetworkOrphaned": 1,
+                "NetworkTransmit": true,
+                "OwnerTransfer": 1,
+                "Components": [
+                  {
+                    "__type": "Playground.GrabberTool",
+                    "__guid": "f3f9b2a6-8975-42e1-9633-c6313e931117",
+                    "__enabled": true,
+                    "Flags": 0,
+                    "ClassId": null,
+                    "ClassName": null,
+                    "Filter": null,
+                    "FunctionHints": [
+                      {
+                        "Name": "Grab",
+                        "Description": null,
+                        "Action": "Attack1",
+                        "Mode": "Held"
+                      },
+                      {
+                        "Name": "Freeze",
+                        "Description": null,
+                        "Action": "Attack2",
+                        "Mode": "Pressed"
+                      }
+                    ],
+                    "HandPrefab": "prefabs/editing/tools/grabber/grabber_hand.prefab",
+                    "IsAdminOnly": false,
+                    "IsClass": false,
+                    "IsNetworkingForced": true,
+                    "NetworkAutomatically": true,
+                    "NetworkId": "f3f9b2a6-8975-42e1-9633-c6313e931117",
+                    "NetworkingMode": "Object",
+                    "NetworkOrphanedMode": "Host",
+                    "NetworkOwner": null,
+                    "NetworkTransferMode": "Fixed",
+                    "OnComponentDestroy": null,
+                    "OnComponentDisabled": null,
+                    "OnComponentEnabled": null,
+                    "OnComponentFixedUpdate": null,
+                    "OnComponentStart": null,
+                    "OnComponentUpdate": null,
+                    "ScrollSensitivity": 30,
+                    "ToolDescription": "Moves and (un)freezes objects.",
+                    "ToolEmoji": "\uD83E\uDDD9‍",
+                    "ToolName": "Grabber",
+                    "ToolType": "Utility"
+                  }
+                ],
+                "Children": []
               }
             ]
           },
@@ -405,8 +468,8 @@
                     "OnComponentStart": null,
                     "OnComponentUpdate": null,
                     "ScrollSensitivity": 32,
-                    "ShapePrefab": "prefabs/editing/tools/block/block_brick.prefab",
-                    "ShapeSize": "50,50,50",
+                    "ShapePrefab": "prefabs/editing/tools/brick/brick_island.prefab",
+                    "ShapeSize": "32,32,32",
                     "ToolDescription": "Create and snap resizeable bricks.",
                     "ToolEmoji": "\uD83E\uDDE9",
                     "ToolName": "Brick",
@@ -567,69 +630,6 @@
             "OwnerTransfer": 1,
             "Components": [],
             "Children": [
-              {
-                "__guid": "046bb8fe-3b84-4051-a538-d1a5c67e0934",
-                "__version": 1,
-                "Flags": 0,
-                "Name": "Grabber",
-                "Position": "0,0,0",
-                "Rotation": "0,0,0,1",
-                "Scale": "1,1,1",
-                "Tags": "",
-                "Enabled": true,
-                "NetworkMode": 1,
-                "NetworkInterpolation": true,
-                "NetworkOrphaned": 1,
-                "NetworkTransmit": true,
-                "OwnerTransfer": 1,
-                "Components": [
-                  {
-                    "__type": "Playground.GrabberTool",
-                    "__guid": "f3f9b2a6-8975-42e1-9633-c6313e931117",
-                    "__enabled": true,
-                    "Flags": 0,
-                    "ClassId": null,
-                    "ClassName": null,
-                    "Filter": null,
-                    "FunctionHints": [
-                      {
-                        "Name": "Grab",
-                        "Description": null,
-                        "Action": "Attack1",
-                        "Mode": "Held"
-                      },
-                      {
-                        "Name": "Freeze",
-                        "Description": null,
-                        "Action": "Attack2",
-                        "Mode": "Pressed"
-                      }
-                    ],
-                    "HandPrefab": "prefabs/editing/tools/grabber/grabber_hand.prefab",
-                    "IsAdminOnly": false,
-                    "IsClass": false,
-                    "IsNetworkingForced": true,
-                    "NetworkAutomatically": true,
-                    "NetworkId": "f3f9b2a6-8975-42e1-9633-c6313e931117",
-                    "NetworkingMode": "Object",
-                    "NetworkOrphanedMode": "Host",
-                    "NetworkOwner": null,
-                    "NetworkTransferMode": "Fixed",
-                    "OnComponentDestroy": null,
-                    "OnComponentDisabled": null,
-                    "OnComponentEnabled": null,
-                    "OnComponentFixedUpdate": null,
-                    "OnComponentStart": null,
-                    "OnComponentUpdate": null,
-                    "ScrollSensitivity": 30,
-                    "ToolDescription": "Moves and (un)freezes objects.",
-                    "ToolEmoji": "\uD83E\uDDD9‍",
-                    "ToolName": "Grabber",
-                    "ToolType": "Physics"
-                  }
-                ],
-                "Children": []
-              },
               {
                 "__guid": "52a12b49-9f06-4b71-984e-32d960f2a5be",
                 "__version": 1,
