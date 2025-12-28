@@ -4,8 +4,8 @@ namespace GameFish;
 
 /// <summary>
 /// A position and a rotation, but not scale.
-/// Makes it very easy to animate programmatically. <br />
-/// Example: tweening between transforms.
+/// Makes it easier to animate programmatically. <br />
+/// <b> EXAMPLE: </b> Transform tweening.
 /// </summary>
 public partial struct Offset
 {
