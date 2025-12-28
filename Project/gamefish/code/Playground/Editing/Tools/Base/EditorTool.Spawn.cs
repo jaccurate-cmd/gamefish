@@ -13,25 +13,34 @@ partial class EditorTool
 	public static bool TryGetObjectGroup( GameObject obj, out EditorObjectGroup group )
 		=> (group = GetObjectGroup( obj )).IsValid();
 
-	public virtual bool TryCreateObjectGroup( Transform tWorld, out EditorObjectGroup group )
+	public virtual bool TryCreateObjectGroup( in Transform tWorld, out EditorObjectGroup group )
 	{
 		group = null;
 
 		if ( !Scene.InGame() )
 			return false;
 
-		var obj = Scene.CreateObject( enabled: true );
+		var objGroup = Scene.CreateObject( enabled: false );
 
-		if ( !obj.IsValid() )
+		if ( !objGroup.IsValid() )
 			return false;
 
-		obj.WorldTransform = tWorld;
+		objGroup.Name = "Object Group";
+		objGroup.WorldTransform = tWorld.WithScale( Vector3.One );
 
-		group = obj.Components.Create<EditorObjectGroup>();
+		group = objGroup.Components.Create<EditorObjectGroup>();
 
 		if ( !group.IsValid() )
 		{
-			obj.DestroyImmediate();
+			objGroup.DestroyImmediate();
+			return false;
+		}
+
+		var rb = objGroup.Components.Create<Rigidbody>( startEnabled: true );
+
+		if ( !rb.IsValid() )
+		{
+			objGroup.DestroyImmediate();
 			return false;
 		}
 
@@ -43,6 +52,12 @@ partial class EditorTool
 	/// </summary>
 	public bool TrySpawnObject( PrefabFile prefab, Transform tWorld, out GameObject obj )
 		=> TrySpawnObject( prefab, parent: null, tWorld, out obj );
+
+	/// <summary>
+	/// Spawns a prefab safely and with auto-configuration.
+	/// </summary>
+	public bool TrySpawnObject( PrefabFile prefab, GameObject objParent, Transform tWorld, out GameObject obj )
+		=> TrySpawnObject( prefab, GetObjectGroup( objParent ), tWorld, out obj );
 
 	/// <summary>
 	/// Spawns a prefab safely and with auto-configuration.
@@ -69,9 +84,7 @@ partial class EditorTool
 			return false;
 		}
 
-		obj.SetParent( parent.GameObject );
-
-		if ( !obj.Components.TryGet<EditorObject>( out _, FindMode.EnabledInSelf ) )
+		if ( !obj.Components.TryGet<EditorObject>( out var e, FindMode.EnabledInSelf ) )
 		{
 			this.Warn( $"No {typeof( EditorObject )} on prefab:[{prefab}]!" );
 
@@ -80,27 +93,17 @@ partial class EditorTool
 			return false;
 		}
 
-		OnObjectSpawned( obj );
+		obj.SetParent( parent.GameObject, keepWorldPosition: true );
+		obj.Transform.ClearInterpolation();
+
+		parent.SetupNetworking( force: true );
+
+		OnObjectSpawned( obj, parent, e );
 
 		return true;
 	}
 
-	protected virtual void OnObjectSpawned( GameObject obj )
+	protected virtual void OnObjectSpawned( GameObject obj, EditorObjectGroup parent, EditorObject e )
 	{
-		SetupObjectNetworking( obj );
-	}
-
-	protected virtual void SetupObjectNetworking( GameObject obj )
-	{
-		if ( !obj.IsValid() )
-			return;
-
-		obj.NetworkSetup(
-			cn: Connection.Host,
-			orphanMode: NetworkOrphaned.ClearOwner,
-			ownerTransfer: OwnerTransfer.Takeover,
-			netMode: NetworkMode.Object,
-			ignoreProxy: true
-		);
 	}
 }

@@ -90,7 +90,7 @@ public partial class BrickTool : ShapeTool
 
 		bool isBrick = false;
 
-		const FindMode findMode = FindMode.EnabledInSelf | FindMode.InAncestors;
+		const FindMode findMode = FindMode.EnabledInSelf | FindMode.InAncestors | FindMode.InDescendants;
 
 		if ( TargetObject.IsValid() )
 			if ( TargetObject.Components.TryGet<BrickIsland>( out _, findMode ) )
@@ -131,22 +131,22 @@ public partial class BrickTool : ShapeTool
 
 		tShape.Scale = tShape.Scale.ComponentMax( BRICK_SIZE_MIN );
 
-		if ( !TrySpawnObject( ShapePrefab, parent: null, tOrigin, out obj ) )
+		if ( !TrySpawnObject( ShapePrefab, OriginObject, tShape, out obj ) )
 			return false;
 
 		return true;
 	}
 
-	protected override void OnObjectSpawned( GameObject obj )
+	protected override void OnObjectSpawned( GameObject obj, EditorObjectGroup parent, EditorObject e )
 	{
 		if ( !obj.IsValid() )
 			return;
 
-		const FindMode findMode = FindMode.Enabled | FindMode.InDescendants;
+		const FindMode findMode = FindMode.InDescendants;
 
-		foreach ( var brick in obj.Components.GetAll<BrickBlock>( findMode ).ToArray() )
+		foreach ( var brick in obj.Components.GetAll<BrickBlock>( findMode ) )
 			brick.RandomizeColor();
 
-		base.OnObjectSpawned( obj );
+		base.OnObjectSpawned( obj, parent, e );
 	}
 }
