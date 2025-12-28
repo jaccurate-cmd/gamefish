@@ -2,11 +2,10 @@ namespace Playground;
 
 public partial class WiringTool : EditorTool
 {
-	public Vector3? TargetWorldPosition { get; set; }
-	public Vector3? TargetLocalPosition { get; set; }
+	public Vector3? TargetLocalPosition { get; protected set; }
 
-	public (Component Parent, Vector3 LocalPos) Point1 { get; set; }
-	public (Component Parent, Vector3 LocalPos) Point2 { get; set; }
+	public (Component Parent, Vector3 LocalPos) Point1 { get; protected set; }
+	public (Component Parent, Vector3 LocalPos) Point2 { get; protected set; }
 
 	public override void OnExit()
 	{
@@ -15,27 +14,27 @@ public partial class WiringTool : EditorTool
 		Clear();
 	}
 
-	public override bool TryLeftClick()
-		=> true;
-
 	public override void FrameSimulate( in float deltaTime )
 	{
-		UpdateTarget( in deltaTime );
+		base.FrameSimulate( in deltaTime );
 
 		if ( !IsMenuOpen )
 		{
 			if ( TargetComponent.IsValid() && TargetComponent is Device device )
 				device.RenderHelpers();
 		}
-
-		UpdatePlacing();
-
-		DrawTargetGizmos();
 	}
 
-	protected void DrawTargetGizmos()
+	protected override void RenderHelpers()
 	{
-		if ( TargetWorldPosition is not Vector3 targetPos )
+		base.RenderHelpers();
+
+		RenderWireHelper();
+	}
+
+	protected void RenderWireHelper()
+	{
+		if ( TargetTrace is not SceneTraceResult tr )
 			return;
 
 		var ent1 = Point1.Parent;
@@ -56,17 +55,14 @@ public partial class WiringTool : EditorTool
 			c = c.WithAlphaMultiplied( 0.5f );
 
 		this.DrawArrow(
-			from: startPoint, to: targetPos,
+			from: startPoint, to: tr.EndPosition,
 			c: c, len: 7f, w: 2f, th: 4f,
 			tWorld: global::Transform.Zero
 		);
 	}
 
-	protected void UpdatePlacing()
+	protected override void OnPrimary( in SceneTraceResult tr )
 	{
-		if ( !PressedPrimary )
-			return;
-
 		if ( !IsValidTarget( TargetComponent ) )
 			return;
 
@@ -76,12 +72,13 @@ public partial class WiringTool : EditorTool
 		if ( !Point1.Parent.IsValid() )
 		{
 			Point1 = (TargetComponent, localPos);
+			Point2 = default;
+
+			return;
 		}
-		else
-		{
-			if ( TargetComponent != Point1.Parent )
-				Point2 = (TargetComponent, localPos);
-		}
+
+		if ( TargetComponent != Point1.Parent )
+			Point2 = (TargetComponent, localPos);
 
 		if ( !CanWire( Point1.Parent, Point2.Parent ) )
 			return;
@@ -91,6 +88,7 @@ public partial class WiringTool : EditorTool
 		Clear();
 	}
 
+
 	protected override void OnReload( in SceneTraceResult tr )
 	{
 		base.OnReload( tr );
@@ -99,15 +97,19 @@ public partial class WiringTool : EditorTool
 			RpcHostRequestClear( ent );
 	}
 
+	protected override void Clear()
+	{
+		base.Clear();
+
+		Point1 = default;
+		Point2 = default;
+	}
+
 	protected override void ClearTarget()
 	{
 		base.ClearTarget();
 
-		TargetWorldPosition = null;
 		TargetLocalPosition = null;
-
-		Point1 = default;
-		Point2 = default;
 	}
 
 	public override bool IsValidTarget( Component c )
@@ -118,7 +120,6 @@ public partial class WiringTool : EditorTool
 		if ( !base.TrySetTarget( in tr, target ) )
 			return false;
 
-		TargetWorldPosition = tr.HitPosition;
 		TargetLocalPosition = target.WorldTransform.PointToLocal( tr.HitPosition );
 
 		return true;
@@ -141,14 +142,14 @@ public partial class WiringTool : EditorTool
 		if ( !TryUse( Rpc.Caller, out _ ) )
 			return;
 
-		if ( !ent1.IsValid() || !ent2.IsValid() )
+		if ( !IsValidTarget( ent1 ) || !IsValidTarget( ent2 ) )
 			return;
 
 		if ( ent1 is Device device1 )
-			device1.TryWire( device1, localPos2 );
+			device1.TryWire( ent2 as Entity, localPos2 );
 
 		if ( ent2 is Device device2 )
-			device2.TryWire( device2, localPos1 );
+			device2.TryWire( ent1 as Entity, localPos1 );
 	}
 
 	[Rpc.Host]

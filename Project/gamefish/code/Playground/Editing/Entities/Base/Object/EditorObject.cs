@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 namespace Playground;
 
 /// <summary>
-/// Some object a player can create.
-/// Tracks who it belongs to so it can be managed.
+/// A physical object a player can create.
+/// Tracks who and what it belongs to so that stuff can be managed.
 /// </summary>
-public partial class EditorEntity : PhysicsObject
+public partial class EditorObject : PhysicsObject
 {
 	protected const int EDITOR_ORDER = DEFAULT_ORDER - 1000;
 

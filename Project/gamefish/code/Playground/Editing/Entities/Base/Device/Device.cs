@@ -3,7 +3,7 @@ namespace Playground;
 /// <summary>
 /// Something that can be controlled and wired.
 /// </summary>
-public abstract partial class Device : EditorEntity, IWired
+public abstract partial class Device : EditorObject, IWired
 {
 	public const int WIRE_LIMIT = 16;
 
@@ -91,7 +91,7 @@ public abstract partial class Device : EditorEntity, IWired
 	/// <returns> If these two are compatible. </returns>
 	public virtual bool CanWire( Entity to )
 	{
-		if ( !to.IsValid() )
+		if ( !to.IsValid() || to == this )
 			return false;
 
 		return to is IWired;

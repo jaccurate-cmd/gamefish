@@ -24,7 +24,7 @@ partial class Editor
 		if ( !ITransform.IsValid( origin ) || !ITransform.IsValid( radius ) )
 			return;
 
-		foreach ( var ent in Scene.GetAll<EditorEntity>() )
+		foreach ( var ent in Scene.GetAll<EditorObject>() )
 			if ( origin.Distance( ent.Center ) < radius )
 				ent.RenderHelpers();
 	}

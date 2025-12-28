@@ -1,6 +1,6 @@
 namespace Playground;
 
-partial class EditorEntity
+partial class EditorObject
 {
 	protected override bool? IsNetworkedOverride => true;
 	protected override bool IsNetworkedAutomatically => true;

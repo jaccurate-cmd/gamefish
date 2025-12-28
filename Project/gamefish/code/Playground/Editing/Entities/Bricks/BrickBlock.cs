@@ -1,7 +1,7 @@
 namespace Playground;
 
 [Icon( "dataset" )] // haha
-public partial class BrickBlock : EditorEntity
+public partial class BrickBlock : EditorObject
 {
 	[Property]
 	[Feature( EDITOR ), Group( ART )]

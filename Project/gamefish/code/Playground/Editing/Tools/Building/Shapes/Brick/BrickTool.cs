@@ -4,9 +4,9 @@ public partial class BlockTool : BrickTool;
 
 public partial class BrickTool : ShapeTool
 {
-	public const int BRICK_SIZE_MIN = 8;
-	public const int BRICK_SIZE_MAX = 64;
-	public const float BRICK_SIZE_STEP = 8;
+	public const int BRICK_SIZE_MIN = 16;
+	public const int BRICK_SIZE_MAX = 32;
+	public const float BRICK_SIZE_STEP = 16;
 
 	/// <summary>
 	/// Scales the size of the brick by this power.
@@ -27,7 +27,7 @@ public partial class BrickTool : ShapeTool
 		}
 	}
 
-	protected int _brickSize = 8;
+	protected int _brickSize = 16;
 
 	/// <summary>
 	/// Is this being attached to an island?

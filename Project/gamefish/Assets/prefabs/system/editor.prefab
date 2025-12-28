@@ -438,7 +438,7 @@
                     "BrickSize": 16,
                     "ClassId": null,
                     "ClassName": null,
-                    "Distance": 512,
+                    "Distance": 256,
                     "DistanceRange": {
                       "Min": 16,
                       "Max": 2048
