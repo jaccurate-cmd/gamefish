@@ -6,4 +6,4 @@ namespace Playground;
 /// Tells the UI to show a property as a tool option.
 /// </summary>
 [AttributeUsage( AttributeTargets.Property )]
-public partial class ToolOptionAttribute : Attribute;
+public partial class ToolSettingAttribute : Attribute;

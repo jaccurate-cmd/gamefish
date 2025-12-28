@@ -8,7 +8,7 @@ public partial class DeviceTool : PrefabTool
 	public GameObject TargetObject { get; set; }
 
 	[Property]
-	[ToolOption]
+	[ToolSetting]
 	[Range( 0f, 360f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public virtual float Yaw { get; set; } = 0f;
@@ -22,8 +22,11 @@ public partial class DeviceTool : PrefabTool
 		base.OnScroll( scroll );
 	}
 
-	protected override bool TrySetTarget( in SceneTraceResult tr )
+	public override bool TrySetTarget( in SceneTraceResult tr, out Component target )
 	{
+		if ( !TrySetTarget( in tr, out target ) )
+			return false;
+
 		TargetObject = tr.GameObject;
 
 		HasTarget = TargetObject.IsValid()

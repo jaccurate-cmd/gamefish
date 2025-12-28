@@ -352,6 +352,70 @@
                 "Children": []
               },
               {
+                "__guid": "c7007016-fe2d-49f8-9f61-80d7053fc6c6",
+                "__version": 1,
+                "Flags": 0,
+                "Name": "Brick",
+                "Position": "0,0,0",
+                "Rotation": "0,0,0,1",
+                "Scale": "1,1,1",
+                "Tags": "",
+                "Enabled": true,
+                "NetworkMode": 1,
+                "NetworkInterpolation": true,
+                "NetworkOrphaned": 1,
+                "NetworkTransmit": true,
+                "OwnerTransfer": 1,
+                "Components": [
+                  {
+                    "__type": "Playground.BlockTool",
+                    "__guid": "9906f68d-a34c-4140-b01e-60082b07a026",
+                    "__enabled": true,
+                    "Flags": 0,
+                    "BrickPower": 3,
+                    "ClassId": null,
+                    "ClassName": null,
+                    "Distance": 512,
+                    "DistanceRange": {
+                      "Min": 16,
+                      "Max": 2048
+                    },
+                    "Filter": null,
+                    "FunctionHints": [
+                      {
+                        "Name": "Shape",
+                        "Description": null,
+                        "Action": "Attack1",
+                        "Mode": "Pressed"
+                      }
+                    ],
+                    "IsAdminOnly": false,
+                    "IsClass": false,
+                    "IsNetworkingForced": true,
+                    "NetworkAutomatically": true,
+                    "NetworkId": "9906f68d-a34c-4140-b01e-60082b07a026",
+                    "NetworkingMode": "Object",
+                    "NetworkOrphanedMode": "Host",
+                    "NetworkOwner": null,
+                    "NetworkTransferMode": "Fixed",
+                    "OnComponentDestroy": null,
+                    "OnComponentDisabled": null,
+                    "OnComponentEnabled": null,
+                    "OnComponentFixedUpdate": null,
+                    "OnComponentStart": null,
+                    "OnComponentUpdate": null,
+                    "ScrollSensitivity": 32,
+                    "ShapePrefab": "prefabs/editing/tools/block/block_brick.prefab",
+                    "ShapeSize": "50,50,50",
+                    "ToolDescription": "Create and snap resizeable bricks.",
+                    "ToolEmoji": "\uD83E\uDDE9",
+                    "ToolName": "Brick",
+                    "ToolType": "Construction"
+                  }
+                ],
+                "Children": []
+              },
+              {
                 "__guid": "0694e9d7-6864-437a-8aec-efc9322b8b78",
                 "__version": 1,
                 "Flags": 0,

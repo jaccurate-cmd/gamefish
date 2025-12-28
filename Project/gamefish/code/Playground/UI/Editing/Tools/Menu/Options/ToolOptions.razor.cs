@@ -18,7 +18,7 @@ partial class ToolOptions
 			return null;
 
 		return TypeLibrary.GetPropertyDescriptions( ActiveTool )
-			.Where( p => p?.HasAttribute<ToolOptionAttribute>() is true )
+			.Where( p => p?.HasAttribute<ToolSettingAttribute>() is true )
 			.OrderBy( p => p.GetDisplayInfo().Order );
 	}
 

@@ -29,7 +29,6 @@ public partial class WiringTool : EditorTool
 		}
 
 		UpdatePlacing();
-		UpdateClearing();
 
 		DrawTargetGizmos();
 	}
@@ -92,49 +91,35 @@ public partial class WiringTool : EditorTool
 		Clear();
 	}
 
-	protected void UpdateClearing()
+	protected override void OnReload( in SceneTraceResult tr )
 	{
-		if ( !PressedReload )
-			return;
+		base.OnReload( tr );
 
 		if ( TargetEntity.IsValid() )
 			RpcHostRequestClear( TargetEntity );
 	}
 
-	protected override void UpdateTarget( in float deltaTime )
+	protected override void ClearTarget()
 	{
-		TargetEntity = null;
+		base.ClearTarget();
+
 		TargetWorldPosition = null;
+		TargetLocalPosition = null;
 
-		if ( !IsClientAllowed( Client.Local ) )
-			return;
-
-		if ( !TryTrace( out var tr ) )
-			return;
-
-		if ( !TryGetTarget( in tr, out var ent ) )
-			return;
-
-		if ( !TrySetTarget( ent, in tr ) )
-			return;
-
-		var cSphere = Color.White.WithAlpha( 0.4f );
-
-		this.DrawSphere( 2f, tr.HitPosition, Color.Transparent, cSphere, global::Transform.Zero );
+		Point1 = default;
+		Point2 = default;
 	}
 
 	public override bool IsValidTarget( Entity ent )
 		=> base.IsValidTarget( ent ) && ent is IWired;
 
-	public override bool TrySetTarget( Entity ent, in SceneTraceResult tr )
+	public override bool TrySetTarget( in SceneTraceResult tr, out Component target )
 	{
-		if ( !IsValidTarget( ent ) )
+		if ( !TrySetTarget( in tr, out target ) )
 			return false;
 
-		TargetEntity = ent;
-
 		TargetWorldPosition = tr.HitPosition;
-		TargetLocalPosition = ent.WorldTransform.PointToLocal( tr.HitPosition );
+		TargetLocalPosition = target.WorldTransform.PointToLocal( tr.HitPosition );
 
 		return true;
 	}
@@ -148,17 +133,6 @@ public partial class WiringTool : EditorTool
 			return false;
 
 		return IsValidTarget( ent1 ) && IsValidTarget( ent2 );
-	}
-
-	protected void Clear()
-	{
-		TargetEntity = null;
-
-		TargetWorldPosition = null;
-		TargetLocalPosition = null;
-
-		Point1 = default;
-		Point2 = default;
 	}
 
 	[Rpc.Host]

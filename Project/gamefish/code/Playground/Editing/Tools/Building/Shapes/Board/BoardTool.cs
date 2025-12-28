@@ -14,7 +14,7 @@ public partial class BoardTool : EditorTool
 
 
 	[Property]
-	[ToolOption]
+	[ToolSetting]
 	[Range( 0f, 4096f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public float Distance { get; set; } = 256f;
@@ -24,20 +24,20 @@ public partial class BoardTool : EditorTool
 	public FloatRange DistanceRange { get; set; } = new( 16f, 1024f );
 
 	[Property]
-	[ToolOption]
+	[ToolSetting]
 	[Range( 0f, 100f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public virtual float ScrollSensitivity { get; set; } = 20f;
 
 	[Property]
-	[ToolOption]
+	[ToolSetting]
 	[Title( "Board Width" )]
 	[Range( 1f, 32f, clamped: false )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public float BoardWidth { get; set; } = 20f;
 
 	[Property]
-	[ToolOption]
+	[ToolSetting]
 	[Title( "Board Height" )]
 	[Range( 1f, 16f, clamped: false )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]

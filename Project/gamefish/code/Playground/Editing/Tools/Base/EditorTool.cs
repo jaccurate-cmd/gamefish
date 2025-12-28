@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Microsoft.VisualBasic;
 
 namespace Playground;
 
@@ -6,6 +7,7 @@ namespace Playground;
 public abstract partial class EditorTool : PlaygroundModule
 {
 	protected const int EDITOR_ORDER = DEFAULT_ORDER - 1000;
+	protected const int EDITOR_DEBUG_ORDER = EDITOR_ORDER - 100;
 
 	protected const int INPUT_ORDER = EDITOR_ORDER + 25;
 	protected const int SOUNDS_ORDER = EDITOR_ORDER + 50;
@@ -68,6 +70,11 @@ public abstract partial class EditorTool : PlaygroundModule
 	/// </summary>
 	public Transform? TargetWorldTransform { get; set; }
 
+	/// <summary>
+	/// The last targeting trace attempt.
+	/// </summary>
+	public SceneTraceResult? TargetTrace { get; set; }
+
 	protected virtual Color ColorOutline => Color.Black.WithAlpha( 0.5f );
 	protected virtual Color ColorFilled => Color.White.WithAlpha( 0.1f );
 	protected virtual Color ColorArrow => Color.Black.WithAlpha( 0.8f );
@@ -82,15 +89,58 @@ public abstract partial class EditorTool : PlaygroundModule
 	public virtual bool IsClientAllowed( Client cl )
 		=> !IsAdminOnly || cl?.Connection?.IsHost is true;
 
-	public virtual void OnEnter() { }
+	public virtual void OnEnter()
+	{
+		ClearTarget();
+	}
+
 	public virtual void OnExit() { }
 
 	public virtual void FrameSimulate( in float deltaTime )
 	{
+		UpdateTarget( in deltaTime );
+		UpdateActions( in deltaTime );
+
+		RenderHelpers();
 	}
 
 	public virtual void FixedSimulate( in float deltaTime )
 	{
+	}
+
+	/// <summary>
+	/// Resets the tool's operating parameters.
+	/// </summary>
+	protected virtual void Clear()
+	{
+		ClearTarget();
+	}
+
+	/// <summary>
+	/// Do stuff directly from action buttons being pressed.
+	/// </summary>
+	protected virtual void UpdateActions( in float deltaTime )
+	{
+		// Panel sends left/right click events.
+		// TODO: Not this. Something less stupid.
+		if ( !IsMenuOpen )
+		{
+			if ( PressedPrimary )
+				if ( TryTrace( out var tr ) )
+					OnPrimary( in tr );
+
+			if ( PressedSecondary )
+				if ( TryTrace( out var tr ) )
+					OnSecondary( in tr );
+		}
+
+		if ( PressedReload )
+			if ( TryTrace( out var tr ) )
+				OnReload( in tr );
+
+		if ( PressedUse )
+			if ( TryTrace( out var tr ) )
+				OnUse( in tr );
 	}
 
 	protected virtual void OnPrimary( in SceneTraceResult tr )
@@ -101,7 +151,14 @@ public abstract partial class EditorTool : PlaygroundModule
 	{
 	}
 
+	/// <summary>
+	/// Like, middle mouse button or something? Probably.
+	/// </summary>
 	protected virtual void OnTertiary( in SceneTraceResult tr )
+	{
+	}
+
+	protected virtual void OnUse( in SceneTraceResult tr )
 	{
 	}
 
@@ -118,27 +175,32 @@ public abstract partial class EditorTool : PlaygroundModule
 		TargetEntity = null;
 		TargetEntityOffset = null;
 		TargetWorldTransform = null;
+
+		TargetTrace = null;
 	}
 
-	protected virtual void UpdateTarget( in float deltaTime )
+	/// <summary>
+	/// Figure out what we're looking at right now.
+	/// </summary>
+	protected virtual void UpdateTarget( in float deltaTime, bool clearPrevious = true )
 	{
-		ClearTarget();
-
-		if ( !TryTrace( out var tr ) )
-			return;
+		if ( clearPrevious )
+			ClearTarget();
 
 		if ( !IsClientAllowed( Client.Local ) )
 			return;
 
-		if ( !TryGetTarget( in tr, out var target ) )
+		if ( !TryTrace( out var tr ) )
 			return;
 
-		TrySetTarget( target, in tr );
+		TargetTrace = tr;
+
+		TrySetTarget( in tr, out _ );
 	}
 
-	protected virtual bool TryGetTarget( in SceneTraceResult tr, out Entity target )
+	protected virtual bool TryGetTargetEntity( in SceneTraceResult tr, out Entity ent )
 	{
-		target = null;
+		ent = null;
 
 		if ( !tr.Hit || !tr.GameObject.IsValid() )
 			return false;
@@ -146,21 +208,29 @@ public abstract partial class EditorTool : PlaygroundModule
 		const FindMode findMode = FindMode.EnabledInSelf
 			| FindMode.InAncestors;
 
-		target = tr.GameObject.Components.GetAll<Entity>( findMode )
+		ent = tr.GameObject.Components.GetAll<Entity>( findMode )
 			.Where( IsValidTarget )
 			.FirstOrDefault();
 
-		return target.IsValid();
+		return ent.IsValid();
 	}
 
-	public virtual bool TrySetTarget( Entity target, in SceneTraceResult tr )
+	public virtual bool TrySetTarget( in SceneTraceResult tr, out Component target )
 	{
-		if ( !IsValidTarget( target ) )
-			return false;
+		if ( TryGetTargetEntity( in tr, out var ent ) )
+		{
+			target = ent;
+			return true;
+		}
 
-		TargetEntity = target;
+		if ( tr.Collider.IsValid() && tr.Collider.Static is true )
+		{
+			target = tr.Collider;
+			return true;
+		}
 
-		return true;
+		target = null;
+		return false;
 	}
 
 	public virtual bool IsValidTarget( Entity ent )

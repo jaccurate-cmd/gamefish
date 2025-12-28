@@ -5,7 +5,7 @@ namespace Playground;
 public partial class PrefabTool : EditorTool
 {
 	[Property]
-	[ToolOption]
+	[ToolSetting]
 	[Range( 0f, 4096f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public virtual float Distance { get; set; } = 512;
@@ -15,13 +15,13 @@ public partial class PrefabTool : EditorTool
 	public FloatRange DistanceRange { get; set; } = new( 16f, 1024f );
 
 	[Property]
-	[ToolOption]
+	[ToolSetting]
 	[Range( 0f, 100f )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public virtual float ScrollSensitivity { get; set; } = 20f;
 
 	[Property]
-	[ToolOption]
+	[ToolSetting]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public PrefabFile Prefab
 	{
@@ -123,7 +123,7 @@ public partial class PrefabTool : EditorTool
 		if ( !TryTrace( out var tr ) )
 			return;
 
-		if ( !TrySetTarget( in tr ) )
+		if ( !TrySetTarget( in tr, out _ ) )
 			return;
 
 		var c1 = Color.Black.WithAlpha( 0.5f );
@@ -139,8 +139,11 @@ public partial class PrefabTool : EditorTool
 		this.DrawBox( bounds, c1, c2, tWorld: TargetTransform );
 	}
 
-	protected virtual bool TrySetTarget( in SceneTraceResult tr )
+	public override bool TrySetTarget( in SceneTraceResult tr, out Component target )
 	{
+		if ( !TrySetTarget( in tr, out target ) )
+			return false;
+
 		var pointDist = tr.Distance.Min( Distance );
 		var hitPoint = tr.StartPosition + (tr.Direction * pointDist);
 
