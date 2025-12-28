@@ -145,7 +145,7 @@ partial class Entity
 	/// By default this networks the object using <see cref="DefaultNetworkOwner"/>. <br />
 	/// Called <see cref="OnStart"/> if <see cref="NetworkAutomatically"/> is enabled.
 	/// </summary>
-	protected virtual void SetupNetworking( bool force = false )
+	public virtual void SetupNetworking( bool force = false )
 	{
 		if ( !force && !IsNetworkSetupAllowed() )
 			return;
