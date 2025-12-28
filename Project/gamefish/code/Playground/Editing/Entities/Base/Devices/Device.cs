@@ -5,8 +5,6 @@ namespace Playground;
 /// </summary>
 public abstract partial class Device : EditorEntity, IWired
 {
-	protected const int PHYSICS_ORDER = EDITOR_ORDER + 10;
-
 	public const int WIRE_LIMIT = 16;
 
 	/// <summary>

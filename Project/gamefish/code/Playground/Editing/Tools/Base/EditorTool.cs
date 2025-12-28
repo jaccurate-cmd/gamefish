@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 using Microsoft.VisualBasic;
 
 namespace Playground;
@@ -56,24 +57,30 @@ public abstract partial class EditorTool : PlaygroundModule
 	public string ToolDescription { get; set; } = "Does stuff.";
 
 	/// <summary>
-	/// The entity we're looking at.
-	/// </summary>
-	public Entity TargetEntity { get; protected set; }
-
-	/// <summary>
-	/// The relative position/rotation from the entity.
-	/// </summary>
-	public Offset? TargetOffset { get; protected set; }
-
-	/// <summary>
-	/// The world-space location we're trying to put/do stuff.
-	/// </summary>
-	public Transform? TargetWorldTransform { get; set; }
-
-	/// <summary>
 	/// The last targeting trace attempt.
 	/// </summary>
 	public SceneTraceResult? TargetTrace { get; set; }
+
+	/// <summary>
+	/// The thing we're looking at.
+	/// </summary>
+	public GameObject TargetObject { get; protected set; }
+	public Component TargetComponent { get; protected set; }
+
+	/// <summary>
+	/// The thing we're trying to do stuff on top of.
+	/// </summary>
+	[Property, JsonIgnore]
+	[Feature( EDITOR ), Group( DEBUG ), Order( EDITOR_DEBUG_ORDER )]
+	public GameObject OriginObject { get; set; }
+
+	[Property, JsonIgnore]
+	[Feature( EDITOR ), Group( DEBUG ), Order( EDITOR_DEBUG_ORDER )]
+	public Component OriginComponent { get; set; }
+
+	[Property, JsonIgnore]
+	[Feature( EDITOR ), Group( DEBUG ), Order( EDITOR_DEBUG_ORDER )]
+	public Offset? OriginOffset { get; set; }
 
 	protected virtual Color ColorOutline => Color.Black.WithAlpha( 0.5f );
 	protected virtual Color ColorFilled => Color.White.WithAlpha( 0.1f );
@@ -114,6 +121,57 @@ public abstract partial class EditorTool : PlaygroundModule
 	protected virtual void Clear()
 	{
 		ClearTarget();
+		ClearOrigin();
+	}
+
+	protected virtual void ClearTarget()
+	{
+		TargetTrace = null;
+		TargetObject = null;
+		TargetComponent = null;
+	}
+
+	protected virtual void ClearOrigin()
+	{
+		OriginObject = null;
+		OriginComponent = null;
+		OriginOffset = null;
+	}
+
+	/// <summary>
+	/// Attempt to assign this uhh thing as our origin of doing stuff.
+	/// </summary>
+	protected virtual bool TrySetOrigin( GameObject obj, Component c, in Offset offset, bool respect = true )
+	{
+		if ( !obj.IsValid() || !c.IsValid() )
+			return false;
+
+		// respec
+		if ( respect && OriginObject.IsValid() )
+			return false;
+
+		OriginObject = obj;
+		OriginComponent = c;
+		OriginOffset = offset;
+
+		return true;
+	}
+
+	protected virtual bool TryGetOffsetFromTrace( in SceneTraceResult tr, out Offset offset )
+	{
+		if ( !tr.Hit || !tr.GameObject.IsValid() )
+		{
+			offset = default;
+			return false;
+		}
+
+		var tOrigin = tr.GameObject.WorldTransform;
+
+		var pos = tOrigin.PointToLocal( tr.EndPosition );
+		var r = tOrigin.RotationToLocal( Rotation.LookAt( tr.Normal ) );
+
+		offset = new( pos, r );
+		return false;
 	}
 
 	/// <summary>
@@ -170,15 +228,6 @@ public abstract partial class EditorTool : PlaygroundModule
 	{
 	}
 
-	protected virtual void ClearTarget()
-	{
-		TargetEntity = null;
-		TargetOffset = null;
-		TargetWorldTransform = null;
-
-		TargetTrace = null;
-	}
-
 	/// <summary>
 	/// Figure out what we're looking at right now.
 	/// </summary>
@@ -195,8 +244,10 @@ public abstract partial class EditorTool : PlaygroundModule
 
 		TargetTrace = tr;
 
-		if ( !TryGetTarget( in tr, out _ ) )
+		if ( !TryGetTarget( in tr, out var target ) )
 			return;
+
+		TrySetTarget( in tr, target );
 	}
 
 	public virtual bool TrySetTarget( in SceneTraceResult tr, Component target )
@@ -205,16 +256,8 @@ public abstract partial class EditorTool : PlaygroundModule
 			return false;
 
 		TargetTrace = tr;
-
-		var tWorld = target.WorldTransform;
-		TargetWorldTransform = tWorld;
-
-		var vLocal = tWorld.PointToLocal( tr.EndPosition );
-		var rLocal = tWorld.RotationToLocal( Rotation.LookAt( tr.Direction ) );
-		TargetOffset = new( vLocal, rLocal );
-
-		if ( target is Entity ent )
-			TargetEntity = ent;
+		TargetObject = target.GameObject;
+		TargetComponent = target;
 
 		return true;
 	}
@@ -224,6 +267,12 @@ public abstract partial class EditorTool : PlaygroundModule
 		if ( TryGetTargetEntity( in tr, out var ent ) )
 		{
 			target = ent;
+			return true;
+		}
+
+		if ( tr.Component.IsValid() )
+		{
+			target = tr.Component;
 			return true;
 		}
 
@@ -254,6 +303,6 @@ public abstract partial class EditorTool : PlaygroundModule
 		return ent.IsValid();
 	}
 
-	public virtual bool IsValidTarget( Entity ent )
+	public virtual bool IsValidTarget( Component ent )
 		=> ent.IsValid();
 }

@@ -471,7 +471,7 @@
                     "ShapePrefab": "prefabs/editing/tools/brick/brick_island.prefab",
                     "ShapeSize": "32,32,32",
                     "ToolDescription": "Create and snap resizeable bricks.",
-                    "ToolEmoji": "\uD83E\uDDE9",
+                    "ToolEmoji": "\uD83E\uDDF1",
                     "ToolName": "Brick",
                     "ToolType": "Construction"
                   }

@@ -56,18 +56,9 @@ public partial class BrickTool : ShapeTool
 		if ( !HasPoints || !ValidShape )
 			return false;
 
-		var points = Points.Select( pr => pr.Position );
-		var bounds = BBox.FromPoints( points );
-		var size = bounds.Size;
+		var tShape = GetShapeOrigin();
 
-		var scale = size / ShapeSize;
-
-		if ( !ITransform.IsValid( scale ) )
-			return false;
-
-		var tWorld = new Transform( bounds.Center, Rotation.Identity, scale );
-
-		if ( !TrySpawnPrefab( ShapePrefab, out obj, tWorld ) )
+		if ( !TrySpawnPrefab( ShapePrefab, out obj, tShape ) )
 			return false;
 
 		return true;

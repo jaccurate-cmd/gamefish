@@ -38,7 +38,7 @@ public abstract class ShapeTool : EditorTool
 	/// <summary>
 	/// The coordinates of the shape(in local or world space).
 	/// </summary>
-	[Property, JsonIgnore]
+	[Property, JsonIgnore, WideMode]
 	[Feature( EDITOR ), Group( DEBUG ), Order( EDITOR_DEBUG_ORDER )]
 	public List<(Vector3 Position, Rotation Rotation)> Points { get; set; }
 
@@ -78,7 +78,7 @@ public abstract class ShapeTool : EditorTool
 
 	public override bool TryRightClick()
 	{
-		if ( TargetEntity.IsValid() || HasPoints )
+		if ( HasPoints )
 		{
 			Clear();
 			return true;
@@ -89,7 +89,7 @@ public abstract class ShapeTool : EditorTool
 
 	protected override void OnPrimary( in SceneTraceResult tr )
 	{
-		TryAddPoint( tr.EndPosition, Rotation.LookAt( tr.Direction ) );
+		TryAddPoint( tr.EndPosition, Rotation.Identity );
 	}
 
 	protected override void OnScroll( in Vector2 scroll )
@@ -118,16 +118,39 @@ public abstract class ShapeTool : EditorTool
 		if ( !HasPoints )
 			return;
 
-		var points = Points?.Select( pr => pr.Position );
+		var points = Points?.Select( pr => pr.Position ).ToList();
+		var tShape = GetShapeOrigin();
+
+		if ( TryGetCursorPosition( out var cursorPos ) )
+		{
+			if ( OriginObject.IsValid() )
+				cursorPos = tShape.PointToLocal( cursorPos );
+
+			points.Add( cursorPos );
+		}
+
 		var box = BBox.FromPoints( points ).Grow( -0.01f );
 
-		this.DrawBox( box, ColorOutline, ColorFilled, global::Transform.Zero );
+		this.DrawBox( box, ColorOutline, ColorFilled, tShape );
 	}
 
 	protected virtual bool TryAddPoint( Vector3 pos, Rotation r )
 	{
 		if ( !IsClientAllowed( Client.Local ) )
 			return false;
+
+		if ( !HasPoints && TargetObject.IsValid() )
+		{
+			var tTarget = TargetObject.WorldTransform;
+			var offset = tTarget.ToLocal( new( pos, r ) );
+
+			TrySetOrigin( TargetObject, TargetComponent, offset );
+		}
+
+		var tOrigin = GetShapeOrigin();
+
+		pos = tOrigin.PointToLocal( pos );
+		r = tOrigin.RotationToLocal( r );
 
 		Points ??= [];
 
@@ -149,6 +172,20 @@ public abstract class ShapeTool : EditorTool
 
 		if ( TryCreateShape( out _ ) )
 			Clear();
+	}
+
+	public virtual Transform GetShapeOrigin()
+	{
+		// Might be snapping to something.
+		if ( !OriginObject.IsValid() )
+			return global::Transform.Zero;
+
+		var tOrigin = OriginObject.WorldTransform;
+
+		if ( OriginOffset is Offset offset )
+			tOrigin = tOrigin.WithOffset( offset );
+
+		return tOrigin;
 	}
 
 	protected abstract bool TryCreateShape( out GameObject obj );

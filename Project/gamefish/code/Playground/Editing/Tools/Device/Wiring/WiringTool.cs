@@ -5,8 +5,8 @@ public partial class WiringTool : EditorTool
 	public Vector3? TargetWorldPosition { get; set; }
 	public Vector3? TargetLocalPosition { get; set; }
 
-	public (Entity Entity, Vector3 LocalPos) Point1 { get; set; }
-	public (Entity Entity, Vector3 LocalPos) Point2 { get; set; }
+	public (Component Parent, Vector3 LocalPos) Point1 { get; set; }
+	public (Component Parent, Vector3 LocalPos) Point2 { get; set; }
 
 	public override void OnExit()
 	{
@@ -24,7 +24,7 @@ public partial class WiringTool : EditorTool
 
 		if ( !IsMenuOpen )
 		{
-			if ( TargetEntity.IsValid() && TargetEntity is Device device )
+			if ( TargetComponent.IsValid() && TargetComponent is Device device )
 				device.RenderHelpers();
 		}
 
@@ -38,12 +38,12 @@ public partial class WiringTool : EditorTool
 		if ( TargetWorldPosition is not Vector3 targetPos )
 			return;
 
-		var ent1 = Point1.Entity;
+		var ent1 = Point1.Parent;
 
 		if ( !IsValidTarget( ent1 ) )
 			return;
 
-		var ent2 = IsValidTarget( Point2.Entity ) ? Point2.Entity : TargetEntity;
+		var ent2 = IsValidTarget( Point2.Parent ) ? Point2.Parent : TargetComponent as Entity;
 
 		if ( !ent2.IsValid() )
 			return;
@@ -67,26 +67,26 @@ public partial class WiringTool : EditorTool
 		if ( !PressedPrimary )
 			return;
 
-		if ( !IsValidTarget( TargetEntity ) )
+		if ( !IsValidTarget( TargetComponent ) )
 			return;
 
 		if ( TargetLocalPosition is not Vector3 localPos )
 			return;
 
-		if ( !Point1.Entity.IsValid() )
+		if ( !Point1.Parent.IsValid() )
 		{
-			Point1 = (TargetEntity, localPos);
+			Point1 = (TargetComponent, localPos);
 		}
 		else
 		{
-			if ( TargetEntity != Point1.Entity )
-				Point2 = (TargetEntity, localPos);
+			if ( TargetComponent != Point1.Parent )
+				Point2 = (TargetComponent, localPos);
 		}
 
-		if ( !CanWire( Point1.Entity, Point2.Entity ) )
+		if ( !CanWire( Point1.Parent, Point2.Parent ) )
 			return;
 
-		RpcHostRequestWire( Point1.Entity, Point2.Entity, Point1.LocalPos, Point2.LocalPos );
+		RpcHostRequestWire( Point1.Parent, Point2.Parent, Point1.LocalPos, Point2.LocalPos );
 
 		Clear();
 	}
@@ -95,8 +95,8 @@ public partial class WiringTool : EditorTool
 	{
 		base.OnReload( tr );
 
-		if ( TargetEntity.IsValid() )
-			RpcHostRequestClear( TargetEntity );
+		if ( TargetComponent is Entity ent )
+			RpcHostRequestClear( ent );
 	}
 
 	protected override void ClearTarget()
@@ -110,8 +110,8 @@ public partial class WiringTool : EditorTool
 		Point2 = default;
 	}
 
-	public override bool IsValidTarget( Entity ent )
-		=> base.IsValidTarget( ent ) && ent is IWired;
+	public override bool IsValidTarget( Component c )
+		=> base.IsValidTarget( c ) && c is IWired;
 
 	public override bool TrySetTarget( in SceneTraceResult tr, Component target )
 	{
@@ -124,7 +124,7 @@ public partial class WiringTool : EditorTool
 		return true;
 	}
 
-	public bool CanWire( Entity ent1, Entity ent2 )
+	public bool CanWire( Component ent1, Component ent2 )
 	{
 		if ( ent1 == ent2 )
 			return false;
@@ -136,7 +136,7 @@ public partial class WiringTool : EditorTool
 	}
 
 	[Rpc.Host]
-	protected void RpcHostRequestWire( Entity ent1, Entity ent2, Vector3 localPos1, Vector3 localPos2 )
+	protected void RpcHostRequestWire( Component ent1, Component ent2, Vector3 localPos1, Vector3 localPos2 )
 	{
 		if ( !TryUse( Rpc.Caller, out _ ) )
 			return;
@@ -145,10 +145,10 @@ public partial class WiringTool : EditorTool
 			return;
 
 		if ( ent1 is Device device1 )
-			device1.TryWire( ent2, localPos2 );
+			device1.TryWire( device1, localPos2 );
 
 		if ( ent2 is Device device2 )
-			device2.TryWire( ent1, localPos1 );
+			device2.TryWire( device2, localPos1 );
 	}
 
 	[Rpc.Host]
