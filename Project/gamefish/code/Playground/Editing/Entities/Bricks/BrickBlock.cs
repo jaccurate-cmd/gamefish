@@ -32,6 +32,13 @@ public partial class BrickBlock : EditorEntity
 		SetRendererColor( BrickColor );
 	}
 
+	public virtual void RandomizeColor()
+	{
+		BrickColor = Color.Random
+			.Desaturate( 0.3f )
+			.Darken( 0.1f );
+	}
+
 	public virtual void SetRendererColor( in Color c )
 	{
 		if ( Renderer.IsValid() )

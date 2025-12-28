@@ -48,6 +48,11 @@ public abstract class ShapeTool : EditorTool
 	public bool HasPoints => Points?.Count > 0;
 
 	/// <summary>
+	/// Can something be made of this shape?
+	/// </summary>
+	public virtual bool ValidShape => Points?.Count >= 2;
+
+	/// <summary>
 	/// Do we have enough(or too many) <see cref="Points"/>?
 	/// </summary>
 	public bool AtLimit => HasPoints && Points.Count >= PointLimit;
@@ -101,12 +106,6 @@ public abstract class ShapeTool : EditorTool
 		Clear();
 	}
 
-	/// <summary>
-	/// Where are the points of the shape we're making are relative to?
-	/// </summary>
-	protected virtual Transform GetShapeOrigin()
-		=> global::Transform.Zero;
-
 	protected override void RenderHelpers()
 	{
 		base.RenderHelpers();
@@ -119,11 +118,10 @@ public abstract class ShapeTool : EditorTool
 		if ( !HasPoints )
 			return;
 
-		var tOrigin = GetShapeOrigin();
 		var points = Points?.Select( pr => pr.Position );
 		var box = BBox.FromPoints( points ).Grow( -0.01f );
 
-		this.DrawBox( box, ColorOutline, ColorFilled, tOrigin );
+		this.DrawBox( box, ColorOutline, ColorFilled, global::Transform.Zero );
 	}
 
 	protected virtual bool TryAddPoint( Vector3 pos, Rotation r )

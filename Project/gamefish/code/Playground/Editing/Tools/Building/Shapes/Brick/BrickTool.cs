@@ -44,24 +44,45 @@ public partial class BrickTool : ShapeTool
 		base.OnScroll( scroll );
 	}
 
-	protected override Transform GetShapeOrigin()
-	{
-		if ( !HasParentIsland )
-			return base.GetShapeOrigin();
-
-		if ( ParentIsland.IsValid() )
-			return ParentIsland.WorldTransform;
-
-		return LastIslandTransform ?? global::Transform.Zero;
-	}
-
 	protected override void OnPointAdded( in Vector3 pos, in Rotation r )
 	{
+		base.OnPointAdded( pos, r );
 	}
 
 	protected override bool TryCreateShape( out GameObject obj )
 	{
 		obj = null;
-		return false;
+
+		if ( !HasPoints || !ValidShape )
+			return false;
+
+		var points = Points.Select( pr => pr.Position );
+		var bounds = BBox.FromPoints( points );
+		var size = bounds.Size;
+
+		var scale = size / ShapeSize;
+
+		if ( !ITransform.IsValid( scale ) )
+			return false;
+
+		var tWorld = new Transform( bounds.Center, Rotation.Identity, scale );
+
+		if ( !TrySpawnPrefab( ShapePrefab, out obj, tWorld ) )
+			return false;
+
+		return true;
+	}
+
+	protected override void OnPrefabSpawned( GameObject obj )
+	{
+		if ( !obj.IsValid() )
+			return;
+
+		const FindMode findMode = FindMode.Enabled | FindMode.InDescendants;
+
+		foreach ( var brick in obj.Components.GetAll<BrickBlock>( findMode ).ToArray() )
+			brick.RandomizeColor();
+
+		base.OnPrefabSpawned( obj );
 	}
 }

@@ -30,17 +30,17 @@ partial class EditorTool
 			return false;
 
 		if ( autoNetwork )
-			NetworkSetup( obj );
+			OnPrefabSpawned( obj );
 
 		return true;
 	}
 
-	protected virtual bool NetworkSetup( GameObject obj )
+	protected virtual void OnPrefabSpawned( GameObject obj )
 	{
 		if ( !obj.IsValid() )
-			return false;
+			return;
 
-		return obj.NetworkSetup(
+		obj.NetworkSetup(
 			cn: Connection.Host,
 			orphanMode: NetworkOrphaned.ClearOwner,
 			ownerTransfer: OwnerTransfer.Takeover,
