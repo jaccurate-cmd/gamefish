@@ -74,6 +74,11 @@ partial class EditorTool
 	public virtual bool TryLeftClick()
 	{
 		// this.Log( "Left clicked." );
+		if ( TryTrace( out var tr ) )
+		{
+			OnPrimary( in tr );
+			return true;
+		}
 
 		return false;
 	}
@@ -100,11 +105,12 @@ partial class EditorTool
 	}
 
 	/// <returns> If the default editor behavior should be prevented. </returns>
-	public virtual bool TryMouseWheel( in Vector2 dir )
+	public virtual bool TryMouseWheel( in Vector2 scroll )
 	{
 		// this.Log( $"Mouse wheel:[{dir}]" );
 
-		return false;
+		OnScroll( in scroll );
+		return true;
 	}
 
 	/// <returns> If the default editor behavior should be prevented. </returns>

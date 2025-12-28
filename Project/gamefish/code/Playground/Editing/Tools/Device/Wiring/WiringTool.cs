@@ -2,7 +2,6 @@ namespace Playground;
 
 public partial class WiringTool : EditorTool
 {
-	public Entity TargetEntity { get; set; }
 	public Vector3? TargetWorldPosition { get; set; }
 	public Vector3? TargetLocalPosition { get; set; }
 
@@ -102,7 +101,7 @@ public partial class WiringTool : EditorTool
 			RpcHostRequestClear( TargetEntity );
 	}
 
-	protected virtual void UpdateTarget( in float deltaTime )
+	protected override void UpdateTarget( in float deltaTime )
 	{
 		TargetEntity = null;
 		TargetWorldPosition = null;
@@ -113,7 +112,7 @@ public partial class WiringTool : EditorTool
 		if ( !TryTrace( out var tr ) )
 			return;
 
-		if ( !TryFindWireable( tr.GameObject, out var ent ) )
+		if ( !TryGetTarget( in tr, out var ent ) )
 			return;
 
 		if ( !TrySetTarget( ent, in tr ) )
@@ -124,25 +123,10 @@ public partial class WiringTool : EditorTool
 		this.DrawSphere( 2f, tr.HitPosition, Color.Transparent, cSphere, global::Transform.Zero );
 	}
 
-	public virtual bool TryFindWireable( GameObject obj, out Entity ent )
-	{
-		ent = null;
+	public override bool IsValidTarget( Entity ent )
+		=> base.IsValidTarget( ent ) && ent is IWired;
 
-		if ( !obj.IsValid() || !obj.Active )
-			return false;
-
-		const FindMode findMode = FindMode.EnabledInSelf
-			| FindMode.InAncestors;
-
-		ent = obj.Components.GetAll<Entity>( findMode )
-		   .FirstOrDefault( ent => ent is IWired );
-
-		// this.Log( ent );
-
-		return ent.IsValid();
-	}
-
-	public bool TrySetTarget( Entity ent, in SceneTraceResult tr )
+	public override bool TrySetTarget( Entity ent, in SceneTraceResult tr )
 	{
 		if ( !IsValidTarget( ent ) )
 			return false;
@@ -155,7 +139,7 @@ public partial class WiringTool : EditorTool
 		return true;
 	}
 
-	public static bool CanWire( Entity ent1, Entity ent2 )
+	public bool CanWire( Entity ent1, Entity ent2 )
 	{
 		if ( ent1 == ent2 )
 			return false;
@@ -164,14 +148,6 @@ public partial class WiringTool : EditorTool
 			return false;
 
 		return IsValidTarget( ent1 ) && IsValidTarget( ent2 );
-	}
-
-	public static bool IsValidTarget( Entity ent )
-	{
-		if ( !ent.IsValid() || ent is not IWired )
-			return false;
-
-		return true;
 	}
 
 	protected void Clear()
