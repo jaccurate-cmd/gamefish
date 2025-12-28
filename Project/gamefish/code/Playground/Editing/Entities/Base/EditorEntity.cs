@@ -6,7 +6,7 @@ namespace Playground;
 /// Some object a player can create.
 /// Tracks who it belongs to so it can be managed.
 /// </summary>
-public partial class EditorEntity : ModuleEntity
+public partial class EditorEntity : PhysicsObject
 {
 	protected const int EDITOR_ORDER = DEFAULT_ORDER - 1000;
 
