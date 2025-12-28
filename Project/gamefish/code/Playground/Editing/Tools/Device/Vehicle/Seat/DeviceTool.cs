@@ -22,14 +22,14 @@ public partial class DeviceTool : PrefabTool
 		base.OnScroll( scroll );
 	}
 
-	public override bool TrySetTarget( in SceneTraceResult tr, out Component target )
+	public override bool TrySetTarget( in SceneTraceResult tr, Component target )
 	{
-		if ( !TrySetTarget( in tr, out target ) )
+		if ( !base.TrySetTarget( in tr, target ) )
 			return false;
 
 		TargetObject = tr.GameObject;
 
-		HasTarget = TargetObject.IsValid()
+		ValidTarget = TargetObject.IsValid()
 			&& tr.Collider.IsValid() && !tr.Collider.Static;
 
 		var targetPos = tr.StartPosition + (tr.Direction * Distance.Min( tr.Distance ));

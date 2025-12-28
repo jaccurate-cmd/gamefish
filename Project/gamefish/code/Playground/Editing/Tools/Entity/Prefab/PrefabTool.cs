@@ -44,14 +44,14 @@ public partial class PrefabTool : EditorTool
 
 	public BBox? PrefabBounds { get; protected set; }
 
-	public bool HasTarget { get; protected set; }
+	public bool ValidTarget { get; protected set; }
 	public Transform TargetTransform { get; protected set; }
 
 	public override void OnExit()
 	{
 		base.OnExit();
 
-		HasTarget = false;
+		ValidTarget = false;
 	}
 
 	public override void FrameSimulate( in float deltaTime )
@@ -112,7 +112,7 @@ public partial class PrefabTool : EditorTool
 
 	protected virtual void UpdateTarget( in float deltaTime )
 	{
-		HasTarget = false;
+		ValidTarget = false;
 
 		if ( !Prefab.IsValid() || !PrefabBounds.HasValue )
 			return;
@@ -123,13 +123,16 @@ public partial class PrefabTool : EditorTool
 		if ( !TryTrace( out var tr ) )
 			return;
 
-		if ( !TrySetTarget( in tr, out _ ) )
+		if ( !TryGetTarget( in tr, out var target ) )
+			return;
+
+		if ( !TrySetTarget( in tr, target ) )
 			return;
 
 		var c1 = Color.Black.WithAlpha( 0.5f );
 		var c2 = Color.White.WithAlpha( 0.04f );
 
-		if ( !HasTarget )
+		if ( !ValidTarget )
 		{
 			c1 = c1.WithAlphaMultiplied( 0.3f );
 			c2 = c2.WithAlphaMultiplied( 0.3f );
@@ -139,15 +142,15 @@ public partial class PrefabTool : EditorTool
 		this.DrawBox( bounds, c1, c2, tWorld: TargetTransform );
 	}
 
-	public override bool TrySetTarget( in SceneTraceResult tr, out Component target )
+	public override bool TrySetTarget( in SceneTraceResult tr, Component target )
 	{
-		if ( !TrySetTarget( in tr, out target ) )
+		if ( !base.TrySetTarget( in tr, target ) )
 			return false;
 
 		var pointDist = tr.Distance.Min( Distance );
 		var hitPoint = tr.StartPosition + (tr.Direction * pointDist);
 
-		HasTarget = true;
+		ValidTarget = true;
 		TargetTransform = new Transform( hitPoint, GetPrefabRotation() );
 
 		return true;
@@ -155,7 +158,7 @@ public partial class PrefabTool : EditorTool
 
 	protected virtual bool TryPlaceAtTarget( out GameObject obj )
 	{
-		if ( !HasTarget )
+		if ( !ValidTarget )
 		{
 			obj = null;
 			return false;

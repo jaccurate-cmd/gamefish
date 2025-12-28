@@ -63,7 +63,7 @@ public abstract partial class EditorTool : PlaygroundModule
 	/// <summary>
 	/// The relative position/rotation from the entity.
 	/// </summary>
-	public Offset? TargetEntityOffset { get; protected set; }
+	public Offset? TargetOffset { get; protected set; }
 
 	/// <summary>
 	/// The world-space location we're trying to put/do stuff.
@@ -173,7 +173,7 @@ public abstract partial class EditorTool : PlaygroundModule
 	protected virtual void ClearTarget()
 	{
 		TargetEntity = null;
-		TargetEntityOffset = null;
+		TargetOffset = null;
 		TargetWorldTransform = null;
 
 		TargetTrace = null;
@@ -195,7 +195,46 @@ public abstract partial class EditorTool : PlaygroundModule
 
 		TargetTrace = tr;
 
-		TrySetTarget( in tr, out _ );
+		if ( !TryGetTarget( in tr, out _ ) )
+			return;
+	}
+
+	public virtual bool TrySetTarget( in SceneTraceResult tr, Component target )
+	{
+		if ( !target.IsValid() )
+			return false;
+
+		TargetTrace = tr;
+
+		var tWorld = target.WorldTransform;
+		TargetWorldTransform = tWorld;
+
+		var vLocal = tWorld.PointToLocal( tr.EndPosition );
+		var rLocal = tWorld.RotationToLocal( Rotation.LookAt( tr.Direction ) );
+		TargetOffset = new( vLocal, rLocal );
+
+		if ( target is Entity ent )
+			TargetEntity = ent;
+
+		return true;
+	}
+
+	public virtual bool TryGetTarget( in SceneTraceResult tr, out Component target )
+	{
+		if ( TryGetTargetEntity( in tr, out var ent ) )
+		{
+			target = ent;
+			return true;
+		}
+
+		if ( tr.Collider.IsValid() && tr.Collider.Static is true )
+		{
+			target = tr.Collider;
+			return true;
+		}
+
+		target = null;
+		return false;
 	}
 
 	protected virtual bool TryGetTargetEntity( in SceneTraceResult tr, out Entity ent )
@@ -213,24 +252,6 @@ public abstract partial class EditorTool : PlaygroundModule
 			.FirstOrDefault();
 
 		return ent.IsValid();
-	}
-
-	public virtual bool TrySetTarget( in SceneTraceResult tr, out Component target )
-	{
-		if ( TryGetTargetEntity( in tr, out var ent ) )
-		{
-			target = ent;
-			return true;
-		}
-
-		if ( tr.Collider.IsValid() && tr.Collider.Static is true )
-		{
-			target = tr.Collider;
-			return true;
-		}
-
-		target = null;
-		return false;
 	}
 
 	public virtual bool IsValidTarget( Entity ent )

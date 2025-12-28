@@ -113,9 +113,9 @@ public partial class WiringTool : EditorTool
 	public override bool IsValidTarget( Entity ent )
 		=> base.IsValidTarget( ent ) && ent is IWired;
 
-	public override bool TrySetTarget( in SceneTraceResult tr, out Component target )
+	public override bool TrySetTarget( in SceneTraceResult tr, Component target )
 	{
-		if ( !TrySetTarget( in tr, out target ) )
+		if ( !base.TrySetTarget( in tr, target ) )
 			return false;
 
 		TargetWorldPosition = tr.HitPosition;
