@@ -45,9 +45,9 @@ public partial class PropellerTool : JointTool
 		if ( !hitPoint.IsValid() || !ValidAttachment( hitPoint ) )
 			return false;
 
-		// var tHit = hitPoint.Object.WorldTransform.WithOffset( hitPoint.Offset.Value );
+		var tHit = hitPoint.Object.WorldTransform.WithOffset( hitPoint.Offset.Value );
 
-		if ( !TrySpawnPrefab( JointPrefab, obj: out var jointObj ) )
+		if ( !TrySpawnObject( JointPrefab, parent: null, tWorld: tHit, obj: out var jointObj ) )
 		{
 			this.Warn( $"Couldn't find/spawn {typeof( Propeller )} prefab:[{JointPrefab}]!" );
 			return false;

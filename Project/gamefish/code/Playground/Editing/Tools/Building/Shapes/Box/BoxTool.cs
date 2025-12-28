@@ -213,6 +213,6 @@ public partial class BoxTool : EditorTool
 
 		var tBox = new Transform( center, Rotation.Identity, scale );
 
-		return TrySpawnPrefab( BoxPrefab, out objBox, tWorld: tBox );
+		return TrySpawnObject( BoxPrefab, tWorld: tBox, out objBox );
 	}
 }

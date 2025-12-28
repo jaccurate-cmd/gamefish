@@ -187,5 +187,5 @@ public partial class BoardTool : EditorTool
 	}
 
 	protected virtual bool TryCreateBoard( in Transform t, out GameObject obj )
-		=> TrySpawnPrefab( BoardPrefab, tWorld: t, obj: out obj );
+		=> TrySpawnObject( BoardPrefab, tWorld: t, obj: out obj );
 }

@@ -68,9 +68,9 @@ public partial class PhysicsWheelTool : JointTool
 		if ( !hitPoint.IsValid() || !ValidAttachment( hitPoint ) )
 			return false;
 
-		// var tHit = hitPoint.Object.WorldTransform.WithOffset( hitPoint.Offset.Value );
+		var tHit = hitPoint.Object.WorldTransform.WithOffset( hitPoint.Offset.Value );
 
-		if ( !TrySpawnPrefab( JointPrefab, obj: out var jointObj ) )
+		if ( !TrySpawnObject( JointPrefab, tHit, obj: out var jointObj ) )
 		{
 			this.Warn( $"Couldn't find/spawn {typeof( PhysicsWheel )} prefab:[{JointPrefab}]!" );
 			return false;

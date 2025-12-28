@@ -95,7 +95,7 @@ public partial class ThrusterTool : EditorTool
 		var rAim = Rotation.LookAt( -hitNormal );
 		var tWorld = new Transform( hitPos, rAim );
 
-		if ( !TrySpawnPrefab( ThrusterPrefab, tWorld: tWorld, obj: out var obj ) )
+		if ( !TrySpawnObject( ThrusterPrefab, tWorld: tWorld, obj: out var obj ) )
 			return false;
 
 		obj.NetworkInterpolation = false;

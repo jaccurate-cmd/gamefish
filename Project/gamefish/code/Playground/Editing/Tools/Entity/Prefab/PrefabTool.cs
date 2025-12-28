@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 
 namespace Playground;
@@ -44,22 +45,14 @@ public partial class PrefabTool : EditorTool
 
 	public BBox? PrefabBounds { get; protected set; }
 
-	public bool ValidTarget { get; protected set; }
 	public Transform TargetTransform { get; protected set; }
-
-	public override void OnExit()
-	{
-		base.OnExit();
-
-		ValidTarget = false;
-	}
 
 	public override void FrameSimulate( in float deltaTime )
 	{
 		UpdateTarget( in deltaTime );
 
 		if ( PressedPrimary )
-			TryPlaceAtTarget( out _ );
+			TrySpawnAtTarget( out _ );
 	}
 
 	public override bool TryMouseWheel( in Vector2 dir )
@@ -110,35 +103,27 @@ public partial class PrefabTool : EditorTool
 		return true;
 	}
 
-	protected virtual void UpdateTarget( in float deltaTime )
+	protected override void UpdateTarget( in float deltaTime, bool clearPrevious = true )
 	{
-		ValidTarget = false;
-
 		if ( !Prefab.IsValid() || !PrefabBounds.HasValue )
+		{
+			ClearTarget();
 			return;
+		}
 
-		if ( !IsClientAllowed( Client.Local ) )
-			return;
-
-		if ( !TryTrace( out var tr ) )
-			return;
-
-		if ( !TryGetTarget( in tr, out var target ) )
-			return;
-
-		if ( !TrySetTarget( in tr, target ) )
-			return;
+		base.UpdateTarget( deltaTime, clearPrevious );
 
 		var c1 = Color.Black.WithAlpha( 0.5f );
 		var c2 = Color.White.WithAlpha( 0.04f );
 
-		if ( !ValidTarget )
+		if ( !TargetObject.IsValid() )
 		{
 			c1 = c1.WithAlphaMultiplied( 0.3f );
 			c2 = c2.WithAlphaMultiplied( 0.3f );
 		}
 
 		var bounds = PrefabBounds.Value;
+
 		this.DrawBox( bounds, c1, c2, tWorld: TargetTransform );
 	}
 
@@ -150,23 +135,15 @@ public partial class PrefabTool : EditorTool
 		var pointDist = tr.Distance.Min( Distance );
 		var hitPoint = tr.StartPosition + (tr.Direction * pointDist);
 
-		ValidTarget = true;
 		TargetTransform = new Transform( hitPoint, GetPrefabRotation() );
 
 		return true;
 	}
 
-	protected virtual bool TryPlaceAtTarget( out GameObject obj )
+	protected virtual bool TrySpawnAtTarget( out GameObject obj )
 	{
-		if ( !ValidTarget )
-		{
-			obj = null;
-			return false;
-		}
+		var parent = GetObjectGroup( TargetObject );
 
-		return TryPlace( TargetTransform, out obj );
+		return TrySpawnObject( Prefab, parent: parent, TargetTransform, out obj );
 	}
-
-	protected virtual bool TryPlace( Transform t, out GameObject obj )
-		=> TrySpawnPrefab( Prefab, tWorld: t, obj: out obj );
 }

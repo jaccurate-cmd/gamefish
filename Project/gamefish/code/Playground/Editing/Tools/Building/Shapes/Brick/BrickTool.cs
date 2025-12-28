@@ -131,13 +131,13 @@ public partial class BrickTool : ShapeTool
 
 		tShape.Scale = tShape.Scale.ComponentMax( BRICK_SIZE_MIN );
 
-		if ( !TrySpawnPrefab( ShapePrefab, out obj, tShape ) )
+		if ( !TrySpawnObject( ShapePrefab, parent: null, tOrigin, out obj ) )
 			return false;
 
 		return true;
 	}
 
-	protected override void OnPrefabSpawned( GameObject obj )
+	protected override void OnObjectSpawned( GameObject obj )
 	{
 		if ( !obj.IsValid() )
 			return;
@@ -147,6 +147,6 @@ public partial class BrickTool : ShapeTool
 		foreach ( var brick in obj.Components.GetAll<BrickBlock>( findMode ).ToArray() )
 			brick.RandomizeColor();
 
-		base.OnPrefabSpawned( obj );
+		base.OnObjectSpawned( obj );
 	}
 }

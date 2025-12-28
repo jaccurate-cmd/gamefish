@@ -44,6 +44,13 @@ public partial class EditorObject : PhysicsObject
 			GameObject.Destroy();
 	}
 
+	protected override void OnParentChanged( GameObject oldParent, GameObject newParent )
+	{
+		base.OnParentChanged( oldParent, newParent );
+
+		RefreshGroup( newParent );
+	}
+
 	public virtual void RenderHelpers()
 	{
 	}

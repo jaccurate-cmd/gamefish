@@ -6,7 +6,8 @@ namespace Playground;
 public partial class BrickIsland : EditorObjectGroup
 {
 	/// <summary>
-	/// All the bricks in this island.
+	/// All the bricks within this.
 	/// </summary>
-	public IEnumerable<BrickBlock> Bricks => Components?.GetAll<BrickBlock>() ?? [];
+	public IEnumerable<BrickBlock> FindBricks()
+		=> Components?.GetAll<BrickBlock>( FindMode.Enabled | FindMode.InDescendants ) ?? [];
 }

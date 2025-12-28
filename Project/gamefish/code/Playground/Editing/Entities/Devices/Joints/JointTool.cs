@@ -147,7 +147,10 @@ public abstract class JointTool : EditorTool
 		if ( !point2.IsValid() || !ValidAttachment( point2 ) )
 			return false;
 
-		if ( !TrySpawnPrefab( JointPrefab, obj: out var jointObj ) )
+		var tWorld = (point1.Object ?? point1.Object)?.WorldTransform
+			?? global::Transform.Zero;
+
+		if ( !TrySpawnObject( JointPrefab, parent: null, tWorld, obj: out var jointObj ) )
 		{
 			this.Warn( $"Couldn't find/spawn {typeof( TJoint )} prefab:[{JointPrefab}]!" );
 			return false;

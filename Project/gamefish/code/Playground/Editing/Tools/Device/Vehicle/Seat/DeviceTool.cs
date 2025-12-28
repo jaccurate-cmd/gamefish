@@ -25,10 +25,11 @@ public partial class DeviceTool : PrefabTool
 		if ( !base.TrySetTarget( in tr, target ) )
 			return false;
 
-		TargetObject = tr.GameObject;
-
-		ValidTarget = TargetObject.IsValid()
-			&& tr.Collider.IsValid() && !tr.Collider.Static;
+		if ( !tr.Collider.IsValid() || tr.Collider.Static )
+		{
+			ClearTarget();
+			return false;
+		}
 
 		var targetPos = tr.StartPosition + (tr.Direction * Distance.Min( tr.Distance ));
 
@@ -42,9 +43,9 @@ public partial class DeviceTool : PrefabTool
 		return true;
 	}
 
-	protected override bool TryPlaceAtTarget( out GameObject obj )
+	protected override bool TrySpawnAtTarget( out GameObject obj )
 	{
-		if ( !base.TryPlaceAtTarget( out obj ) )
+		if ( !base.TrySpawnAtTarget( out obj ) )
 			return false;
 
 		if ( TargetObject.IsValid() )
