@@ -89,7 +89,7 @@ public abstract class ShapeTool : EditorTool
 
 	protected override void OnPrimary( in SceneTraceResult tr )
 	{
-		TryAddPoint( tr.EndPosition, Rotation.Identity );
+		TryAddPoint( tr.EndPosition, Rotation.LookAt( tr.Normal ) );
 	}
 
 	protected override void OnScroll( in Vector2 scroll )
@@ -115,23 +115,26 @@ public abstract class ShapeTool : EditorTool
 
 	protected virtual void RenderShape()
 	{
+		RenderBoxShape();
+	}
+
+	protected virtual void RenderBoxShape()
+	{
 		if ( !HasPoints )
 			return;
 
 		var points = Points?.Select( pr => pr.Position ).ToList();
-		var tShape = GetShapeOrigin();
+		var tOrigin = GetShapeOrigin();
 
 		if ( TryGetCursorPosition( out var cursorPos ) )
 		{
-			if ( OriginObject.IsValid() )
-				cursorPos = tShape.PointToLocal( cursorPos );
-
+			cursorPos = tOrigin.PointToLocal( cursorPos );
 			points.Add( cursorPos );
 		}
 
 		var box = BBox.FromPoints( points ).Grow( -0.01f );
 
-		this.DrawBox( box, ColorOutline, ColorFilled, tShape );
+		this.DrawBox( box, ColorOutline, ColorFilled, tOrigin );
 	}
 
 	protected virtual bool TryAddPoint( Vector3 pos, Rotation r )
