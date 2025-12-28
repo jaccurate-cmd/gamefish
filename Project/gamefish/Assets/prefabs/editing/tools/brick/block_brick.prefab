@@ -44,44 +44,10 @@
         "OnComponentUpdate": null,
         "Renderer": {
           "_type": "component",
-          "component_id": "ff822a20-f454-4b7b-ade4-48cace471ac9",
-          "go": "305b5d3e-a762-4912-a2c5-8669a4170233",
+          "component_id": "37a4297c-8ee7-4d28-afbf-7f1b38a9fae4",
+          "go": "e558bd31-93d8-435b-88ef-75b1818da075",
           "component_type": "ModelRenderer"
         }
-      },
-      {
-        "__type": "Sandbox.Rigidbody",
-        "__guid": "155cf156-4d8c-4fa1-9680-16d4e487cba3",
-        "__enabled": true,
-        "Flags": 0,
-        "AngularDamping": 0,
-        "EnableImpactDamage": false,
-        "EnhancedCcd": false,
-        "Gravity": true,
-        "GravityScale": 1,
-        "ImpactDamage": 0,
-        "LinearDamping": 0,
-        "Locking": {
-          "X": false,
-          "Y": false,
-          "Z": false,
-          "Pitch": false,
-          "Yaw": false,
-          "Roll": false
-        },
-        "MassCenterOverride": "0,0,0",
-        "MassOverride": 0,
-        "MinImpactDamageSpeed": 500,
-        "MotionEnabled": true,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "OverrideMassCenter": false,
-        "RigidbodyFlags": 0,
-        "StartAsleep": false
       },
       {
         "__type": "Sandbox.BoxCollider",
@@ -108,56 +74,36 @@
         "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
-      }
-    ],
-    "Children": [
+      },
       {
-        "__guid": "305b5d3e-a762-4912-a2c5-8669a4170233",
-        "__version": 1,
+        "__type": "Sandbox.ModelRenderer",
+        "__guid": "37a4297c-8ee7-4d28-afbf-7f1b38a9fae4",
+        "__enabled": true,
         "Flags": 0,
-        "Name": "Model",
-        "Position": "0,0,0",
-        "Rotation": "0,0,0,1",
-        "Scale": "0.64,0.64,0.64",
-        "Tags": "",
-        "Enabled": true,
-        "NetworkMode": 2,
-        "NetworkInterpolation": true,
-        "NetworkOrphaned": 0,
-        "NetworkTransmit": true,
-        "OwnerTransfer": 1,
-        "Components": [
-          {
-            "__type": "Sandbox.ModelRenderer",
-            "__guid": "ff822a20-f454-4b7b-ade4-48cace471ac9",
-            "__enabled": true,
-            "Flags": 0,
-            "BodyGroups": 18446744073709551615,
-            "CreateAttachments": false,
-            "LodOverride": null,
-            "MaterialGroup": null,
-            "MaterialOverride": null,
-            "Materials": null,
-            "Model": "models/dev/box.vmdl",
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "RenderOptions": {
-              "GameLayer": true,
-              "OverlayLayer": false,
-              "BloomLayer": false,
-              "AfterUILayer": false
-            },
-            "RenderType": "On",
-            "Tint": "0.86512,0.85123,0.77257,1"
-          }
-        ],
-        "Children": []
+        "BodyGroups": 18446744073709551615,
+        "CreateAttachments": false,
+        "LodOverride": null,
+        "MaterialGroup": null,
+        "MaterialOverride": null,
+        "Materials": null,
+        "Model": "models/gamefish/brick/brick_32.vmdl",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
+        },
+        "RenderType": "On",
+        "Tint": "0.86512,0.85123,0.77257,1"
       }
     ],
+    "Children": [],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,

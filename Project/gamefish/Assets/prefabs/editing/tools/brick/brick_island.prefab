@@ -41,6 +41,40 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null
+      },
+      {
+        "__type": "Sandbox.Rigidbody",
+        "__guid": "fad8f408-5ff6-4c3b-8fbe-6856867106c2",
+        "__enabled": true,
+        "Flags": 0,
+        "AngularDamping": 0,
+        "EnableImpactDamage": false,
+        "EnhancedCcd": false,
+        "Gravity": true,
+        "GravityScale": 1,
+        "ImpactDamage": 0,
+        "LinearDamping": 0,
+        "Locking": {
+          "X": false,
+          "Y": false,
+          "Z": false,
+          "Pitch": false,
+          "Yaw": false,
+          "Roll": false
+        },
+        "MassCenterOverride": "0,0,0",
+        "MassOverride": 0,
+        "MinImpactDamageSpeed": 500,
+        "MotionEnabled": true,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OverrideMassCenter": false,
+        "RigidbodyFlags": 0,
+        "StartAsleep": false
       }
     ],
     "Children": [
@@ -65,7 +99,6 @@
         },
         "__PrefabIdToInstanceId": {
           "e558bd31-93d8-435b-88ef-75b1818da075": "2ae17e30-ef76-4483-b2db-5b922fccf127",
-          "155cf156-4d8c-4fa1-9680-16d4e487cba3": "8eb13ec8-604f-40f0-b061-9860a813c552",
           "ff822a20-f454-4b7b-ade4-48cace471ac9": "cbd0cbcc-8a06-4449-9381-b79f6a677c41",
           "bb58795a-05f5-42a0-aad5-9129911f0335": "974854fa-c32c-4bbc-ab5d-120ebe1ceea7",
           "f56c6fdb-20ab-4a46-9edc-7bcc6e03231f": "22a4986f-5769-4319-b705-2ab6ce94165d",
