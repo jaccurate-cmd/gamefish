@@ -2,26 +2,37 @@ namespace Playground;
 
 public partial class RemoverTool : EditorTool
 {
-	public override bool TryLeftClick()
+	protected override void OnPrimary( in SceneTraceResult tr )
 	{
-		TryRemoveTarget();
+		base.OnPrimary( in tr );
 
-		return true;
+		if ( !IsClientAllowed( Client.Local ) )
+			return;
+
+		if ( !TryGetTarget( in tr, out var target ) )
+			return;
+
+		if ( !CanRemove( Client.Local, target?.GameObject ) )
+			return;
+
+		RpcRemoveObject( target?.GameObject );
 	}
 
-	protected virtual bool TryRemoveTarget()
+	public override bool TryGetTarget( in SceneTraceResult tr, out Component target )
 	{
-		if ( !IsClientAllowed( Client.Local ) )
-			return false;
+		if ( tr.Collider.IsValid() && tr.Collider is not MapCollider )
+		{
+			target = tr.Collider;
+			return true;
+		}
 
-		if ( !TryTrace( out var tr ) || !tr.Hit )
-			return false;
+		return base.TryGetTarget( tr, out target );
+	}
 
-		if ( !CanRemove( Client.Local, tr.GameObject ) )
-			return false;
-
-		RpcTryRemoveObject( tr.GameObject );
-		return true;
+	protected override bool TryGetTargetEntity( in SceneTraceResult tr, out EditorObject e )
+	{
+		e = null;
+		return false;
 	}
 
 	public virtual bool CanRemove( Client cl, GameObject obj )
@@ -29,8 +40,12 @@ public partial class RemoverTool : EditorTool
 		if ( !obj.IsValid() )
 			return false;
 
-		// Can't ever remove the map itself with this tool.
-		if ( obj.GetComponent<MapCollider>( includeDisabled: true ).IsValid() )
+		// Can only remove editor objects.
+		if ( !obj.Components.TryGet<EditorObject>( out _, FindMode.EverythingInSelfAndAncestors ) )
+			return false;
+
+		// Can never remove maps.
+		if ( obj.Components.TryGet<MapInstance>( out _, FindMode.EverythingInSelfAndAncestors | FindMode.InDescendants ) )
 			return false;
 
 		// Can't remove connected player-owned pawns.
@@ -59,7 +74,7 @@ public partial class RemoverTool : EditorTool
 	}
 
 	[Rpc.Host( NetFlags.Reliable )]
-	protected void RpcTryRemoveObject( GameObject obj )
+	protected void RpcRemoveObject( GameObject obj )
 	{
 		if ( !TryUse( Rpc.Caller, out var cl ) )
 			return;
@@ -67,8 +82,18 @@ public partial class RemoverTool : EditorTool
 		if ( !obj.IsValid() )
 			return;
 
-		if ( obj.Components.TryGet<DynamicEntity>( out var ent, FindMode.Enabled | FindMode.InAncestors ) )
-			obj = ent.GameObject;
+		const FindMode findMode = FindMode.EnabledInSelf | FindMode.InAncestors;
+
+		if ( !obj.Components.TryGet<EditorObject>( out var e, findMode ) )
+			return;
+
+		obj = e.GameObject;
+
+		if ( !CanRemove( cl, obj ) )
+		{
+			this.Warn( $"Client:[{cl}] failed to remove obj:[{obj}]" );
+			return;
+		}
 
 		if ( !CanRemove( cl, obj ) )
 			return;

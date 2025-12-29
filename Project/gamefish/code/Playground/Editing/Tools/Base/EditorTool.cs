@@ -290,9 +290,9 @@ public abstract partial class EditorTool : PlaygroundModule
 		return false;
 	}
 
-	protected virtual bool TryGetTargetEntity( in SceneTraceResult tr, out Entity ent )
+	protected virtual bool TryGetTargetEntity( in SceneTraceResult tr, out EditorObject e )
 	{
-		ent = null;
+		e = null;
 
 		if ( !tr.Hit || !tr.GameObject.IsValid() )
 			return false;
@@ -300,11 +300,7 @@ public abstract partial class EditorTool : PlaygroundModule
 		const FindMode findMode = FindMode.EnabledInSelf
 			| FindMode.InAncestors;
 
-		ent = tr.GameObject.Components.GetAll<Entity>( findMode )
-			.Where( IsValidTarget )
-			.FirstOrDefault();
-
-		return ent.IsValid();
+		return tr.GameObject.Components.TryGet( out e, findMode );
 	}
 
 	public virtual bool IsValidTarget( Component ent )
