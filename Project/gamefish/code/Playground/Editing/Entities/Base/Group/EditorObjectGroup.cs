@@ -2,6 +2,21 @@ namespace Playground;
 
 public partial class EditorObjectGroup : EditorObject
 {
+	protected override void OnStart()
+	{
+		base.OnStart();
+
+		CreatePhysics();
+	}
+
+	protected virtual void CreatePhysics()
+	{
+		if ( !this.InGame() )
+			return;
+
+		Components.GetOrCreate<Rigidbody>( FindMode.EverythingInSelfAndAncestors );
+	}
+
 	/// <summary>
 	/// Finds all objects within that we should be concerned with.
 	/// </summary>

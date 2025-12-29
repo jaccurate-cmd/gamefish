@@ -36,14 +36,6 @@ partial class EditorTool
 			return false;
 		}
 
-		var rb = objGroup.Components.Create<Rigidbody>( startEnabled: true );
-
-		if ( !rb.IsValid() )
-		{
-			objGroup.DestroyImmediate();
-			return false;
-		}
-
 		return true;
 	}
 
@@ -93,11 +85,12 @@ partial class EditorTool
 			return false;
 		}
 
-		eObj.SetParent( parent.GameObject, keepWorldPosition: true );
-		eObj.Transform.ClearInterpolation();
+		parent.SetupNetworking( force: true );
 
 		e.SetupNetworking( force: true );
-		parent.SetupNetworking( force: true );
+
+		eObj.SetParent( parent.GameObject, keepWorldPosition: true );
+		eObj.Transform.ClearInterpolation();
 
 		OnObjectSpawned( parent, e );
 
