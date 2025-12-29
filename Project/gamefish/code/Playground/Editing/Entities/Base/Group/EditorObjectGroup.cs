@@ -22,8 +22,8 @@ public partial class EditorObjectGroup : EditorObject
 		rb = Components.GetOrCreate<Rigidbody>();
 
 		// 'cause uhhh fuck you, also bugs n shit
-		if ( rb.PhysicsBody.IsValid() )
-			rb.PhysicsBody.EnhancedCcd = true;
+		// if ( rb.PhysicsBody.IsValid() )
+			// rb.PhysicsBody.EnhancedCcd = true;
 
 		// none of this shit please
 		rb.EnableImpactDamage = false;
@@ -41,6 +41,7 @@ public partial class EditorObjectGroup : EditorObject
 			return;
 		}
 
+		/*
 		var colliders = Components.GetAll<Collider>( FindMode.EnabledInSelfAndDescendants )
 			.Where( c => c.Enabled );
 
@@ -58,6 +59,7 @@ public partial class EditorObjectGroup : EditorObject
 			Rigidbody.Enabled = false;
 			Rigidbody.Enabled = true;
 		}
+		*/
 	}
 
 	/// <summary>
