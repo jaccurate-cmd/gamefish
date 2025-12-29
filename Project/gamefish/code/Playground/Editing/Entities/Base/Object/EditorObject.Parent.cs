@@ -2,32 +2,39 @@ namespace Playground;
 
 partial class EditorObject
 {
+	/// <summary>
+	/// The parent entity that this is "snapped" to.
+	/// </summary>
+	[Property]
+	[Title( "Island" )]
+	[ShowIf( nameof( InGame ), true )]
+	[Feature( EDITOR ), Order( EDITOR_ORDER )]
 	public EditorIsland Island
 	{
-		get => _objGroup;
+		get => _objIsland;
 		protected set
 		{
-			if ( _objGroup == value )
+			if ( _objIsland == value )
 				return;
 
-			var old = _objGroup;
-			_objGroup = value;
+			var old = _objIsland;
+			_objIsland = value;
 
-			OnSetObjectGroup( _objGroup, old );
+			OnSetIsland( _objIsland, old );
 		}
 	}
 
-	protected EditorIsland _objGroup = null;
+	protected EditorIsland _objIsland = null;
 
-	protected virtual void OnSetObjectGroup( EditorIsland newGroup, EditorIsland oldGroup )
+	protected virtual void OnSetIsland( EditorIsland newIsland, EditorIsland oldIsland )
 	{
-		this.Log( $"group new:[{newGroup}] old:[{oldGroup}]" );
+		this.Log( $"group new:[{newIsland}] old:[{oldIsland}]" );
 
-		if ( newGroup.IsValid() )
-			newGroup.OnObjectAdded( this );
+		if ( newIsland.IsValid() )
+			newIsland.OnObjectAdded( this );
 	}
 
-	protected void UpdateIsland( GameObject parent = null )
+	protected void RefreshIsland( GameObject parent = null )
 	{
 		parent ??= GameObject;
 
@@ -40,10 +47,10 @@ partial class EditorObject
 		Island = parent?.Components?.Get<EditorIsland>( FindMode.Enabled | FindMode.InAncestors );
 
 		if ( Island.IsValid() )
-			DestroyPhysics();
+			DisablePhysics();
 	}
 
-	protected void DestroyPhysics()
+	protected void DisablePhysics()
 	{
 		if ( !GameObject.IsValid() )
 			return;
@@ -54,6 +61,6 @@ partial class EditorObject
 			return;
 
 		foreach ( var rb in bodies.ToArray() )
-			rb.Destroy();
+			rb.Enabled = false;
 	}
 }

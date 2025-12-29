@@ -56,5 +56,6 @@ public partial class EditorIsland : EditorObject
 
 	public virtual void OnObjectAdded( EditorObject ent )
 	{
+		TogglePhysics();
 	}
 }
