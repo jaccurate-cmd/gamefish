@@ -90,9 +90,12 @@ partial class EditorTool
 		e.SetupNetworking( force: true );
 
 		eObj.SetParent( parent.GameObject, keepWorldPosition: true );
-		eObj.Transform.ClearInterpolation();
+		// eObj.Transform.ClearInterpolation();
 
 		OnObjectSpawned( parent, e );
+
+		if ( parent.IsValid() )
+			parent.RpcBroadcastRefreshPhysics();
 
 		return true;
 	}

@@ -93,9 +93,9 @@ public partial class BoxTool : EditorTool
 
 	public override void FrameSimulate( in float deltaTime )
 	{
-		UpdateScroll( in deltaTime );
 		UpdateUse( in deltaTime );
 
+		UpdateTarget( in deltaTime );
 		UpdatePlace( in deltaTime );
 		UpdateCancel( in deltaTime );
 	}
@@ -110,12 +110,6 @@ public partial class BoxTool : EditorTool
 	{
 		if ( PressedUse )
 			UseHeight = !UseHeight;
-	}
-
-	protected virtual void UpdateScroll( in float deltaTime )
-	{
-		if ( !Mouse.Active )
-			return;
 	}
 
 	protected virtual void UpdatePlace( in float deltaTime )
@@ -213,6 +207,6 @@ public partial class BoxTool : EditorTool
 
 		var tBox = new Transform( center, Rotation.Identity, scale );
 
-		return TrySpawnObject( BoxPrefab, tWorld: tBox, out objBox );
+		return TrySpawnObject( BoxPrefab, TargetObject, tWorld: tBox, out objBox );
 	}
 }

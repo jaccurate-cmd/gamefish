@@ -22,6 +22,9 @@ partial class EditorObject
 	protected virtual void OnSetObjectGroup( EditorObjectGroup newGroup, EditorObjectGroup oldGroup )
 	{
 		this.Log( $"group new:[{newGroup}] old:[{oldGroup}]" );
+
+		if ( newGroup.IsValid() )
+			newGroup.RpcBroadcastRefreshPhysics();
 	}
 
 	protected void RefreshGroup( GameObject parent = null )

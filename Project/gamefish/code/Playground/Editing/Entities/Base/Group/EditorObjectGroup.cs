@@ -14,7 +14,50 @@ public partial class EditorObjectGroup : EditorObject
 		if ( !this.InGame() )
 			return;
 
-		Components.GetOrCreate<Rigidbody>( FindMode.EverythingInSelfAndAncestors );
+		var rb = Components.Get<Rigidbody>( FindMode.EverythingInSelfAndAncestors );
+
+		if ( rb.IsValid() )
+			rb.Destroy();
+
+		rb = Components.GetOrCreate<Rigidbody>();
+
+		// 'cause uhhh fuck you, also bugs n shit
+		if ( rb.PhysicsBody.IsValid() )
+			rb.PhysicsBody.EnhancedCcd = true;
+
+		// none of this shit please
+		rb.EnableImpactDamage = false;
+	}
+
+	[Rpc.Broadcast]
+	public void RpcBroadcastRefreshPhysics()
+	{
+		if ( !this.InGame() )
+			return;
+
+		if ( !Rigidbody.IsValid() )
+		{
+			CreatePhysics();
+			return;
+		}
+
+		var colliders = Components.GetAll<Collider>( FindMode.EnabledInSelfAndDescendants )
+			.Where( c => c.Enabled );
+
+		if ( !colliders.Any() )
+			return;
+
+		foreach ( var c in colliders.ToArray() )
+		{
+			c.Enabled = false;
+			c.Enabled = true;
+		}
+
+		if ( Rigidbody.IsValid() )
+		{
+			Rigidbody.Enabled = false;
+			Rigidbody.Enabled = true;
+		}
 	}
 
 	/// <summary>
@@ -50,5 +93,6 @@ public partial class EditorObjectGroup : EditorObject
 	/// </summary>
 	public virtual void OnObjectAdded( EditorObject ent )
 	{
+		RpcBroadcastRefreshPhysics();
 	}
 }
