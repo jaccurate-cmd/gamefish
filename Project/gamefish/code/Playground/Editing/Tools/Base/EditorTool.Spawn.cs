@@ -62,9 +62,9 @@ partial class EditorTool
 	/// <summary>
 	/// Spawns a prefab safely and with auto-configuration.
 	/// </summary>
-	public virtual bool TrySpawnObject( PrefabFile prefab, EditorObjectGroup parent, Transform tWorld, out GameObject obj )
+	public virtual bool TrySpawnObject( PrefabFile prefab, EditorObjectGroup parent, Transform tWorld, out GameObject eObj )
 	{
-		obj = null;
+		eObj = null;
 
 		// Permission check.
 		if ( !IsClientAllowed( Client.Local ) )
@@ -78,32 +78,33 @@ partial class EditorTool
 		}
 
 		// Create the prefab.
-		if ( !prefab.TrySpawn( tWorld, out obj ) )
+		if ( !prefab.TrySpawn( tWorld, out eObj ) )
 		{
 			parent.GameObject.DestroyImmediate();
 			return false;
 		}
 
-		if ( !obj.Components.TryGet<EditorObject>( out var e, FindMode.EnabledInSelf ) )
+		if ( !eObj.Components.TryGet<EditorObject>( out var e, FindMode.EnabledInSelf ) )
 		{
 			this.Warn( $"No {typeof( EditorObject )} on prefab:[{prefab}]!" );
 
-			obj.DestroyImmediate();
+			eObj.DestroyImmediate();
 			parent.GameObject.DestroyImmediate();
 			return false;
 		}
 
-		obj.SetParent( parent.GameObject, keepWorldPosition: true );
-		obj.Transform.ClearInterpolation();
+		eObj.SetParent( parent.GameObject, keepWorldPosition: true );
+		eObj.Transform.ClearInterpolation();
 
+		e.SetupNetworking( force: true );
 		parent.SetupNetworking( force: true );
 
-		OnObjectSpawned( obj, parent, e );
+		OnObjectSpawned( parent, e );
 
 		return true;
 	}
 
-	protected virtual void OnObjectSpawned( GameObject obj, EditorObjectGroup parent, EditorObject e )
+	protected virtual void OnObjectSpawned( EditorObjectGroup parent, EditorObject e )
 	{
 	}
 }

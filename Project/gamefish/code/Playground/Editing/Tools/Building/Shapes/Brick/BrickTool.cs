@@ -137,16 +137,11 @@ public partial class BrickTool : ShapeTool
 		return true;
 	}
 
-	protected override void OnObjectSpawned( GameObject obj, EditorObjectGroup parent, EditorObject e )
+	protected override void OnObjectSpawned( EditorObjectGroup parent, EditorObject e )
 	{
-		if ( !obj.IsValid() )
-			return;
-
-		const FindMode findMode = FindMode.InDescendants;
-
-		foreach ( var brick in obj.Components.GetAll<BrickBlock>( findMode ) )
+		if ( e.IsValid() && e is BrickBlock brick )
 			brick.RandomizeColor();
 
-		base.OnObjectSpawned( obj, parent, e );
+		base.OnObjectSpawned( parent, e );
 	}
 }
