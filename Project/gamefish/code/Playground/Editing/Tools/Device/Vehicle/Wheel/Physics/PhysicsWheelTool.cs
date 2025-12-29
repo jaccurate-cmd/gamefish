@@ -70,12 +70,13 @@ public partial class PhysicsWheelTool : JointTool
 
 		var tHit = hitPoint.Object.WorldTransform.WithOffset( hitPoint.Offset.Value );
 
-		if ( !TrySpawnObject( JointPrefab, tHit, obj: out var jointObj ) )
+		if ( !TrySpawnObject( JointPrefab, tHit, out var e ) )
 		{
 			this.Warn( $"Couldn't find/spawn {typeof( PhysicsWheel )} prefab:[{JointPrefab}]!" );
 			return false;
 		}
 
+		var jointObj = e.GameObject;
 		jointObj.NetworkInterpolation = false;
 
 		if ( !jointObj.Components.TryGet<PhysicsWheel>( out var joint ) )

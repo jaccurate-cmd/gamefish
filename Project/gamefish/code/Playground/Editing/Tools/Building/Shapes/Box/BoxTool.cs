@@ -179,7 +179,7 @@ public partial class BoxTool : EditorTool
 
 		if ( StartPoint is Vector3 start )
 		{
-			if ( !TryCreateBox( start, in pos, out _ ) )
+			if ( !TryCreateBox( start, in pos ) )
 				return false;
 
 			StopShaping();
@@ -192,21 +192,18 @@ public partial class BoxTool : EditorTool
 		return true;
 	}
 
-	protected virtual bool TryCreateBox( in Vector3 a, in Vector3 b, out GameObject objBox )
+	protected virtual bool TryCreateBox( in Vector3 a, in Vector3 b )
 	{
 		var bounds = BBox.FromPoints( [a, b] );
 
 		if ( bounds.Volume < 2f )
-		{
-			objBox = null;
 			return false;
-		}
 
 		var center = bounds.Center;
 		var scale = bounds.Size / BoxSize.Max( 1f );
 
 		var tBox = new Transform( center, Rotation.Identity, scale );
 
-		return TrySpawnObject( BoxPrefab, OriginObject, tWorld: tBox, out objBox );
+		return TrySpawnObject( BoxPrefab, tBox, out _ );
 	}
 }

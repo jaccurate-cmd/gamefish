@@ -140,10 +140,13 @@ public partial class PrefabTool : EditorTool
 		return true;
 	}
 
-	protected virtual bool TrySpawnAtTarget( out GameObject obj )
+	protected virtual bool TrySpawnAtTarget( out EditorObject e )
 	{
-		var parent = GetObjectGroup( TargetObject );
+		var parent = FindIsland( TargetObject );
 
-		return TrySpawnObject( Prefab, parent: parent, TargetTransform, out obj );
+		if ( parent.IsValid() )
+			return TrySpawnObject( Prefab, TargetTransform, parent, out e );
+
+		return TrySpawnObject( Prefab, TargetTransform, out e );
 	}
 }

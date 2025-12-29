@@ -95,9 +95,10 @@ public partial class SpinnerTool : EditorTool
 		var rAim = Rotation.LookAt( -hitNormal );
 		var tWorld = new Transform( hitPos, rAim );
 
-		if ( !TrySpawnObject( SpinnerPrefab, tWorld, obj: out var jointObj ) )
+		if ( !TrySpawnObject( SpinnerPrefab, tWorld, out var e ) )
 			return false;
 
+		var jointObj = e.GameObject;
 		jointObj.NetworkInterpolation = false;
 
 		if ( !jointObj.Components.TryGet<Spinner>( out var thruster ) )

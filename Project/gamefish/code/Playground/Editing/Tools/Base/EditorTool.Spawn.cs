@@ -2,7 +2,7 @@ namespace Playground;
 
 partial class EditorTool
 {
-	public static EditorObjectGroup GetObjectGroup( GameObject obj )
+	public static EditorObjectGroup FindIsland( GameObject obj )
 	{
 		if ( !obj.IsValid() )
 			return null;
@@ -11,7 +11,7 @@ partial class EditorTool
 	}
 
 	public static bool TryGetObjectGroup( GameObject obj, out EditorObjectGroup group )
-		=> (group = GetObjectGroup( obj )).IsValid();
+		=> (group = FindIsland( obj )).IsValid();
 
 	public virtual bool TryCreateObjectGroup( in Transform tWorld, out EditorObjectGroup group )
 	{
@@ -39,68 +39,58 @@ partial class EditorTool
 		return true;
 	}
 
-	/// <summary>
-	/// Spawns a prefab safely and with auto-configuration.
-	/// </summary>
-	public bool TrySpawnObject( PrefabFile prefab, Transform tWorld, out GameObject obj )
-		=> TrySpawnObject( prefab, parent: null, tWorld, out obj );
+	public bool TrySpawnObject( PrefabFile prefab, in Transform tWorld, out EditorObject e )
+		=> TrySpawnObject( new( prefab, tWorld ), out e );
 
-	/// <summary>
-	/// Spawns a prefab safely and with auto-configuration.
-	/// </summary>
-	public bool TrySpawnObject( PrefabFile prefab, GameObject objParent, Transform tWorld, out GameObject obj )
-		=> TrySpawnObject( prefab, GetObjectGroup( objParent ), tWorld, out obj );
+	public bool TrySpawnObject( PrefabFile prefab, in Transform tWorld, GameObject objParent, out EditorObject e )
+		=> TrySpawnObject( prefab, tWorld, FindIsland( objParent ), out e );
 
-	/// <summary>
-	/// Spawns a prefab safely and with auto-configuration.
-	/// </summary>
-	public virtual bool TrySpawnObject( PrefabFile prefab, EditorObjectGroup parent, Transform tWorld, out GameObject eObj )
+	public bool TrySpawnObject( PrefabFile prefab, in Transform tWorld, EditorObjectGroup parent, out EditorObject e )
 	{
-		eObj = null;
+		var cfg = ObjectSpawnConfig.FromWorld( prefab, parent, tWorld );
+		return TrySpawnObject( in cfg, out e );
+	}
+
+	public virtual bool TrySpawnObject( in ObjectSpawnConfig cfg, out EditorObject e )
+	{
+		e = null;
 
 		// Permission check.
 		if ( !IsClientAllowed( Client.Local ) )
 			return false;
 
-		// Create a new object(entity) group if one wasn't specified.
-		if ( !parent.IsValid() )
-		{
-			if ( !TryCreateObjectGroup( tWorld, out parent ) )
-				return false;
-		}
-
-		// Create the prefab.
-		if ( !prefab.TrySpawn( tWorld, out eObj ) )
-		{
-			parent.GameObject.DestroyImmediate();
+		if ( !cfg.IsValid() )
 			return false;
-		}
 
-		if ( !eObj.Components.TryGet<EditorObject>( out var e, FindMode.EnabledInSelf ) )
+		// Clone the prefab.
+		if ( !cfg.TryGetWorldTransform( out var tWorld ) )
+			return false;
+
+		if ( !cfg.Prefab.TrySpawn( tWorld, out var eObj ) )
+			return false;
+
+		if ( !eObj.Components.TryGet( out e, FindMode.EnabledInSelf ) )
 		{
-			this.Warn( $"No {typeof( EditorObject )} on prefab:[{prefab}]!" );
+			this.Warn( $"No {typeof( EditorObject )} on prefab:[{cfg.Prefab}]!" );
 
 			eObj.DestroyImmediate();
-			parent.GameObject.DestroyImmediate();
 			return false;
 		}
 
-		parent.SetupNetworking( force: true );
-
+		eObj.Transform.ClearInterpolation();
 		e.SetupNetworking( force: true );
 
-		eObj.SetParent( parent.GameObject, keepWorldPosition: true );
-		// eObj.Transform.ClearInterpolation();
+		// eObj.SetParent( parent.GameObject, keepWorldPosition: true );
 
-		OnObjectSpawned( parent, e );
+		OnObjectSpawned( e, parent: null );
 
-		if ( parent.IsValid() )
-			parent.RpcBroadcastRefreshPhysics();
+		// if ( parent.IsValid() )
+			// parent.RpcBroadcastRefreshPhysics();
 
 		return true;
 	}
 
-	protected virtual void OnObjectSpawned( EditorObjectGroup parent, EditorObject e )
+	protected virtual void OnObjectSpawned( EditorObject e, EditorObjectGroup parent )
 	{
 	}
 }

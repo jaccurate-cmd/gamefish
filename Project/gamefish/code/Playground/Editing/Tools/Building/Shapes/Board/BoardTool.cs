@@ -101,7 +101,7 @@ public partial class BoardTool : EditorTool
 	{
 		if ( StartPoint.HasValue )
 		{
-			if ( TryCreateBoard( BoardTransform, out _ ) )
+			if ( TryCreateBoard( BoardTransform ) )
 				StopShaping();
 		}
 		else if ( TargetPoint.HasValue )
@@ -186,6 +186,6 @@ public partial class BoardTool : EditorTool
 		}
 	}
 
-	protected virtual bool TryCreateBoard( in Transform t, out GameObject obj )
-		=> TrySpawnObject( BoardPrefab, tWorld: t, obj: out obj );
+	protected virtual bool TryCreateBoard( in Transform t )
+		=> TrySpawnObject( BoardPrefab, tWorld: t, out _ );
 }

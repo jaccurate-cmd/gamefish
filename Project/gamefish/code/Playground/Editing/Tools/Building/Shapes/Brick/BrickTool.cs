@@ -131,17 +131,17 @@ public partial class BrickTool : ShapeTool
 
 		tShape.Scale = tShape.Scale.ComponentMax( BRICK_SIZE_MIN );
 
-		if ( !TrySpawnObject( ShapePrefab, OriginObject, tShape, out obj ) )
+		if ( !TrySpawnObject( ShapePrefab, tShape, out _ ) )
 			return false;
 
 		return true;
 	}
 
-	protected override void OnObjectSpawned( EditorObjectGroup parent, EditorObject e )
+	protected override void OnObjectSpawned( EditorObject e, EditorObjectGroup parent )
 	{
 		if ( e.IsValid() && e is BrickBlock brick )
 			brick.RandomizeColor();
 
-		base.OnObjectSpawned( parent, e );
+		base.OnObjectSpawned( e, parent );
 	}
 }

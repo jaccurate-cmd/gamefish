@@ -150,12 +150,13 @@ public abstract class JointTool : EditorTool
 		var tWorld = (point1.Object ?? point1.Object)?.WorldTransform
 			?? global::Transform.Zero;
 
-		if ( !TrySpawnObject( JointPrefab, parent: null, tWorld, eObj: out var jointObj ) )
+		if ( !TrySpawnObject( JointPrefab, tWorld, e: out var e ) )
 		{
 			this.Warn( $"Couldn't find/spawn {typeof( TJoint )} prefab:[{JointPrefab}]!" );
 			return false;
 		}
 
+		var jointObj = e.GameObject;
 		jointObj.NetworkInterpolation = false;
 
 		if ( !jointObj.Components.TryGet<TJoint>( out var joint ) )

@@ -43,13 +43,13 @@ public partial class DeviceTool : PrefabTool
 		return true;
 	}
 
-	protected override bool TrySpawnAtTarget( out GameObject obj )
+	protected override bool TrySpawnAtTarget( out EditorObject e )
 	{
-		if ( !base.TrySpawnAtTarget( out obj ) )
+		if ( !base.TrySpawnAtTarget( out e ) )
 			return false;
 
 		if ( TargetObject.IsValid() )
-			obj.SetParent( TargetObject, keepWorldPosition: true );
+			e.GameObject.SetParent( TargetObject, keepWorldPosition: true );
 
 		return true;
 	}
