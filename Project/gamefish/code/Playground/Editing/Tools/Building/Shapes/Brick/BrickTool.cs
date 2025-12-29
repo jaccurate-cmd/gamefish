@@ -7,6 +7,8 @@ public partial class BrickTool : ShapeTool
 	public const float BRICK_SIZE_STEP = 8;
 	public const float BRICK_MODEL_SIZE = 16;
 
+	public override bool HasScrollFocus => base.HasScrollFocus || HasPoints || HoldingShift;
+
 	[Property]
 	[Title( "Prefab Size" )]
 	[Range( 1f, 32f, clamped: false )]
@@ -53,19 +55,33 @@ public partial class BrickTool : ShapeTool
 
 	protected int _brickHeight;
 
-	public Vector3 SnapToBrick( Transform tBrick, Vector3 pos )
+	protected override void Clear()
+	{
+		base.Clear();
+
+		BrickHeight = 1;
+	}
+
+	public float SnapToBrickGrid( in float n )
+		=> (n / BrickSize).Round() * BrickSize;
+
+	public Vector3 SnapToBrickGrid( Vector3 localPos )
+	{
+		localPos.x = (localPos.x / BrickSize).Round() * BrickSize;
+		localPos.y = (localPos.y / BrickSize).Round() * BrickSize;
+		localPos.z = (localPos.z / BrickSize).Round() * BrickSize;
+
+		return localPos;
+	}
+
+	public Vector3 SnapToBrickGrid( Transform tBrick, in Vector3 worldPos )
 	{
 		tBrick.Scale = 1f;
 
-		pos = tBrick.PointToLocal( pos );
+		var localPos = tBrick.PointToLocal( worldPos );
+		localPos = SnapToBrickGrid( localPos );
 
-		pos.x = (pos.x / BrickSize).Round() * BrickSize;
-		pos.y = (pos.y / BrickSize).Round() * BrickSize;
-		pos.z = (pos.z / BrickSize).Round() * BrickSize;
-
-		pos = tBrick.PointToWorld( pos );
-
-		return pos;
+		return tBrick.PointToWorld( localPos );
 	}
 
 	protected override void OnScroll( in float scroll )
@@ -85,27 +101,57 @@ public partial class BrickTool : ShapeTool
 		base.OnScroll( scroll );
 	}
 
+	public override bool TryTrace( out SceneTraceResult tr )
+		=> Editor.TryTrace( Scene, out tr, dist: Distance );
+
+	protected override bool TryGetOffsetFromTrace( in SceneTraceResult tr, out Offset offset )
+	{
+		offset = default;
+		return false;
+	}
+
 	protected override void OnPrimary( in SceneTraceResult tr )
 	{
 		if ( !TryGetCursorPosition( out var cursorPos ) )
 			return;
 
-		if ( TargetObject.IsValid() )
+		if ( !HasPoints && tr.Hit && TargetObject.IsValid() )
 		{
-			var rTarget = TargetObject.WorldRotation;
-			// var vAxis = rTarget.ClosestAxis( Vector3.Forward );
-			var rAligned = Rotation.LookAt( tr.Normal, rTarget.Forward );
+			var tWorld = TargetObject.WorldTransform;
+			var rNormal = Rotation.LookAt( tr.Normal, tWorld.Forward );
+			var tLocal = tWorld.ToLocal( new( tr.EndPosition, rNormal ) );
 
-			TryAddPoint( cursorPos, rAligned );
-			return;
+			TrySetOrigin( TargetObject, TargetComponent, tLocal );
 		}
 
-		TryAddPoint( cursorPos, Rotation.LookAt( Vector3.Forward, tr.Normal ) );
+		TryAddWorldPoint( new( cursorPos, Rotation.Identity ) );
+	}
+
+	protected override bool TrySetOrigin( GameObject obj, Component c, Offset offset, bool allowReplace = true )
+	{
+		if ( !obj.IsValid() )
+			return false;
+
+		// var tTarget = TargetObject.WorldTransform;
+
+		// var vAxis = tTarget.Rotation.ClosestAxis( offset.Rotation.Forward );
+		// var rAxis = Rotation.LookAt( vAxis );
+
+		offset.Position = offset.Position.SnapToGrid( BRICK_SIZE_MIN );
+
+		return base.TrySetOrigin( obj, c, offset, allowReplace );
+	}
+
+	protected override void AddPoint( Vector3 pos, Rotation r )
+	{
+		pos = SnapToBrickGrid( pos );
+
+		base.AddPoint( pos, r );
 	}
 
 	protected override bool TryGetCursorPosition( out Vector3 cursorPos )
 	{
-		if ( TargetTrace is not SceneTraceResult tr || !tr.Hit )
+		if ( !TryTrace( out var tr ) )
 		{
 			cursorPos = default;
 			return false;
@@ -120,6 +166,10 @@ public partial class BrickTool : ShapeTool
 			var tOrigin = GetShapeOrigin();
 			var vUp = tOrigin.Forward;
 
+			// this.DrawArrow( tOrigin.Position, tOrigin.Position + tOrigin.Up * 64f, Color.Cyan, tWorld: global::Transform.Zero );
+			// this.DrawArrow( tOrigin.Position, tOrigin.Position + tOrigin.Forward * 64f, Color.Red, tWorld: global::Transform.Zero );
+			// this.DrawArrow( tOrigin.Position, tOrigin.Position + tOrigin.Right * 64f, Color.Green, tWorld: global::Transform.Zero );
+
 			var plane = new Plane( tOrigin.Position, vUp );
 			var ray = new Ray( tr.StartPosition, tr.Direction );
 
@@ -127,7 +177,7 @@ public partial class BrickTool : ShapeTool
 				return false;
 
 			// Horizontal Drag
-			cursorPos = SnapToBrick( GetShapeOrigin( OriginObject.WorldTransform ), hitPoint );
+			cursorPos = SnapToBrickGrid( OriginObject.WorldTransform, hitPoint );
 
 			// Vertical Layers
 			cursorPos += vUp * BrickSize * BrickHeight;
@@ -135,24 +185,16 @@ public partial class BrickTool : ShapeTool
 			return true;
 		}
 
-		bool isBrick = false;
-
-		const FindMode findMode = FindMode.EnabledInSelf | FindMode.InDescendants;
-
+		// Target Snapping
 		if ( TargetObject.IsValid() )
-			if ( TargetObject.Components.TryGet<BrickBlock>( out _, findMode ) )
-				isBrick = true;
-
-		if ( isBrick )
 		{
 			var tBrick = GetShapeOrigin( TargetObject.WorldTransform );
-			cursorPos = SnapToBrick( tBrick, cursorPos );
-
+			cursorPos = SnapToBrickGrid( tBrick, cursorPos );
 			return true;
 		}
 
-		if ( HoldingShift )
-			cursorPos = SnapToBrick( global::Transform.Zero, cursorPos );
+		// Global Snapping
+		cursorPos = SnapToBrickGrid( global::Transform.Zero, cursorPos );
 
 		return true;
 	}

@@ -144,13 +144,13 @@ public abstract partial class EditorTool : PlaygroundModule
 	/// <summary>
 	/// Attempt to assign this uhh thing as our origin of doing stuff.
 	/// </summary>
-	protected virtual bool TrySetOrigin( GameObject obj, Component c, in Offset offset, bool respect = true )
+	protected virtual bool TrySetOrigin( GameObject obj, Component c, Offset offset, bool allowReplace = true )
 	{
 		if ( !obj.IsValid() || !c.IsValid() )
 			return false;
 
-		// respec
-		if ( respect && OriginObject.IsValid() )
+		// respec'
+		if ( !allowReplace && OriginObject.IsValid() )
 			return false;
 
 		OriginObject = obj;
@@ -174,7 +174,8 @@ public abstract partial class EditorTool : PlaygroundModule
 		var r = tOrigin.RotationToLocal( Rotation.LookAt( tr.Normal ) );
 
 		offset = new( pos, r );
-		return false;
+
+		return true;
 	}
 
 	/// <summary>

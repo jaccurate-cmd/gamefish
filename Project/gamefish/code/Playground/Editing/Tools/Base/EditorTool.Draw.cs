@@ -9,13 +9,13 @@ partial class EditorTool
 
 	protected virtual bool TryGetCursorPosition( out Vector3 cursorPos )
 	{
-		if ( TargetTrace is SceneTraceResult tr && tr.Hit )
+		if ( !TryTrace( out var tr ) )
 		{
-			cursorPos = tr.HitPosition;
-			return true;
+			cursorPos = Scene?.Camera?.WorldPosition ?? default;
+			return false;
 		}
 
-		cursorPos = default;
+		cursorPos = tr.EndPosition;
 		return false;
 	}
 

@@ -85,7 +85,7 @@ public abstract class ShapeTool : EditorTool
 	protected override void OnPrimary( in SceneTraceResult tr )
 	{
 		if ( TryGetCursorPosition( out var cursorPos ) )
-			TryAddPoint( cursorPos, Rotation.LookAt( tr.Normal ) );
+			TryAddWorldPoint( new( cursorPos, Rotation.LookAt( tr.Normal ) ) );
 	}
 
 	public override bool TryMouseWheel( in Vector2 dir )
@@ -125,7 +125,7 @@ public abstract class ShapeTool : EditorTool
 		if ( !HasPoints )
 			return;
 
-		var tOrigin = GetShapeOrigin().WithScale( 1f );
+		var tOrigin = GetShapeOrigin();
 
 		var points = Points?.Select( pr => pr.Position ).ToList();
 
@@ -134,28 +134,28 @@ public abstract class ShapeTool : EditorTool
 
 		var box = BBox.FromPoints( points );
 		box = BBox.FromPositionAndSize( box.Center, box.Size - 0.1f );
-		// .Grow( -tOrigin.PointToLocal( float.Epsilon ).Length );
 
 		this.DrawBox( box, ColorOutline, ColorFilled, tOrigin );
 	}
 
-	protected virtual bool TryAddPoint( Vector3 pos, Rotation r )
+	protected virtual bool TryAddWorldPoint( Transform tWorld )
+	{
+		var tOrigin = GetShapeOrigin();
+		var tLocal = tOrigin.ToLocal( in tWorld );
+
+		return TryAddLocalPoint( tLocal );
+	}
+
+	protected virtual bool TryAddLocalPoint( Transform tLocal )
+	{
+		AddPoint( tLocal.Position, tLocal.Rotation );
+		return true;
+	}
+
+	protected virtual void AddPoint( Vector3 pos, Rotation r )
 	{
 		if ( !IsClientAllowed( Client.Local ) )
-			return false;
-
-		if ( !HasPoints && TargetObject.IsValid() )
-		{
-			var tTarget = TargetObject.WorldTransform;
-			var offset = tTarget.ToLocal( new( pos, r ) );
-
-			TrySetOrigin( TargetObject, TargetComponent, offset );
-		}
-
-		var tOrigin = GetShapeOrigin();
-
-		pos = tOrigin.PointToLocal( pos );
-		r = tOrigin.RotationToLocal( r );
+			return;
 
 		Points ??= [];
 
@@ -166,8 +166,6 @@ public abstract class ShapeTool : EditorTool
 			Points.Add( (pos, r) );
 
 		OnPointAdded( pos, r );
-
-		return true;
 	}
 
 	protected virtual void OnPointAdded( in Vector3 pos, in Rotation r )
