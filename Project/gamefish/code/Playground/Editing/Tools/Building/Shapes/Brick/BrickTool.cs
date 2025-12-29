@@ -1,7 +1,5 @@
 namespace Playground;
 
-public partial class BlockTool : BrickTool;
-
 public partial class BrickTool : ShapeTool
 {
 	public const int BRICK_SIZE_MIN = 16;

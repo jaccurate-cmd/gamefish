@@ -71,14 +71,17 @@ public abstract partial class EditorTool : PlaygroundModule
 	/// The thing we're trying to do stuff on top of.
 	/// </summary>
 	[Property, JsonIgnore]
+	[ShowIf( nameof( InGame ), true )]
 	[Feature( EDITOR ), Group( DEBUG ), Order( EDITOR_DEBUG_ORDER )]
 	public GameObject OriginObject { get; set; }
 
 	[Property, JsonIgnore]
+	[ShowIf( nameof( InGame ), true )]
 	[Feature( EDITOR ), Group( DEBUG ), Order( EDITOR_DEBUG_ORDER )]
 	public Component OriginComponent { get; set; }
 
 	[Property, JsonIgnore]
+	[ShowIf( nameof( InGame ), true )]
 	[Feature( EDITOR ), Group( DEBUG ), Order( EDITOR_DEBUG_ORDER )]
 	public Offset? OriginOffset { get; set; }
 

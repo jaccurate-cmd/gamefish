@@ -33,6 +33,7 @@ public abstract class ShapeTool : EditorTool
 	/// The coordinates of the shape(in local or world space).
 	/// </summary>
 	[Property, JsonIgnore, WideMode]
+	[ShowIf( nameof( InGame ), true )]
 	[Feature( EDITOR ), Group( DEBUG ), Order( EDITOR_DEBUG_ORDER )]
 	public List<(Vector3 Position, Rotation Rotation)> Points { get; set; }
 
@@ -42,14 +43,14 @@ public abstract class ShapeTool : EditorTool
 	public bool HasPoints => Points?.Count > 0;
 
 	/// <summary>
-	/// Can something be made of this shape?
-	/// </summary>
-	public virtual bool ValidShape => Points?.Count >= 2;
-
-	/// <summary>
 	/// Do we have enough(or too many) <see cref="Points"/>?
 	/// </summary>
 	public bool AtLimit => HasPoints && Points.Count >= PointLimit;
+
+	/// <summary>
+	/// Can something be made of this shape?
+	/// </summary>
+	public virtual bool ValidShape => Points?.Count >= 2;
 
 	/// <summary>
 	/// The maximum number of points for making this shape.

@@ -432,7 +432,7 @@
                 "OwnerTransfer": 1,
                 "Components": [
                   {
-                    "__type": "Playground.BlockTool",
+                    "__type": "Playground.BrickTool",
                     "__guid": "9906f68d-a34c-4140-b01e-60082b07a026",
                     "__enabled": true,
                     "Flags": 0,
