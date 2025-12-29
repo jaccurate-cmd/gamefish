@@ -34,7 +34,7 @@
 					{
 						_class = "PhysicsShapeBox"
 						parent_bone = ""
-						surface_prop = "cardboard"
+						surface_prop = "plastic.sheet"
 						collision_tags = "solid brick"
 						origin = [ 8.0, 8.0, 8.0 ]
 						angles = [ 0.0, 0.0, 0.0 ]
