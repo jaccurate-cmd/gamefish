@@ -2,7 +2,7 @@ namespace Playground;
 
 partial class EditorObject
 {
-	public EditorObjectGroup ObjectGroup
+	public EditorIsland Island
 	{
 		get => _objGroup;
 		protected set
@@ -17,29 +17,29 @@ partial class EditorObject
 		}
 	}
 
-	protected EditorObjectGroup _objGroup = null;
+	protected EditorIsland _objGroup = null;
 
-	protected virtual void OnSetObjectGroup( EditorObjectGroup newGroup, EditorObjectGroup oldGroup )
+	protected virtual void OnSetObjectGroup( EditorIsland newGroup, EditorIsland oldGroup )
 	{
 		this.Log( $"group new:[{newGroup}] old:[{oldGroup}]" );
 
 		if ( newGroup.IsValid() )
-			newGroup.RpcBroadcastRefreshPhysics();
+			newGroup.OnObjectAdded( this );
 	}
 
-	protected void RefreshGroup( GameObject parent = null )
+	protected void UpdateIsland( GameObject parent = null )
 	{
 		parent ??= GameObject;
 
 		if ( !parent.IsValid() )
 		{
-			ObjectGroup = null;
+			Island = null;
 			return;
 		}
 
-		ObjectGroup = parent?.Components?.Get<EditorObjectGroup>( FindMode.Enabled | FindMode.InAncestors );
+		Island = parent?.Components?.Get<EditorIsland>( FindMode.Enabled | FindMode.InAncestors );
 
-		if ( ObjectGroup.IsValid() )
+		if ( Island.IsValid() )
 			DestroyPhysics();
 	}
 

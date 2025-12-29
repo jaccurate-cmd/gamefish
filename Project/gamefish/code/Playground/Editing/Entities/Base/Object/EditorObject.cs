@@ -48,7 +48,7 @@ public partial class EditorObject : PhysicsObject
 	{
 		base.OnParentChanged( oldParent, newParent );
 
-		RefreshGroup( newParent );
+		UpdateIsland( newParent );
 	}
 
 	public virtual void RenderHelpers()

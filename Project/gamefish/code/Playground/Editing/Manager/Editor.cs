@@ -11,7 +11,8 @@ public partial class Editor : Singleton<Editor>
 {
 	protected const int EDITOR_ORDER = DEFAULT_ORDER - 1000;
 
-	protected const int TOOL_ORDER = EDITOR_ORDER + 1;
+	protected const int TOOL_ORDER = EDITOR_ORDER + 10;
+	protected const int PREFABS_ORDER = EDITOR_ORDER + 50;
 	protected const int TRACING_ORDER = EDITOR_ORDER + 100;
 
 	/*

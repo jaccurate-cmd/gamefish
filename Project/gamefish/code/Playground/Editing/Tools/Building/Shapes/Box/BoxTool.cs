@@ -205,5 +205,6 @@ public partial class BoxTool : EditorTool
 		var tBox = new Transform( center, Rotation.Identity, scale );
 
 		return TrySpawnObject( BoxPrefab, tBox, out _ );
+		// return TrySpawnObject( BoxPrefab, tBox, OriginObject, out _ );
 	}
 }

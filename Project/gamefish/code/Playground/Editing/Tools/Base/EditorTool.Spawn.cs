@@ -2,53 +2,51 @@ namespace Playground;
 
 partial class EditorTool
 {
-	public static EditorObjectGroup FindIsland( GameObject obj )
+	public virtual bool TryCreateIsland( in Transform tWorld, out EditorIsland island )
 	{
-		if ( !obj.IsValid() )
-			return null;
+		island = null;
 
-		return obj.Components?.Get<EditorObjectGroup>( FindMode.EnabledInSelf | FindMode.InAncestors );
-	}
-
-	public static bool TryGetObjectGroup( GameObject obj, out EditorObjectGroup group )
-		=> (group = FindIsland( obj )).IsValid();
-
-	public virtual bool TryCreateObjectGroup( in Transform tWorld, out EditorObjectGroup group )
-	{
-		group = null;
-
-		if ( !Scene.InGame() )
+		if ( !Scene.InGame() || !Editor.IsValid() )
 			return false;
 
-		var objGroup = Scene.CreateObject( enabled: false );
-
-		if ( !objGroup.IsValid() )
-			return false;
-
-		objGroup.Name = "Object Group";
-		objGroup.WorldTransform = tWorld.WithScale( Vector3.One );
-
-		group = objGroup.Components.Create<EditorObjectGroup>();
-
-		if ( !group.IsValid() )
+		if ( !Editor.IslandPrefab.TrySpawn( tWorld, out var obj ) )
 		{
-			objGroup.DestroyImmediate();
+			this.Warn( $"Missing island prefab on {typeof( Editor )}!" );
+			return false;
+		}
+
+		obj.WorldTransform = tWorld.WithScale( Vector3.One );
+		obj.Transform.ClearInterpolation();
+
+		island = obj.Components.Get<EditorIsland>();
+
+		if ( !island.IsValid() )
+		{
+			this.Warn( $"Missing island prefab on prefab:{Editor.IslandPrefab}!" );
+			obj.DestroyImmediate();
 			return false;
 		}
 
 		return true;
 	}
 
-	public bool TrySpawnObject( PrefabFile prefab, in Transform tWorld, out EditorObject e )
-		=> TrySpawnObject( new( prefab, tWorld ), out e );
-
 	public bool TrySpawnObject( PrefabFile prefab, in Transform tWorld, GameObject objParent, out EditorObject e )
-		=> TrySpawnObject( prefab, tWorld, FindIsland( objParent ), out e );
+		=> TrySpawnObject( prefab, tWorld, Editor.FindIsland( objParent ), out e );
 
-	public bool TrySpawnObject( PrefabFile prefab, in Transform tWorld, EditorObjectGroup parent, out EditorObject e )
+	public bool TrySpawnObject( PrefabFile prefab, in Transform tWorld, EditorIsland parent, out EditorObject e )
 	{
 		var cfg = ObjectSpawnConfig.FromWorld( prefab, parent, tWorld );
 		return TrySpawnObject( in cfg, out e );
+	}
+
+	public bool TrySpawnObject( PrefabFile prefab, in Transform tWorld, out EditorObject e, bool withIsland = false )
+	{
+		var cfg = new ObjectSpawnConfig( prefab, tWorld );
+
+		if ( withIsland )
+			cfg = cfg.WithIsland( isEnabled: true, island: null );
+
+		return TrySpawnObject( cfg, out e );
 	}
 
 	public virtual bool TrySpawnObject( in ObjectSpawnConfig cfg, out EditorObject e )
@@ -57,9 +55,6 @@ partial class EditorTool
 
 		// Permission check.
 		if ( !IsClientAllowed( Client.Local ) )
-			return false;
-
-		if ( !cfg.IsValid() )
 			return false;
 
 		// Clone the prefab.
@@ -77,20 +72,40 @@ partial class EditorTool
 			return false;
 		}
 
-		eObj.Transform.ClearInterpolation();
 		e.SetupNetworking( force: true );
 
-		// eObj.SetParent( parent.GameObject, keepWorldPosition: true );
+		// 🏝
+		EditorIsland island = null;
 
-		OnObjectSpawned( e, parent: null );
+		if ( cfg.InGroup )
+		{
+			island = cfg.Island;
+
+			// Create a new island if configured to.
+			if ( !island.IsValid() && !TryCreateIsland( tWorld, out island ) )
+			{
+				this.Warn( $"Couldn't create island! Preventing object:[{eObj}]" );
+				eObj.DestroyImmediate();
+				return false;
+			}
+
+			eObj.SetParent( island.GameObject, keepWorldPosition: true );
+
+			if ( cfg.IsTransformLocal )
+				eObj.LocalTransform = cfg.Transform;
+		}
+
+		eObj.Transform.ClearInterpolation();
+
+		OnObjectSpawned( e, island );
 
 		// if ( parent.IsValid() )
-			// parent.RpcBroadcastRefreshPhysics();
+		// parent.RpcBroadcastRefreshPhysics();
 
 		return true;
 	}
 
-	protected virtual void OnObjectSpawned( EditorObject e, EditorObjectGroup parent )
+	protected virtual void OnObjectSpawned( EditorObject e, EditorIsland parent )
 	{
 	}
 }

@@ -142,7 +142,7 @@ public partial class PrefabTool : EditorTool
 
 	protected virtual bool TrySpawnAtTarget( out EditorObject e )
 	{
-		var parent = FindIsland( TargetObject );
+		var parent = Editor.FindIsland( TargetObject );
 
 		if ( parent.IsValid() )
 			return TrySpawnObject( Prefab, TargetTransform, parent, out e );

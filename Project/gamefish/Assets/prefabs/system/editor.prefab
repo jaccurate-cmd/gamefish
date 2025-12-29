@@ -24,6 +24,7 @@
         "ClassName": null,
         "DrawNearbyHelperRadius": 2048,
         "IsClass": false,
+        "IslandPrefab": "prefabs/editing/island.prefab",
         "IsNetworkingForced": true,
         "NetworkAutomatically": true,
         "NetworkId": "993ed032-9e55-45b5-93ac-9a9578e282f3",
