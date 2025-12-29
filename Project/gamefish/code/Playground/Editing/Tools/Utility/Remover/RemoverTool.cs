@@ -20,6 +20,17 @@ public partial class RemoverTool : EditorTool
 
 	public override bool TryGetTarget( in SceneTraceResult tr, out Component target )
 	{
+		target = null;
+
+		if ( !tr.Hit || !tr.GameObject.IsValid() )
+			return false;
+
+		if ( HoldingShift && Editor.TryFindIsland( tr.GameObject, out var island ) )
+		{
+			target = island;
+			return true;
+		}
+
 		if ( tr.Collider.IsValid() && tr.Collider is not MapCollider )
 		{
 			target = tr.Collider;

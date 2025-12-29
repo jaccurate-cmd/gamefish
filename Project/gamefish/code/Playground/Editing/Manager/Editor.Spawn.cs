@@ -18,6 +18,6 @@ partial class Editor
 		return obj.Components?.Get<EditorIsland>( FindMode.EnabledInSelf | FindMode.InAncestors );
 	}
 
-	public static bool TryFindIsland( GameObject obj, out EditorIsland group )
-		=> (group = FindIsland( obj )).IsValid();
+	public static bool TryFindIsland( GameObject obj, out EditorIsland island )
+		=> (island = FindIsland( obj )).IsValid();
 }

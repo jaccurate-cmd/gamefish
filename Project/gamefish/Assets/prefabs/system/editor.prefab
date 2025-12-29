@@ -176,6 +176,12 @@
                         "Description": null,
                         "Action": "Attack1",
                         "Mode": "Pressed"
+                      },
+                      {
+                        "Name": "Group",
+                        "Description": null,
+                        "Action": "Run",
+                        "Mode": "Pressed"
                       }
                     ],
                     "IsAdminOnly": false,
@@ -193,7 +199,7 @@
                     "OnComponentFixedUpdate": null,
                     "OnComponentStart": null,
                     "OnComponentUpdate": null,
-                    "ToolDescription": "Deletes entities.",
+                    "ToolDescription": "Gets rid of stuff.",
                     "ToolEmoji": "✂",
                     "ToolName": "Remover",
                     "ToolType": "Utility"
