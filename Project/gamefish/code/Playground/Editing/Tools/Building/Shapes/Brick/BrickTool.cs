@@ -4,7 +4,20 @@ public partial class BrickTool : ShapeTool
 {
 	public const int BRICK_SIZE_MIN = 16;
 	public const int BRICK_SIZE_MAX = 32;
-	public const float BRICK_SIZE_STEP = 16;
+	public const float BRICK_SIZE_STEP = 8;
+	public const float BRICK_MODEL_SIZE = 16;
+
+	[Property]
+	[Title( "Prefab Size" )]
+	[Range( 1f, 32f, clamped: false )]
+	[Feature( EDITOR ), Group( PREFABS ), Order( PREFABS_ORDER - 1 )]
+	public float BrickPrefabSize
+	{
+		get => _brickPrefabSize.Max( 1f );
+		protected set => _brickPrefabSize = value.Max( 1f );
+	}
+
+	protected float _brickPrefabSize = 16f;
 
 	/// <summary>
 	/// Scales the size of the brick by this power.
@@ -26,13 +39,6 @@ public partial class BrickTool : ShapeTool
 	}
 
 	protected int _brickSize = 16;
-
-	/// <summary>
-	/// Is this being attached to an island?
-	/// </summary>
-	public bool HasParentIsland { get; protected set; }
-	public BrickIsland ParentIsland { get; protected set; }
-	public Transform? LastIslandTransform { get; protected set; }
 
 	public override int PointLimit => 2;
 
@@ -88,10 +94,10 @@ public partial class BrickTool : ShapeTool
 
 		bool isBrick = false;
 
-		const FindMode findMode = FindMode.EnabledInSelf | FindMode.InAncestors | FindMode.InDescendants;
+		const FindMode findMode = FindMode.EnabledInSelf | FindMode.InDescendants;
 
 		if ( TargetObject.IsValid() )
-			if ( TargetObject.Components.TryGet<BrickIsland>( out _, findMode ) )
+			if ( TargetObject.Components.TryGet<BrickBlock>( out _, findMode ) )
 				isBrick = true;
 
 		if ( isBrick )
@@ -128,11 +134,16 @@ public partial class BrickTool : ShapeTool
 		var tShape = tOrigin.ToWorld( new( box.Mins, Rotation.Identity, box.Size ) );
 
 		tShape.Scale = tShape.Scale.ComponentMax( BRICK_SIZE_MIN );
+		tShape.Scale /= BrickPrefabSize;
 
-		if ( !TrySpawnObject( ShapePrefab, tShape, OriginObject, out _ ) )
-			return false;
+		if ( Editor.TryFindIsland( OriginObject, out var island ) )
+			if ( TrySpawnObject( ShapePrefab, tShape, island, out _ ) )
+				return true;
 
-		return true;
+		if ( TrySpawnObject( ShapePrefab, tShape, out _, withIsland: true ) )
+			return true;
+
+		return false;
 	}
 
 	protected override void OnObjectSpawned( EditorObject e, EditorIsland parent )

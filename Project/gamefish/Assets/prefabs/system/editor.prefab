@@ -468,6 +468,7 @@
                     "OnComponentFixedUpdate": null,
                     "OnComponentStart": null,
                     "OnComponentUpdate": null,
+                    "PrefabSize": 16,
                     "ScrollSensitivity": 32,
                     "ShapePrefab": "prefabs/editing/tools/brick/block_brick.prefab",
                     "ToolDescription": "Create and snap resizeable bricks.",

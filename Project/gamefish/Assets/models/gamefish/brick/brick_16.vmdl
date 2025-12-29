@@ -12,12 +12,12 @@
 					{
 						_class = "RenderMeshFile"
 						filename = "models\\gamefish\\brick\\dmx\\mesh\\brick_1.dmx"
-						import_translation = [ 0.5, 0.5, 0.5 ]
+						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 1.0
-						align_origin_x_type = "None"
-						align_origin_y_type = "None"
-						align_origin_z_type = "None"
+						import_scale = 16.0
+						align_origin_x_type = "BoundsMin"
+						align_origin_y_type = "BoundsMin"
+						align_origin_z_type = "BoundsMin"
 						parent_bone = ""
 						import_filter = 
 						{

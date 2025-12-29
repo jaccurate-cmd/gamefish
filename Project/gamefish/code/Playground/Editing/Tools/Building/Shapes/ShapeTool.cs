@@ -9,7 +9,7 @@ public abstract class ShapeTool : EditorTool
 {
 	[Property]
 	[Title( "Shape" )]
-	[Feature( EDITOR ), Group( PREFABS ), Order( PREFABS_ORDER )]
+	[Feature( EDITOR ), Group( PREFABS ), Order( PREFABS_ORDER - 2 )]
 	public PrefabFile ShapePrefab { get; set; }
 
 	[Property]
