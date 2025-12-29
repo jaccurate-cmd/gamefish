@@ -42,6 +42,17 @@ public partial class BrickTool : ShapeTool
 
 	public override int PointLimit => 2;
 
+	/// <summary>
+	/// The vertical layer count when placing bricks.
+	/// </summary>
+	public int BrickHeight
+	{
+		get => _brickHeight.Max( 1 );
+		protected set => _brickHeight = value.Max( 1 );
+	}
+
+	protected int _brickHeight;
+
 	public Vector3 SnapToBrick( Transform tBrick, Vector3 pos )
 	{
 		tBrick.Scale = 1f;
@@ -55,6 +66,23 @@ public partial class BrickTool : ShapeTool
 		pos = tBrick.PointToWorld( pos );
 
 		return pos;
+	}
+
+	protected override void OnScroll( in float scroll )
+	{
+		if ( HasPoints )
+		{
+			BrickHeight += scroll.Round().CeilToInt().Sign();
+			return;
+		}
+
+		// if ( HoldingShift )
+		// {
+		// BrickSize += scroll.Round().CeilToInt();
+		// return;
+		// }
+
+		base.OnScroll( scroll );
 	}
 
 	protected override void OnPrimary( in SceneTraceResult tr )
@@ -83,12 +111,27 @@ public partial class BrickTool : ShapeTool
 			return false;
 		}
 
-		var dist = tr.Distance.Min( Distance );
-		cursorPos = tr.StartPosition + (tr.Direction * dist);
+		// Manual distance for air placement.
+		var userDistance = tr.Distance.Min( Distance );
+		cursorPos = tr.StartPosition + (tr.Direction * userDistance);
 
 		if ( OriginObject.IsValid() )
 		{
-			cursorPos = SnapToBrick( GetShapeOrigin( OriginObject.WorldTransform ), cursorPos );
+			var tOrigin = GetShapeOrigin();
+			var vUp = tOrigin.Forward;
+
+			var plane = new Plane( tOrigin.Position, vUp );
+			var ray = new Ray( tr.StartPosition, tr.Direction );
+
+			if ( !plane.TryTrace( in ray, out var hitPoint, twosided: true ) )
+				return false;
+
+			// Horizontal Drag
+			cursorPos = SnapToBrick( GetShapeOrigin( OriginObject.WorldTransform ), hitPoint );
+
+			// Vertical Layers
+			cursorPos += vUp * BrickSize * BrickHeight;
+
 			return true;
 		}
 
@@ -104,20 +147,14 @@ public partial class BrickTool : ShapeTool
 		{
 			var tBrick = GetShapeOrigin( TargetObject.WorldTransform );
 			cursorPos = SnapToBrick( tBrick, cursorPos );
+
+			return true;
 		}
+
+		if ( HoldingShift )
+			cursorPos = SnapToBrick( global::Transform.Zero, cursorPos );
 
 		return true;
-	}
-
-	protected override void OnScroll( in float scroll )
-	{
-		if ( HoldingShift )
-		{
-			BrickSize += scroll.Round().CeilToInt();
-			return;
-		}
-
-		base.OnScroll( scroll );
 	}
 
 	protected override bool TryCreateShape( out GameObject obj )
