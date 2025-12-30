@@ -110,6 +110,30 @@
           "Children": []
         },
         {
+          "__guid": "f41c08b4-31c5-4dfa-a2cb-28b6a1e9e2e6",
+          "__version": 1,
+          "__Prefab": "prefabs/editing/tools/voxel/voxel_world.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "a96e820a-e828-4478-9dea-97964fde0e5d"
+                },
+                "Property": "MapPath",
+                "Value": "voxel\\maps\\bnb\\yart_dusty.vox"
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "2d0ddc99-76b3-4bc1-881a-109a9bd26b02": "f41c08b4-31c5-4dfa-a2cb-28b6a1e9e2e6",
+            "a96e820a-e828-4478-9dea-97964fde0e5d": "a2505e10-48a5-4738-a90f-3bd1a392fe95"
+          }
+        },
+        {
           "__guid": "fda8f8d3-7e45-43af-a138-6f9b259dee97",
           "__version": 1,
           "Flags": 0,
@@ -229,40 +253,6 @@
               "Children": []
             }
           ]
-        },
-        {
-          "__guid": "bdbbaf79-e48c-4a93-8185-a7cd8dcac676",
-          "__version": 1,
-          "Flags": 0,
-          "Name": "Map",
-          "Position": "0,0,0",
-          "Rotation": "0,0,0,1",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkInterpolation": true,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Playground.VoxelMap",
-              "__guid": "0a228cf8-555f-417b-9486-32e1e29ae140",
-              "__enabled": true,
-              "Flags": 0,
-              "Atlas": "resources/base.voxatlas",
-              "MapPath": "maps\\bnb\\yart_castle.vox",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "VoxelScale": 39.37008
-            }
-          ],
-          "Children": []
         }
       ]
     },

@@ -220,7 +220,16 @@
           "__PrefabInstancePatch": {
             "AddedObjects": [],
             "RemovedObjects": [],
-            "PropertyOverrides": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "bdf9eef4-ff56-4fa6-920d-28b816bdb973"
+                },
+                "Property": "Enabled",
+                "Value": false
+              }
+            ],
             "MovedObjects": []
           },
           "__PrefabIdToInstanceId": {
@@ -255,7 +264,7 @@
             "e511f256-8e20-4c99-af3d-542f8941f894": "26de1d17-2723-43e6-8ebc-1318879e26a3",
             "2c5f2c2d-fb06-413d-ab5e-ea155b2000c3": "49c48c3d-8efb-4b46-9e76-f52ec2a665b4",
             "bdf9eef4-ff56-4fa6-920d-28b816bdb973": "08a1fbe0-1fda-4ee1-8c28-ad152af52897",
-            "0098a6a1-6529-40cc-a81c-2786f9cd7c7c": "a1b09e26-6d4c-468c-8c59-b0b454ec38a7"
+            "48db7cd7-a9de-4150-a00a-fa34041b17f4": "e6f653dd-b01e-4340-8e68-bf70787c44c2"
           }
         }
       ]

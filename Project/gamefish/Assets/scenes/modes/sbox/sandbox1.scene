@@ -364,6 +364,30 @@
           ]
         },
         {
+          "__guid": "5c6b1a48-d4fa-4924-a011-3de5a16dd7db",
+          "__version": 1,
+          "__Prefab": "prefabs/editing/tools/voxel/voxel_world.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "a96e820a-e828-4478-9dea-97964fde0e5d"
+                },
+                "Property": "VoxelScale",
+                "Value": 32
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "2d0ddc99-76b3-4bc1-881a-109a9bd26b02": "5c6b1a48-d4fa-4924-a011-3de5a16dd7db",
+            "a96e820a-e828-4478-9dea-97964fde0e5d": "4c7cde31-d778-4261-ac29-5725bb0999e7"
+          }
+        },
+        {
           "__guid": "bdbbaf79-e48c-4a93-8185-a7cd8dcac676",
           "__version": 1,
           "Flags": 0,
