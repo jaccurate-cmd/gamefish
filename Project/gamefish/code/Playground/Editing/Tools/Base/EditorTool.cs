@@ -194,6 +194,10 @@ public abstract partial class EditorTool : PlaygroundModule
 			if ( PressedSecondary )
 				if ( TryTrace( out var tr ) )
 					OnSecondary( in tr );
+
+			if ( PressedMiddleMouse )
+				if ( TryTrace( out var tr ) )
+					OnMiddleMouse( in tr );
 		}
 
 		if ( PressedReload )
@@ -213,10 +217,7 @@ public abstract partial class EditorTool : PlaygroundModule
 	{
 	}
 
-	/// <summary>
-	/// Like, middle mouse button or something? Probably.
-	/// </summary>
-	protected virtual void OnTertiary( in SceneTraceResult tr )
+	protected virtual void OnMiddleMouse( in SceneTraceResult tr )
 	{
 	}
 

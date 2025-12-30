@@ -10,16 +10,19 @@ partial class EditorTool
 	public static bool PressedReload => IsPressed( "Reload", isKeyboard: false );
 	public static bool PressedPrimary => IsPressed( "Attack1", isKeyboard: false );
 	public static bool PressedSecondary => IsPressed( "Attack2", isKeyboard: false );
+	public static bool PressedMiddleMouse => IsPressed( "MMB", isKeyboard: false );
 
 	public static bool HoldingUse => IsDown( "Use", isKeyboard: false );
 	public static bool HoldingReload => IsDown( "Reload", isKeyboard: false );
 	public static bool HoldingPrimary => IsDown( "Attack1", isKeyboard: false );
 	public static bool HoldingSecondary => IsDown( "Attack2", isKeyboard: false );
+	public static bool HoldingMiddleMouse => IsDown( "MMB", isKeyboard: false );
 
 	public static bool ReleasedUse => IsReleased( "Use", isKeyboard: false );
 	public static bool ReleasedReload => IsReleased( "Reload", isKeyboard: false );
 	public static bool ReleasedPrimary => IsReleased( "Attack1", isKeyboard: false );
 	public static bool ReleasedSecondary => IsReleased( "Attack2", isKeyboard: false );
+	public static bool ReleasedMiddleMouse => IsReleased( "MMB", isKeyboard: false );
 
 	public virtual bool HasAimingFocus => ShowCursor is true;
 	public virtual bool HasScrollFocus => Mouse.Active || HasAimingFocus;
@@ -72,6 +75,7 @@ partial class EditorTool
 	public virtual bool TryLeftClick()
 	{
 		// this.Log( "Left clicked." );
+
 		if ( TryTrace( out var tr ) )
 		{
 			OnPrimary( in tr );
@@ -93,6 +97,12 @@ partial class EditorTool
 	public virtual bool TryMiddleClick()
 	{
 		// this.Log( "Middle clicked." );
+
+		if ( TryTrace( out var tr ) )
+		{
+			OnMiddleMouse( in tr );
+			return true;
+		}
 
 		return false;
 	}
