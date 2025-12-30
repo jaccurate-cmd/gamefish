@@ -368,10 +368,10 @@
                     "Mode": "Pressed"
                   },
                   {
-                    "Name": "Snap",
+                    "Name": "Replace",
                     "Description": null,
-                    "Action": "Run",
-                    "Mode": "Held"
+                    "Action": "Reload",
+                    "Mode": "Pressed"
                   }
                 ],
                 "IsAdminOnly": false,

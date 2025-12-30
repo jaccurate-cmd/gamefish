@@ -101,6 +101,43 @@ public partial class BrickTool : ShapeTool
 		base.OnScroll( scroll );
 	}
 
+	protected override void OnReload( in SceneTraceResult tr )
+	{
+		base.OnReload( tr );
+
+		Clear();
+
+		if ( !tr.Hit || !tr.Collider.IsValid() )
+			return;
+
+		var brick = tr.Collider.GetComponent<BrickBlock>();
+
+		if ( !brick.IsValid() )
+			return;
+
+		if ( !Editor.TryFindIsland( brick.GameObject, out var island ) )
+			return;
+
+		if ( !TrySetOrigin( island.GameObject, island, brick.LocalTransform ) )
+			return;
+
+		AddPoint( Vector3.Zero, brick.LocalRotation );
+
+		RpcDestroyBrick( brick );
+	}
+
+	[Rpc.Host]
+	protected void RpcDestroyBrick( BrickBlock brick )
+	{
+		if ( !brick.IsValid() )
+			return;
+
+		if ( !TryUse( Rpc.Caller, out var cl ) )
+			return;
+
+		brick.DestroyGameObject();
+	}
+
 	public override bool TryTrace( out SceneTraceResult tr )
 		=> Editor.TryTrace( Scene, out tr, dist: Distance );
 
