@@ -20,7 +20,7 @@
         "__guid": "a96e820a-e828-4478-9dea-97964fde0e5d",
         "__enabled": true,
         "Flags": 0,
-        "Atlas": "voxel/atlas/flatcolor.voxatlas",
+        "Atlas": "resources/base.voxatlas",
         "MapPath": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
