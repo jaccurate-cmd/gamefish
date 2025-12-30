@@ -6,6 +6,7 @@ public partial class BrickTool : ShapeTool
 	public const int BRICK_SIZE_MAX = 32;
 	public const float BRICK_SIZE_STEP = 8;
 	public const float BRICK_MODEL_SIZE = 16;
+	public const float BRICK_HUE_DELTA = 12f;
 
 	public override bool HasScrollFocus => base.HasScrollFocus || HasPoints || HoldingShift;
 
@@ -42,7 +43,11 @@ public partial class BrickTool : ShapeTool
 
 	protected int _brickSize = 16;
 
-	public override int PointLimit => 2;
+	[Property]
+	[ToolSetting]
+	[ColorUsage( HasAlpha = false, IsHDR = false )]
+	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
+	public Color BrickColor { get; set; } = Color.White.Darken( 0.1f );
 
 	/// <summary>
 	/// The vertical layer count when placing bricks.
@@ -55,11 +60,27 @@ public partial class BrickTool : ShapeTool
 
 	protected int _brickHeight;
 
+	public override int PointLimit => 2;
+
+	protected override void OnStart()
+	{
+		base.OnStart();
+
+		BrickColor = GetRandomBrickColor();
+	}
+
 	protected override void Clear()
 	{
 		base.Clear();
 
 		BrickHeight = 1;
+	}
+
+	public static Color GetRandomBrickColor()
+	{
+		var step = (Random.Float( 360 ) / BRICK_HUE_DELTA).Floor();
+		var hue = BRICK_HUE_DELTA * step;
+		return new ColorHsv( hue, 0.7f, 0.6f );
 	}
 
 	[Rpc.Host]
@@ -83,15 +104,14 @@ public partial class BrickTool : ShapeTool
 		if ( !TryUse( Rpc.Caller, out _ ) )
 			return;
 
-		const float hueDelta = 15f;
-
 		var color = brick.BrickColor.ToHsv();
 
-		color.Hue = (color.Hue + hueDelta).NormalizeDegrees();
+		color.Hue = (color.Hue + BRICK_HUE_DELTA).NormalizeDegrees();
 		color.Saturation = 0.7f;
 		color.Value = 0.6f;
 
-		brick.BrickColor = color.ToColor();
+		BrickColor = color;
+		brick.BrickColor = BrickColor;
 	}
 
 	public float SnapToBrickGrid( in float n )
@@ -300,7 +320,7 @@ public partial class BrickTool : ShapeTool
 	protected override void OnObjectSpawned( EditorObject e, EditorIsland parent )
 	{
 		if ( e.IsValid() && e is BrickBlock brick )
-			brick.RandomizeColor();
+			brick.BrickColor = BrickColor;
 
 		base.OnObjectSpawned( e, parent );
 	}
