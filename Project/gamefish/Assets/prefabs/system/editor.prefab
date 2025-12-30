@@ -368,6 +368,12 @@
                     "Mode": "Pressed"
                   },
                   {
+                    "Name": "Color",
+                    "Description": null,
+                    "Action": "MMB",
+                    "Mode": "Pressed"
+                  },
+                  {
                     "Name": "Replace",
                     "Description": null,
                     "Action": "Reload",

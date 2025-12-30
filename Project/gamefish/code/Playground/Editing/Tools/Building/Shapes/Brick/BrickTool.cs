@@ -62,6 +62,38 @@ public partial class BrickTool : ShapeTool
 		BrickHeight = 1;
 	}
 
+	[Rpc.Host]
+	protected void RpcDestroyBrick( BrickBlock brick )
+	{
+		if ( !brick.IsValid() )
+			return;
+
+		if ( !TryUse( Rpc.Caller, out _ ) )
+			return;
+
+		brick.DestroyGameObject();
+	}
+
+	[Rpc.Host]
+	protected void RpcCycleBrickColor( BrickBlock brick )
+	{
+		if ( !brick.IsValid() )
+			return;
+
+		if ( !TryUse( Rpc.Caller, out _ ) )
+			return;
+
+		const float hueDelta = 15f;
+
+		var color = brick.BrickColor.ToHsv();
+
+		color.Hue = (color.Hue + hueDelta).NormalizeDegrees();
+		color.Saturation = 0.7f;
+		color.Value = 0.6f;
+
+		brick.BrickColor = color.ToColor();
+	}
+
 	public float SnapToBrickGrid( in float n )
 		=> (n / BrickSize).Round() * BrickSize;
 
@@ -105,8 +137,6 @@ public partial class BrickTool : ShapeTool
 	{
 		base.OnReload( tr );
 
-		Clear();
-
 		if ( !tr.Hit || !tr.Collider.IsValid() )
 			return;
 
@@ -126,16 +156,21 @@ public partial class BrickTool : ShapeTool
 		RpcDestroyBrick( brick );
 	}
 
-	[Rpc.Host]
-	protected void RpcDestroyBrick( BrickBlock brick )
+	protected override void OnMiddleMouse( in SceneTraceResult tr )
 	{
+		base.OnMiddleMouse( tr );
+
+		if ( !tr.Hit || !tr.Collider.IsValid() )
+			return;
+
+		var brick = tr.Collider.GetComponent<BrickBlock>();
+
 		if ( !brick.IsValid() )
 			return;
 
-		if ( !TryUse( Rpc.Caller, out var cl ) )
-			return;
+		this.Log( "color" );
 
-		brick.DestroyGameObject();
+		RpcCycleBrickColor( brick );
 	}
 
 	public override bool TryTrace( out SceneTraceResult tr )

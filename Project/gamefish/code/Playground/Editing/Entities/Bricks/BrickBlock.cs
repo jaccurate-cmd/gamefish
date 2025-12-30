@@ -13,7 +13,7 @@ public partial class BrickBlock : EditorObject
 	public Color BrickColor
 	{
 		get => _brickColor;
-		protected set
+		set
 		{
 			_brickColor = value;
 			OnSetBrickColor( in _brickColor );
