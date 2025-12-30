@@ -1,7 +1,7 @@
 namespace Playground;
 
 [Icon( "precision_manufacturing" )]
-public partial class PhysicsWheel : Device
+public partial class PhysicsWheel : Device, IPilot
 {
 	[Property]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
@@ -15,7 +15,7 @@ public partial class PhysicsWheel : Device
 	[Sync]
 	[Property, ReadOnly]
 	[Feature( EDITOR ), Group( PHYSICS ), Order( PHYSICS_ORDER )]
-	public Vector2 DriveInput { get; set; } = Vector2.Zero;
+	public Vector3 DriveInput { get; set; } = Vector3.Zero;
 
 	[Sync]
 	public DeviceAttachPoint ParentPoint { get; set; }

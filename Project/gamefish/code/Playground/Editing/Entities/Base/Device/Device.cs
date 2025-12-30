@@ -3,7 +3,7 @@ namespace Playground;
 /// <summary>
 /// Something that can be controlled and wired.
 /// </summary>
-public abstract partial class Device : EditorObject, IWired
+public abstract partial class Device : EditorObject, IWire
 {
 	public const int WIRE_LIMIT = 16;
 
@@ -45,14 +45,14 @@ public abstract partial class Device : EditorObject, IWired
 			return;
 
 		foreach ( var (ent, _) in Wires )
-			if ( ent.IsValid() && ent is IWired wire )
+			if ( ent.IsValid() && ent is IWire wire )
 				SimulateWire( wire, in deltaTime, in isFixedUpdate );
 	}
 
 	/// <summary>
 	/// Update a particular connection to something else.
 	/// </summary>
-	protected virtual void SimulateWire( IWired wire, in float deltaTime, in bool isFixedUpdate )
+	protected virtual void SimulateWire( IWire wire, in float deltaTime, in bool isFixedUpdate )
 		=> wire?.WireSimulate( this, in deltaTime, in isFixedUpdate );
 
 	public override void RenderHelpers()
@@ -88,13 +88,15 @@ public abstract partial class Device : EditorObject, IWired
 		}
 	}
 
-	/// <returns> If these two are compatible. </returns>
-	public virtual bool CanWire( Entity to )
+	public virtual bool CanWire( IWire wire )
 	{
-		if ( !to.IsValid() || to == this )
+		if ( wire is null || wire == this )
 			return false;
 
-		return to is IWired;
+		if ( wire is IValid v )
+			return v.IsValid();
+
+		return true;
 	}
 
 	/// <summary>
@@ -111,7 +113,7 @@ public abstract partial class Device : EditorObject, IWired
 		if ( TooManyWires )
 			return false;
 
-		if ( !CanWire( to ) )
+		if ( to is not IWire w || !CanWire( w ) )
 			return false;
 
 		Wires ??= [];

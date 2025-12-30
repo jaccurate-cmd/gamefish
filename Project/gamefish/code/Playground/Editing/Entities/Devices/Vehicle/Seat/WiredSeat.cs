@@ -1,11 +1,17 @@
 namespace Playground;
 
-public partial class WiredSeat : Seat, IWired, IPilot
+public partial class WiredSeat : Seat, IWire, IPilot
 {
 	[Property]
 	[Sync( SyncFlags.FromHost )]
-	[Feature( SEAT ), Group( DEBUG ), Order( SEAT_DEBUG_ORDER + 1 )]
+	[Feature( SEAT ), Group( VEHICLE ), Order( SEAT_DEBUG_ORDER + 1 )]
 	public Vector3 DriveInput { get; set; }
+
+	public bool CanWire( IWire wire )
+	{
+		this.Log( wire );
+		return wire is IPilot;
+	}
 
 	public void WireSimulate( Device device, in float deltaTime, in bool isFixedUpdate )
 	{
