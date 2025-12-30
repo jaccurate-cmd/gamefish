@@ -15,11 +15,8 @@ partial class Library
 		if ( !obj.IsValid() )
 			return null;
 
-		if ( c.IsValid() )
-			return c;
+		var found = obj.Components?.Get<TComp>( findMode );
 
-		c = obj.Components?.Get<TComp>( findMode );
-
-		return c;
+		return found.IsValid() ? found : null;
 	}
 }
