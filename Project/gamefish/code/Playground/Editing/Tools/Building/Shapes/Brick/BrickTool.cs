@@ -83,6 +83,15 @@ public partial class BrickTool : ShapeTool
 		return new ColorHsv( hue, 0.7f, 0.6f );
 	}
 
+	public static Color GetNextColor( ColorHsv color )
+	{
+		color.Hue = (color.Hue + BRICK_HUE_DELTA).NormalizeDegrees();
+		color.Saturation = 0.7f;
+		color.Value = 0.6f;
+
+		return color;
+	}
+
 	[Rpc.Host]
 	protected void RpcDestroyBrick( BrickBlock brick )
 	{
@@ -96,7 +105,7 @@ public partial class BrickTool : ShapeTool
 	}
 
 	[Rpc.Host]
-	protected void RpcCycleBrickColor( BrickBlock brick )
+	protected void RpcSetBrickColor( BrickBlock brick, Color color )
 	{
 		if ( !brick.IsValid() )
 			return;
@@ -104,14 +113,7 @@ public partial class BrickTool : ShapeTool
 		if ( !TryUse( Rpc.Caller, out _ ) )
 			return;
 
-		var color = brick.BrickColor.ToHsv();
-
-		color.Hue = (color.Hue + BRICK_HUE_DELTA).NormalizeDegrees();
-		color.Saturation = 0.7f;
-		color.Value = 0.6f;
-
-		BrickColor = color;
-		brick.BrickColor = BrickColor;
+		brick.BrickColor = color;
 	}
 
 	public float SnapToBrickGrid( in float n )
@@ -188,9 +190,17 @@ public partial class BrickTool : ShapeTool
 		if ( !brick.IsValid() )
 			return;
 
-		this.Log( "color" );
+		if ( HoldingShift )
+		{
+			BrickColor = brick.BrickColor;
+			return;
+		}
 
-		RpcCycleBrickColor( brick );
+		var nextColor = GetNextColor( brick.BrickColor );
+
+		BrickColor = nextColor;
+
+		RpcSetBrickColor( brick, BrickColor );
 	}
 
 	public override bool TryTrace( out SceneTraceResult tr )

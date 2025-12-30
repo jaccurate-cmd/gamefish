@@ -350,6 +350,7 @@
                 "__guid": "2aade5cd-ee4c-484c-8dc3-f38a72d13173",
                 "__enabled": true,
                 "Flags": 0,
+                "BrickColor": "0.9,0.9,0.9,1",
                 "BrickPrefabSize": 16,
                 "BrickSize": 16,
                 "ClassId": null,
@@ -368,16 +369,22 @@
                     "Mode": "Pressed"
                   },
                   {
+                    "Name": "Replace ",
+                    "Description": null,
+                    "Action": "Reload",
+                    "Mode": "Pressed"
+                  },
+                  {
                     "Name": "Color",
                     "Description": null,
                     "Action": "MMB",
                     "Mode": "Pressed"
                   },
                   {
-                    "Name": "Replace",
+                    "Name": "Copy ",
                     "Description": null,
-                    "Action": "Reload",
-                    "Mode": "Pressed"
+                    "Action": "Run",
+                    "Mode": "Held"
                   }
                 ],
                 "IsAdminOnly": false,
