@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Playground;
 
 public partial class BrickTool : ShapeTool
@@ -43,8 +45,8 @@ public partial class BrickTool : ShapeTool
 
 	protected int _brickSize = 16;
 
-	[Property]
 	[ToolSetting]
+	[Property, JsonIgnore]
 	[ColorUsage( HasAlpha = false, IsHDR = false )]
 	[Feature( EDITOR ), Group( SETTINGS ), Order( SETTINGS_ORDER )]
 	public Color BrickColor { get; set; } = Color.White.Darken( 0.1f );

@@ -81,7 +81,7 @@
         },
         "__PrefabIdToInstanceId": {
           "2d0ddc99-76b3-4bc1-881a-109a9bd26b02": "bdf9eef4-ff56-4fa6-920d-28b816bdb973",
-          "c4e6286f-67a7-4e52-9314-0c5ce5805087": "0098a6a1-6529-40cc-a81c-2786f9cd7c7c"
+          "a96e820a-e828-4478-9dea-97964fde0e5d": "48db7cd7-a9de-4150-a00a-fa34041b17f4"
         }
       },
       {
@@ -350,7 +350,6 @@
                 "__guid": "2aade5cd-ee4c-484c-8dc3-f38a72d13173",
                 "__enabled": true,
                 "Flags": 0,
-                "BrickColor": "0.9,0.9,0.9,1",
                 "BrickPrefabSize": 16,
                 "BrickSize": 16,
                 "ClassId": null,
