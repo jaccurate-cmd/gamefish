@@ -34,6 +34,8 @@ public partial class Editor : Singleton<Editor>
 
 		SimulateTool( Time.Delta, isFixedUpdate: false );
 
+		UpdateTargetOutline();
+
 		DrawNearbyHelpers();
 	}
 
