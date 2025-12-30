@@ -28,7 +28,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "VoxelScale": 39.37008
+        "VoxelScale": 32
       }
     ],
     "Children": [],
