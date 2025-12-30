@@ -8,7 +8,7 @@ public partial class VoxelMap : NetworkedVoxelVolume, Component.ExecuteInEditor
 	[Property]
 	[Group( MAP )]
 	[Sync( SyncFlags.FromHost )]
-	[FilePath( Extension = "vox" )]
+	[FilePath( Extension = "vox,vxl" )]
 	[Change( Name = nameof( ReloadMap ) )]
 	public string MapPath { get; set; }
 
@@ -35,7 +35,13 @@ public partial class VoxelMap : NetworkedVoxelVolume, Component.ExecuteInEditor
 
 		await Task.MainThread();
 
+		// Load the map.
 		await Import( path );
+
+		// Generate visuals and collision.
+		var chunks = Chunks?.Values ?? [];
+
+		await GenerateMeshes( chunks );
 	}
 
 	[Button]
